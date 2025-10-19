@@ -3,6 +3,7 @@ import { ArrowRight } from 'lucide-react';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import Link from 'next/link';
 
 type Course = {
   id: string;
@@ -24,7 +25,7 @@ const getPlaceholderImage = (id: string) => {
 };
 
 export default function CourseCard({ course }: CourseCardProps) {
-  const { title, icon: Icon, level, price, compareAtPrice, image } = course;
+  const { title, icon: Icon, level, price, compareAtPrice, image, id } = course;
   const placeholder = getPlaceholderImage(image);
 
   return (
@@ -57,9 +58,11 @@ export default function CourseCard({ course }: CourseCardProps) {
         </div>
 
         <div className="flex flex-col w-full gap-2 mt-auto">
-            <Button variant="ghost" className="text-primary hover:bg-primary/10 hover:text-primary w-full">
-                View Course <ArrowRight className="w-4 h-4 ml-2" />
-            </Button>
+            <Link href={`/courses/${id}`}>
+                <Button variant="ghost" className="text-primary hover:bg-primary/10 hover:text-primary w-full">
+                    View Course <ArrowRight className="w-4 h-4 ml-2" />
+                </Button>
+            </Link>
         </div>
       </div>
     </div>
