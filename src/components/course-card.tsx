@@ -59,7 +59,6 @@ export default function CourseCard({ course }: CourseCardProps) {
             <Button variant="ghost" className="text-primary hover:bg-primary/10 hover:text-primary w-full">
                 View Course <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
-            <Button className="w-full gradient-btn gradient-btn-1">Buy Now</Button>
         </div>
       </div>
     </div>
