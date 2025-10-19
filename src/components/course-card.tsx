@@ -40,25 +40,27 @@ export default function CourseCard({ course }: CourseCardProps) {
                 className="object-cover rounded-t-2xl"
             />
         )}
+        <Badge variant="secondary" className="absolute top-3 left-3 bg-background/70 backdrop-blur-sm text-primary border-primary/20 text-xs">
+            {level}
+        </Badge>
         <div className="absolute top-3 right-3 bg-background/70 backdrop-blur-sm p-2 rounded-full">
             <Icon className="h-6 w-6 glowing-icon" />
         </div>
       </div>
       <div className="p-4 flex flex-col flex-grow items-center text-center">
         <div className="flex justify-center w-full mb-2">
-            <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20 mr-2">{level}</Badge>
             <div className="flex items-center gap-1 text-amber-400">
                 <Star className="w-4 h-4 fill-current" />
                 <span className="font-bold text-sm text-foreground">{rating}</span>
             </div>
         </div>
-        <h3 className="text-lg font-bold mb-2 flex-grow">{title}</h3>
+        <h3 className="text-base font-bold mb-2 flex-grow">{title}</h3>
         
         <div className="flex items-baseline gap-2 mb-4 justify-center">
             {compareAtPrice && (
-                <p className="text-base text-muted-foreground line-through">${compareAtPrice}</p>
+                <p className="text-sm text-muted-foreground line-through">${compareAtPrice}</p>
             )}
-            <p className="text-xl font-bold text-primary">${price}</p>
+            <p className="text-lg font-bold text-primary">${price}</p>
         </div>
 
         <div className="flex flex-col w-full gap-2 mt-auto">
