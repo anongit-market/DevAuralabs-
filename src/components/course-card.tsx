@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { Star, ArrowRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
