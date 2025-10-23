@@ -9,7 +9,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@/components/ui/carousel';
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { EmblaCarouselType } from 'embla-carousel-react';
 
 const useCoverflow = (api: EmblaCarouselType | undefined) => {
@@ -21,10 +21,15 @@ const useCoverflow = (api: EmblaCarouselType | undefined) => {
     if (!api) return;
 
     const newTransforms = api.scrollSnapList().map((scrollSnap, index) => {
-      const diffToTarget = scrollSnap - api.scrollProgress();
-      const scale = 1 - Math.abs(diffToTarget) * 0.4;
-      const rotateY = diffToTarget * -25;
-      const opacity = 1 - Math.abs(diffToTarget) * 0.5;
+      let diff = scrollSnap - api.scrollProgress();
+      const scrollProgress = Math.max(0, 1 - Math.abs(diff));
+      
+      const inView = Math.abs(diff) < 0.99;
+
+      const scale = inView ? 1 - Math.abs(diff) * 0.4 : 0.6;
+      const rotateY = diff * -25;
+      const opacity = inView ? 1 - Math.abs(diff) * 0.5 : 0.5;
+      
       return { scale, rotateY, opacity };
     });
 
@@ -48,6 +53,19 @@ const useCoverflow = (api: EmblaCarouselType | undefined) => {
 export default function CoursesSection() {
   const [api, setApi] = useState<EmblaCarouselType | undefined>();
   const transforms = useCoverflow(api);
+  const audioRef = useRef<HTMLAudioElement>(null);
+
+  useEffect(() => {
+    if (!api) return;
+    const playSound = () => {
+        audioRef.current?.play().catch(e => console.error("Audio play failed", e));
+    };
+    api.on('select', playSound);
+    return () => {
+        api.off('select', playSound);
+    };
+  }, [api]);
+
   return (
     <section id="courses" className="py-12 md:py-24">
       <div className="text-center mb-12">
@@ -83,6 +101,7 @@ export default function CoursesSection() {
         <CarouselPrevious className="hidden md:flex"/>
         <CarouselNext className="hidden md:flex"/>
       </Carousel>
+      <audio ref={audioRef} src="https://firebasestorage.googleapis.com/v0/b/genkit-llm-hackathon.appspot.com/o/swoosh.mp3?alt=media&token=80921829-8a5e-41b3-855f-a3a8997b3992" preload="auto"></audio>
     </section>
   );
 }
