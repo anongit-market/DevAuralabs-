@@ -9,7 +9,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@/components/ui/carousel';
-import { useState, useCallback, useEffect, useRef } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { EmblaCarouselType } from 'embla-carousel-react';
 
 const useCoverflow = (api: EmblaCarouselType | undefined) => {
@@ -53,18 +53,6 @@ const useCoverflow = (api: EmblaCarouselType | undefined) => {
 export default function CoursesSection() {
   const [api, setApi] = useState<EmblaCarouselType | undefined>();
   const transforms = useCoverflow(api);
-  const audioRef = useRef<HTMLAudioElement>(null);
-
-  useEffect(() => {
-    if (!api) return;
-    const playSound = () => {
-        audioRef.current?.play().catch(e => console.error("Audio play failed", e));
-    };
-    api.on('select', playSound);
-    return () => {
-        api.off('select', playSound);
-    };
-  }, [api]);
 
   return (
     <section id="courses" className="py-12 md:py-24">
@@ -101,7 +89,6 @@ export default function CoursesSection() {
         <CarouselPrevious className="hidden md:flex"/>
         <CarouselNext className="hidden md:flex"/>
       </Carousel>
-      <audio ref={audioRef} src="https://firebasestorage.googleapis.com/v0/b/genkit-llm-hackathon.appspot.com/o/swoosh.mp3?alt=media&token=80921829-8a5e-41b3-855f-a3a8997b3992" preload="auto"></audio>
     </section>
   );
 }
