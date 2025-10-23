@@ -2,7 +2,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Menu, User, ShoppingCart } from 'lucide-react';
+import { Menu, User, ShoppingCart, BookOpen } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 
 import { Button } from '@/components/ui/button';
@@ -165,6 +165,9 @@ export default function Navbar() {
                     <DropdownMenuSeparator />
                     <DropdownMenuItem asChild>
                       <Link href="/profile">Profile</Link>
+                    </DropdownMenuItem>
+                     <DropdownMenuItem asChild>
+                      <Link href="/profile/my-courses">My Courses</Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem>Dashboard</DropdownMenuItem>
                     <DropdownMenuItem asChild>
