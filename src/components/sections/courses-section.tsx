@@ -71,7 +71,7 @@ export default function CoursesSection() {
                   engine.slideLooper.loopPoints.forEach(loopPoint => {
                     const isUsed = loopPoint.target() === scrollProgress;
                     if (isUsed) {
-                      const sign = Math.sign(engine.dragHandler.pointerMoves()[0]?.x ?? 0);
+                      const sign = Math.sign(engine.dragHandler.dragged.x);
                       if (sign === -1) {
                           diffToTarget = scrollSnaps[index] - (1 + scrollProgress);
                       }
