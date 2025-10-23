@@ -1,95 +1,13 @@
-
-'use client';
-
 import { courses } from '@/lib/data';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
-import Image from 'next/image';
-import { notFound, useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { CheckCircle } from 'lucide-react';
-
-const getPlaceholderImage = (id: string) => {
-  return PlaceHolderImages.find((img) => img.id === id);
-};
+import { notFound } from 'next/navigation';
+import CourseDetailClient from './course-detail-client';
 
 export default function CourseDetailPage({ params }: { params: { id: string } }) {
   const course = courses.find((c) => c.id === params.id);
-  const router = useRouter();
 
   if (!course) {
     notFound();
   }
 
-  const handlePurchase = () => {
-    // In a real app, you would check for user authentication status here.
-    // For now, we'll simulate an unauthenticated user and redirect to signup.
-    const isAuthenticated = false; 
-
-    if (!isAuthenticated) {
-      router.push('/signup');
-    } else {
-      // Proceed to checkout
-      console.log('Proceeding to checkout...');
-    }
-  };
-
-  const placeholder = getPlaceholderImage(course.image);
-
-  return (
-    <div className="container mx-auto py-12 px-4">
-      <div className="grid lg:grid-cols-5 gap-12">
-        <div className="lg:col-span-3">
-          <div className="relative aspect-video rounded-2xl overflow-hidden glass-card mb-8">
-            {placeholder && (
-              <Image
-                src={placeholder.imageUrl}
-                alt={placeholder.description}
-                data-ai-hint={placeholder.imageHint}
-                fill
-                className="object-cover"
-              />
-            )}
-            <Badge variant="secondary" className="absolute top-4 left-4 bg-background/70 backdrop-blur-sm text-primary border-primary/20">
-              {course.level}
-            </Badge>
-          </div>
-          <h1 className="text-4xl font-bold mb-4 glowing-text">{course.title}</h1>
-          <p className="text-lg text-muted-foreground mb-8">{course.description}</p>
-          
-          <div className="space-y-4">
-            <h2 className="text-2xl font-bold">What you&apos;ll learn</h2>
-            <ul className="space-y-2 text-muted-foreground">
-                <li className="flex items-center gap-2"><CheckCircle className="h-5 w-5 text-primary" /> Core security principles and practices.</li>
-                <li className="flex items-center gap-2"><CheckCircle className="h-5 w-5 text-primary" /> Hands-on experience with security tools.</li>
-                <li className="flex items-center gap-2"><CheckCircle className="h-5 w-5 text-primary" /> How to identify and mitigate vulnerabilities.</li>
-                <li className="flex items-center gap-2"><CheckCircle className="h-5 w-5 text-primary" /> Preparation for industry certifications.</li>
-            </ul>
-          </div>
-        </div>
-        <div className="lg:col-span-2">
-            <div className="glass-card p-8 sticky top-24">
-                <div className="flex items-baseline gap-2 mb-6">
-                    <p className="text-3xl font-bold text-primary">${course.price}</p>
-                    {course.compareAtPrice && (
-                        <p className="text-xl text-muted-foreground line-through">${course.compareAtPrice}</p>
-                    )}
-                </div>
-                <p className="text-sm text-muted-foreground mb-6">Get lifetime access to this course and all future updates.</p>
-                <div className="flex flex-col gap-4">
-                    <Button size="lg" className="w-full gradient-btn gradient-btn-1" onClick={handlePurchase}>
-                        Buy Now
-                    </Button>
-                    <Button size="lg" variant="outline" className="w-full glowing-btn" onClick={handlePurchase}>
-                        Add to Cart
-                    </Button>
-                </div>
-                 <div className="mt-8 text-xs text-center text-muted-foreground">
-                    30-Day Money-Back Guarantee
-                </div>
-            </div>
-        </div>
-      </div>
-    </div>
-  );
+  return <CourseDetailClient course={course} />;
 }
