@@ -49,27 +49,27 @@ export default function CourseCard({ course, parallaxOffset }: CourseCardProps) 
               />
           )}
         </div>
-        <Badge variant="secondary" className="absolute top-3 left-3 bg-background/70 backdrop-blur-sm text-primary border-primary/20 text-xs">
+        <Badge variant="secondary" className="absolute top-2 left-2 bg-background/70 backdrop-blur-sm text-primary border-primary/20 text-[10px] px-1.5 py-0.5">
             {level}
         </Badge>
-        <div className="absolute top-3 right-3 bg-background/70 backdrop-blur-sm p-2 rounded-full">
-            <Icon className="h-5 w-5 glowing-icon" />
+        <div className="absolute top-2 right-2 bg-background/70 backdrop-blur-sm p-1.5 rounded-full">
+            <Icon className="h-4 w-4 glowing-icon" />
         </div>
       </div>
-      <div className="p-3 flex flex-col flex-grow items-center text-center">
-        <h3 className="text-sm font-bold mb-2 flex-grow">{title}</h3>
+      <div className="p-1 flex flex-col flex-grow items-center text-center">
+        <h3 className="text-xs font-bold mb-0.5 flex-grow">{title}</h3>
         
-        <div className="flex items-baseline gap-1 mb-3 justify-center">
+        <div className="flex items-baseline gap-1 mb-1 justify-center">
             {compareAtPrice && (
-                <p className="text-xs text-muted-foreground line-through">${compareAtPrice}</p>
+                <p className="text-[10px] text-muted-foreground line-through">${compareAtPrice}</p>
             )}
-            <p className="text-base font-bold text-primary">${price}</p>
+            <p className="text-xs font-bold text-primary">${price}</p>
         </div>
 
         <div className="flex flex-col w-full gap-2 mt-auto">
             <Link href={`/courses/${id}`}>
-                <Button size="sm" variant="ghost" className="text-primary hover:bg-primary/10 hover:text-primary w-full text-xs">
-                    View Course <ArrowRight className="w-3 h-3 ml-1" />
+                <Button size="xs" variant="ghost" className="text-primary hover:bg-primary/10 hover:text-primary w-full text-[10px] h-7">
+                    View Course
                 </Button>
             </Link>
         </div>
