@@ -1,5 +1,12 @@
 import { courses } from '@/lib/data';
 import CourseCard from '@/components/course-card';
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from '@/components/ui/carousel';
 
 export default function CoursesSection() {
   return (
@@ -10,11 +17,25 @@ export default function CoursesSection() {
           Equip yourself with the latest knowledge and skills to defend against digital threats.
         </p>
       </div>
-      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-8">
-        {courses.map((course) => (
-          <CourseCard key={course.id} course={course} />
-        ))}
-      </div>
+      <Carousel
+        opts={{
+          align: 'start',
+          loop: true,
+        }}
+        className="w-full"
+      >
+        <CarouselContent>
+          {courses.map((course) => (
+            <CarouselItem key={course.id} className="basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5">
+              <div className="p-1 h-full">
+                <CourseCard course={course} />
+              </div>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+        <CarouselPrevious className="hidden md:flex"/>
+        <CarouselNext className="hidden md:flex"/>
+      </Carousel>
     </section>
   );
 }
