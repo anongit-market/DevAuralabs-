@@ -1,3 +1,4 @@
+
 'use client';
 
 import { PlaceHolderImages } from '@/lib/placeholder-images';
@@ -5,8 +6,10 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { CheckCircle } from 'lucide-react';
+import { CheckCircle, ShoppingCart } from 'lucide-react';
 import type { courses } from '@/lib/data';
+import { useToast } from '@/hooks/use-toast';
+import { useEffect, useState } from 'react';
 
 const getPlaceholderImage = (id: string) => {
   return PlaceHolderImages.find((img) => img.id === id);
@@ -16,16 +19,42 @@ type Course = (typeof courses)[0];
 
 export default function CourseDetailClient({ course }: { course: Course }) {
   const router = useRouter();
+  const { toast } = useToast();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
 
-  const handlePurchase = () => {
-    // In a real app, you would check for user authentication status here.
-    // For now, we'll simulate an unauthenticated user and redirect to signup.
-    const isAuthenticated = false;
+  useEffect(() => {
+    setIsMounted(true);
+    const authStatus = localStorage.getItem('isAuthenticated') === 'true';
+    setIsAuthenticated(authStatus);
+  }, []);
 
+  const handleBuyNow = () => {
+    if (!isMounted) return;
     if (!isAuthenticated) {
       router.push(`/signup?next=/checkout/${course.id}`);
     } else {
       router.push(`/checkout/${course.id}`);
+    }
+  };
+
+  const handleAddToCart = () => {
+    if (!isMounted) return;
+    if (!isAuthenticated) {
+      router.push(`/signup?next=/courses/${course.id}`);
+    } else {
+      // In a real app, you'd have a cart state management (e.g., Context, Redux)
+      // and an API call to add the item to the user's cart in the database.
+      console.log(`Added ${course.title} to cart.`);
+      toast({
+        title: 'Added to Cart',
+        description: `${course.title} has been added to your shopping cart.`,
+        action: (
+          <Button variant="ghost" size="sm" onClick={() => router.push('/cart')}>
+            View Cart
+          </Button>
+        ),
+      });
     }
   };
 
@@ -72,10 +101,11 @@ export default function CourseDetailClient({ course }: { course: Course }) {
                 </div>
                 <p className="text-sm text-muted-foreground mb-6">Get lifetime access to this course and all future updates.</p>
                 <div className="flex flex-col gap-4">
-                    <Button size="lg" className="w-full gradient-btn gradient-btn-1" onClick={handlePurchase}>
+                    <Button size="lg" className="w-full gradient-btn gradient-btn-1" onClick={handleBuyNow}>
                         Buy Now
                     </Button>
-                    <Button size="lg" variant="outline" className="w-full glowing-btn" onClick={handlePurchase}>
+                    <Button size="lg" variant="outline" className="w-full glowing-btn" onClick={handleAddToCart}>
+                        <ShoppingCart className="mr-2 h-5 w-5" />
                         Add to Cart
                     </Button>
                 </div>
