@@ -112,10 +112,14 @@ export default function Navbar() {
                   </nav>
                   <div className="mt-auto">
                     {isMounted && (
-                      !isAuthenticated && (
+                      !isAuthenticated ? (
                         <Link href="/login" onClick={() => setIsOpen(false)}>
                           <Button className="glowing-btn w-full" variant="outline">Login</Button>
                         </Link>
+                      ) : (
+                        <Button className="w-full" variant="destructive" onClick={() => { handleLogout(); setIsOpen(false); }}>
+                          Logout
+                        </Button>
                       )
                     )}
                   </div>
