@@ -16,9 +16,14 @@ const TWEEN_FACTOR = 1.2;
 
 const useTweening = (api: EmblaCarouselType | undefined) => {
   const [tweenValues, setTweenValues] = useState<number[]>([]);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const onScroll = useCallback(() => {
-    if (!api) return;
+    if (!api || !isMounted) return;
 
     const engine = api.internalEngine();
     const scrollProgress = api.scrollProgress();
@@ -36,12 +41,11 @@ const useTweening = (api: EmblaCarouselType | undefined) => {
     };
 
     setTweenValues(getTweenValues(scrollProgress));
-  }, [api, setTweenValues]);
+  }, [api, isMounted]);
 
   useEffect(() => {
-    if (!api) return;
+    if (!api || !isMounted) return;
 
-    // Run on mount to avoid hydration mismatch
     onScroll();
     api.on('scroll', onScroll);
     api.on('reInit', onScroll);
@@ -49,7 +53,7 @@ const useTweening = (api: EmblaCarouselType | undefined) => {
     return () => {
       api.off('scroll', onScroll);
     };
-  }, [api, onScroll]);
+  }, [api, onScroll, isMounted]);
 
   return tweenValues;
 };
@@ -95,8 +99,12 @@ export default function CoursesSection() {
             </CarouselItem>
           ))}
         </CarouselContent>
-        <CarouselPrevious className="hidden md:flex" />
-        <CarouselNext className="hidden md:flex" />
+        {isMounted && (
+          <>
+            <CarouselPrevious className="hidden md:flex" />
+            <CarouselNext className="hidden md:flex" />
+          </>
+        )}
       </Carousel>
     </section>
   );
