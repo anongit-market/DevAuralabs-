@@ -1,10 +1,18 @@
 import { ShieldCheck, Code, Bot, Palette } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
+
+export const icons: { [key: string]: LucideIcon } = {
+  ShieldCheck,
+  Code,
+  Bot,
+  Palette,
+};
 
 export const courses = [
   {
     id: 'c1',
     title: 'Ethical Hacking Pro',
-    icon: ShieldCheck,
+    icon: 'ShieldCheck',
     level: 'Intermediate',
     price: 199.99,
     compareAtPrice: 249.99,
@@ -14,7 +22,7 @@ export const courses = [
   {
     id: 'c2',
     title: 'Network Security Fundamentals',
-    icon: ShieldCheck,
+    icon: 'ShieldCheck',
     level: 'Beginner',
     price: 149.99,
     compareAtPrice: 199.99,
@@ -24,7 +32,7 @@ export const courses = [
   {
     id: 'c3',
     title: 'Advanced Cloud Security',
-    icon: ShieldCheck,
+    icon: 'ShieldCheck',
     level: 'Advanced',
     price: 249.99,
     compareAtPrice: 299.99,
@@ -34,7 +42,7 @@ export const courses = [
   {
     id: 'c4',
     title: 'Reverse Engineering & Malware Analysis',
-    icon: ShieldCheck,
+    icon: 'ShieldCheck',
     level: 'Advanced',
     price: 299.99,
     compareAtPrice: 349.99,
@@ -47,7 +55,7 @@ export const skills = [
   {
     id: 's1',
     title: 'Full-Stack Web Development',
-    icon: Code,
+    icon: 'Code',
     progress: 75,
     description: 'Become a full-stack developer with React, Node.js, and more.',
     image: 'skill-1',
@@ -55,7 +63,7 @@ export const skills = [
   {
     id: 's2',
     title: 'AI & Machine Learning Engineer',
-    icon: Bot,
+    icon: 'Bot',
     progress: 60,
     description: 'Dive into the world of AI, data science, and machine learning.',
     image: 'skill-2',
@@ -63,7 +71,7 @@ export const skills = [
   {
     id: 's3',
     title: 'UI/UX Design Mastery',
-    icon: Palette,
+    icon: 'Palette',
     progress: 90,
     description: 'Create stunning and user-friendly interfaces from scratch.',
     image: 'skill-3',

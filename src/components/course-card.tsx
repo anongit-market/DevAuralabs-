@@ -3,11 +3,12 @@ import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
+import { icons } from '@/lib/data';
 
 type Course = {
   id: string;
   title: string;
-  icon: React.ElementType;
+  icon: string;
   level: string;
   price: number;
   compareAtPrice?: number;
@@ -24,8 +25,9 @@ const getPlaceholderImage = (id: string) => {
 };
 
 export default function CourseCard({ course }: CourseCardProps) {
-  const { title, icon: Icon, level, price, compareAtPrice, image, id } = course;
+  const { title, icon, level, price, compareAtPrice, image, id } = course;
   const placeholder = getPlaceholderImage(image);
+  const Icon = icons[icon];
 
   return (
     <div className="glass-card flex flex-col h-full">
@@ -47,7 +49,7 @@ export default function CourseCard({ course }: CourseCardProps) {
             {level}
         </Badge>
         <div className="absolute top-2 right-2 bg-background/70 backdrop-blur-sm p-1.5 rounded-full">
-            <Icon className="h-4 w-4 glowing-icon" />
+            {Icon && <Icon className="h-4 w-4 glowing-icon" />}
         </div>
       </div>
       <div className="p-1 flex flex-col flex-grow items-center text-center">

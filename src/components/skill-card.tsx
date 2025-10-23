@@ -2,11 +2,12 @@ import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
+import { icons } from '@/lib/data';
 
 type Skill = {
   id: string;
   title: string;
-  icon: React.ElementType;
+  icon: string;
   progress: number;
   description: string;
   image: string;
@@ -21,8 +22,9 @@ const getPlaceholderImage = (id: string) => {
 };
 
 export default function SkillCard({ skill }: SkillCardProps) {
-  const { title, icon: Icon, progress, description, image } = skill;
+  const { title, icon, progress, description, image } = skill;
   const placeholder = getPlaceholderImage(image);
+  const Icon = icons[icon];
 
   return (
     <div className="glass-card flex flex-col">
@@ -37,7 +39,7 @@ export default function SkillCard({ skill }: SkillCardProps) {
             />
         )}
          <div className="absolute top-3 right-3 bg-background/70 backdrop-blur-sm p-2 rounded-full">
-            <Icon className="h-6 w-6 glowing-icon text-secondary" />
+            {Icon && <Icon className="h-6 w-6 glowing-icon text-secondary" />}
         </div>
       </div>
       <div className="p-6 flex flex-col flex-grow">
