@@ -23,7 +23,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const pathname = usePathname();
-  const showFooter = pathname !== '/login';
+  const noFooterPaths = ['/login', '/signup'];
+  const showFooter = !noFooterPaths.includes(pathname);
 
   return (
     <html lang="en" className="dark">
