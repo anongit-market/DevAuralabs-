@@ -18,28 +18,37 @@ type Course = {
 
 type CourseCardProps = {
   course: Course;
+  parallaxOffset: number;
 };
 
 const getPlaceholderImage = (id: string) => {
   return PlaceHolderImages.find((img) => img.id === id);
 };
 
-export default function CourseCard({ course }: CourseCardProps) {
+export default function CourseCard({ course, parallaxOffset }: CourseCardProps) {
   const { title, icon: Icon, level, price, compareAtPrice, image, id } = course;
   const placeholder = getPlaceholderImage(image);
 
   return (
     <div className="glass-card flex flex-col">
-      <div className="relative h-48 w-full">
-        {placeholder && (
-            <Image
-                src={placeholder.imageUrl}
-                alt={placeholder.description}
-                data-ai-hint={placeholder.imageHint}
-                fill
-                className="object-cover rounded-t-2xl"
-            />
-        )}
+      <div className="relative h-48 w-full overflow-hidden rounded-t-2xl">
+        <div
+          className="h-full w-full"
+          style={{
+            transform: `translateX(${parallaxOffset}%)`,
+            willChange: 'transform',
+          }}
+        >
+          {placeholder && (
+              <Image
+                  src={placeholder.imageUrl}
+                  alt={placeholder.description}
+                  data-ai-hint={placeholder.imageHint}
+                  fill
+                  className="object-cover"
+              />
+          )}
+        </div>
         <Badge variant="secondary" className="absolute top-3 left-3 bg-background/70 backdrop-blur-sm text-primary border-primary/20 text-xs">
             {level}
         </Badge>

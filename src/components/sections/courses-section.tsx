@@ -1,3 +1,6 @@
+'use client';
+
+import { useState, useEffect, useCallback } from 'react';
 import { courses } from '@/lib/data';
 import CourseCard from '@/components/course-card';
 import {
@@ -6,9 +9,51 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
+  type CarouselApi,
 } from '@/components/ui/carousel';
 
+const TWEEN_FACTOR = 1.2;
+
 export default function CoursesSection() {
+  const [api, setApi] = useState<CarouselApi>();
+  const [tweenValues, setTweenValues] = useState<number[]>([]);
+
+  const onScroll = useCallback(() => {
+    if (!api) return;
+
+    const engine = api.internalEngine();
+    const scrollProgress = api.scrollProgress();
+
+    const styles = api.scrollSnapList().map((scrollSnap, index) => {
+      let diffToTarget = scrollSnap - scrollProgress;
+
+      if (engine.options.loop) {
+        engine.slideLooper.loopPoints.forEach(loopPoint => {
+          const isUsed = loopPoint.target() === scrollProgress;
+          if (isUsed) {
+            const sign = Math.sign(
+              engine.dragHandler.pointerMoves[0]?.x || 0,
+            );
+            if (sign === -1) {
+              diffToTarget = scrollSnap - (1 + scrollProgress);
+            }
+            if (sign === 1) {
+              diffToTarget = scrollSnap + (1 - scrollProgress);
+            }
+          }
+        });
+      }
+      return diffToTarget * (-1 / TWEEN_FACTOR) * 100;
+    });
+    setTweenValues(styles);
+  }, [api]);
+
+  useEffect(() => {
+    if (!api) return;
+    onScroll();
+    api.on('scroll', onScroll).on('reInit', onScroll);
+  }, [api, onScroll]);
+
   return (
     <section id="courses" className="py-12 md:py-24">
       <div className="text-center mb-12">
@@ -18,6 +63,7 @@ export default function CoursesSection() {
         </p>
       </div>
       <Carousel
+        setApi={setApi}
         opts={{
           align: 'start',
           loop: true,
@@ -25,10 +71,10 @@ export default function CoursesSection() {
         className="w-full"
       >
         <CarouselContent>
-          {courses.map((course) => (
-            <CarouselItem key={course.id} className="basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4">
+          {courses.map((course, index) => (
+            <CarouselItem key={course.id} className="basis-full sm:basis-1/2 md:basis-1/3">
               <div className="p-1 h-full">
-                <CourseCard course={course} />
+                <CourseCard course={course} parallaxOffset={tweenValues[index]}/>
               </div>
             </CarouselItem>
           ))}
