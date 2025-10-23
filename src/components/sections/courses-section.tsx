@@ -29,7 +29,18 @@ const useParallax = (
       const scrollProgress = api.scrollProgress();
   
       const newTransforms = api.scrollSnapList().map((scrollSnap, index) => {
-        const diffToTarget = scrollSnap - scrollProgress;
+        let diffToTarget = scrollSnap - scrollProgress;
+
+        if (api.internalEngine().options.loop) {
+            const { slideLooper } = api.internalEngine();
+            const loopPoints = slideLooper.loopPoints;
+            const shortest = loopPoints.reduce((acc, loopPoint) => {
+                const diff = loopPoint.get(diffToTarget);
+                return Math.abs(diff) < Math.abs(acc) ? diff : acc;
+            }, diffToTarget);
+            diffToTarget = shortest;
+        }
+
         const scale = 1 - Math.abs(diffToTarget) * 0.4;
         const rotateY = diffToTarget * -30;
         const opacity = 1 - Math.abs(diffToTarget) * 0.5;
@@ -70,7 +81,7 @@ export default function CoursesSection() {
       <Carousel
         setApi={setApi}
         opts={{
-          align: 'start',
+          align: 'center',
           loop: true,
         }}
         className="w-full"
