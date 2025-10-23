@@ -38,9 +38,10 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [hasScrolled, setHasScrolled] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    // This will only run on the client side
+    setIsMounted(true);
     setIsAuthenticated(localStorage.getItem('isAuthenticated') === 'true');
 
     const handleScroll = () => {
@@ -97,12 +98,14 @@ export default function Navbar() {
                     ))}
                   </nav>
                   <div className="mt-auto">
-                    {isAuthenticated ? (
-                       <Button className="glowing-btn w-full" variant="outline" onClick={handleLogout}>Logout</Button>
-                    ) : (
-                      <Link href="/login" onClick={() => setIsOpen(false)}>
-                        <Button className="glowing-btn w-full" variant="outline">Login</Button>
-                      </Link>
+                    {isMounted && (
+                      isAuthenticated ? (
+                        <Button className="glowing-btn w-full" variant="outline" onClick={handleLogout}>Logout</Button>
+                      ) : (
+                        <Link href="/login" onClick={() => setIsOpen(false)}>
+                          <Button className="glowing-btn w-full" variant="outline">Login</Button>
+                        </Link>
+                      )
                     )}
                   </div>
                 </div>
@@ -130,43 +133,45 @@ export default function Navbar() {
         </div>
 
         <div className="flex items-center justify-end gap-4">
-          {isAuthenticated ? (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-                  <Avatar className="h-9 w-9">
-                    <AvatarImage src="https://i.pravatar.cc/150?u=a042581f4e29026704d" alt="@user" />
-                    <AvatarFallback>
-                        <User className="h-5 w-5" />
-                    </AvatarFallback>
-                  </Avatar>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56" align="end" forceMount>
-                <DropdownMenuLabel className="font-normal">
-                  <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-medium leading-none">John Doe</p>
-                    <p className="text-xs leading-none text-muted-foreground">
-                      john.doe@example.com
-                    </p>
-                  </div>
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>Profile</DropdownMenuItem>
-                <DropdownMenuItem>Dashboard</DropdownMenuItem>
-                <DropdownMenuItem>Settings</DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={handleLogout}>
-                  Log out
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          ) : (
-            <Link href="/login" className="hidden md:flex">
-                <Button className="glowing-btn" variant="outline" size="sm">
-                Login
-                </Button>
-            </Link>
+          {isMounted && (
+            isAuthenticated ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                    <Avatar className="h-9 w-9">
+                      <AvatarImage src="https://i.pravatar.cc/150?u=a042581f4e29026704d" alt="@user" />
+                      <AvatarFallback>
+                          <User className="h-5 w-5" />
+                      </AvatarFallback>
+                    </Avatar>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56" align="end" forceMount>
+                  <DropdownMenuLabel className="font-normal">
+                    <div className="flex flex-col space-y-1">
+                      <p className="text-sm font-medium leading-none">John Doe</p>
+                      <p className="text-xs leading-none text-muted-foreground">
+                        john.doe@example.com
+                      </p>
+                    </div>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem>Profile</DropdownMenuItem>
+                  <DropdownMenuItem>Dashboard</DropdownMenuItem>
+                  <DropdownMenuItem>Settings</DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={handleLogout}>
+                    Log out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <Link href="/login" className="hidden md:flex">
+                  <Button className="glowing-btn" variant="outline" size="sm">
+                  Login
+                  </Button>
+              </Link>
+            )
           )}
         </div>
       </div>
