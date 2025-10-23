@@ -67,11 +67,11 @@ export default function CoursesSection() {
               let diffToTarget = scrollSnaps[index] - scrollProgress;
               
               const engine = api.internalEngine();
-              if (engine && engine.options.loop && engine.dragHandler) {
+              if (engine && engine.options.loop && engine.slideLooper) {
                   engine.slideLooper.loopPoints.forEach(loopPoint => {
                     const isUsed = loopPoint.target() === scrollProgress;
                     if (isUsed) {
-                      if (engine.dragHandler.dragged.x) {
+                      if (engine.dragHandler && engine.dragHandler.dragged) {
                         const sign = Math.sign(engine.dragHandler.dragged.x);
                         if (sign === -1) {
                             diffToTarget = scrollSnaps[index] - (1 + scrollProgress);
