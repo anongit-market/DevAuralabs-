@@ -60,7 +60,7 @@ export default function SignupPage() {
     if (next) {
       router.push(next);
     } else {
-      router.push('/admin');
+      router.push('/');
     }
   }
 
