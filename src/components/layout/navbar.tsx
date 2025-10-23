@@ -2,7 +2,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Menu, User } from 'lucide-react';
+import { Menu, User, ShoppingCart } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 
 import { Button } from '@/components/ui/button';
@@ -42,7 +42,8 @@ export default function Navbar() {
 
   useEffect(() => {
     setIsMounted(true);
-    setIsAuthenticated(localStorage.getItem('isAuthenticated') === 'true');
+    const authStatus = localStorage.getItem('isAuthenticated') === 'true';
+    setIsAuthenticated(authStatus);
 
     const handleScroll = () => {
       setHasScrolled(window.scrollY > 10);
@@ -113,9 +114,9 @@ export default function Navbar() {
             </Sheet>
           </div>
           
-          <div className="flex items-center gap-6">
+          <div className="hidden md:flex items-center gap-6">
               <Link href="/" className="font-bold text-lg text-foreground">DevAura Labs</Link>
-              <nav className="hidden md:flex md:items-center md:gap-6 text-sm font-medium">
+              <nav className="flex items-center gap-6 text-sm font-medium">
                 {navLinks.map(({ href, label }) => (
                   <Link
                     key={href}
@@ -135,36 +136,44 @@ export default function Navbar() {
         <div className="flex items-center justify-end gap-4">
           {isMounted && (
             isAuthenticated ? (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-                    <Avatar className="h-9 w-9">
-                      <AvatarImage src="https://i.pravatar.cc/150?u=a042581f4e29026704d" alt="@user" />
-                      <AvatarFallback>
-                          <User className="h-5 w-5" />
-                      </AvatarFallback>
-                    </Avatar>
+              <div className="flex items-center gap-4">
+                <Link href="/cart">
+                  <Button variant="ghost" size="icon">
+                    <ShoppingCart className="h-5 w-5" />
+                    <span className="sr-only">Cart</span>
                   </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56" align="end" forceMount>
-                  <DropdownMenuLabel className="font-normal">
-                    <div className="flex flex-col space-y-1">
-                      <p className="text-sm font-medium leading-none">John Doe</p>
-                      <p className="text-xs leading-none text-muted-foreground">
-                        john.doe@example.com
-                      </p>
-                    </div>
-                  </DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem>Profile</DropdownMenuItem>
-                  <DropdownMenuItem>Dashboard</DropdownMenuItem>
-                  <DropdownMenuItem>Settings</DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={handleLogout}>
-                    Log out
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+                </Link>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                      <Avatar className="h-9 w-9">
+                        <AvatarImage src="https://i.pravatar.cc/150?u=a042581f4e29026704d" alt="@user" />
+                        <AvatarFallback>
+                            <User className="h-5 w-5" />
+                        </AvatarFallback>
+                      </Avatar>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-56" align="end" forceMount>
+                    <DropdownMenuLabel className="font-normal">
+                      <div className="flex flex-col space-y-1">
+                        <p className="text-sm font-medium leading-none">John Doe</p>
+                        <p className="text-xs leading-none text-muted-foreground">
+                          john.doe@example.com
+                        </p>
+                      </div>
+                    </DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem>Profile</DropdownMenuItem>
+                    <DropdownMenuItem>Dashboard</DropdownMenuItem>
+                    <DropdownMenuItem>Settings</DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={handleLogout}>
+                      Log out
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
             ) : (
               <Link href="/login" className="hidden md:flex">
                   <Button className="glowing-btn" variant="outline" size="sm">
