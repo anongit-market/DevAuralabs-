@@ -17,6 +17,11 @@ const TWEEN_FACTOR = 1.2;
 export default function CoursesSection() {
   const [api, setApi] = useState<CarouselApi>();
   const [tweenValues, setTweenValues] = useState<number[]>([]);
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const onScroll = useCallback(() => {
     if (!api) return;
@@ -74,15 +79,19 @@ export default function CoursesSection() {
       >
         <CarouselContent>
           {courses.map((course, index) => (
-            <CarouselItem key={course.id} className="basis-full sm:basis-1/2 md:basis-1/3">
+            <CarouselItem key={course.id} className="basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4">
               <div className="p-1 h-full">
                 <CourseCard course={course} parallaxOffset={tweenValues[index]}/>
               </div>
             </CarouselItem>
           ))}
         </CarouselContent>
-        <CarouselPrevious className="hidden md:flex"/>
-        <CarouselNext className="hidden md:flex"/>
+        {isClient && (
+          <>
+            <CarouselPrevious className="hidden md:flex"/>
+            <CarouselNext className="hidden md:flex"/>
+          </>
+        )}
       </Carousel>
     </section>
   );
