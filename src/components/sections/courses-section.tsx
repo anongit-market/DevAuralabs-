@@ -20,19 +20,8 @@ const useCoverflow = (api: EmblaCarouselType | undefined) => {
   const onScroll = useCallback(() => {
     if (!api) return;
 
-    const engine = api.internalEngine();
-    const scrollProgress = api.scrollProgress();
-
     const newTransforms = api.scrollSnapList().map((scrollSnap, index) => {
-      let diffToTarget = scrollSnap - scrollProgress;
-      const slidesInView = api.slidesInView(true);
-
-      if (api.plugins().loop && slidesInView.indexOf(index) === -1) {
-          const sign = Math.sign(diffToTarget);
-          if (sign === -1) diffToTarget = diffToTarget + 1;
-          if (sign === 1) diffToTarget = diffToTarget - 1;
-      }
-      
+      const diffToTarget = scrollSnap - api.scrollProgress();
       const scale = 1 - Math.abs(diffToTarget) * 0.4;
       const rotateY = diffToTarget * -25;
       const opacity = 1 - Math.abs(diffToTarget) * 0.5;
