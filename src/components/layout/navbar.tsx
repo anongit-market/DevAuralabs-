@@ -52,9 +52,10 @@ export default function Navbar() {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full p-4">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4 md:hidden">
+    <header className="absolute top-0 z-50 w-full">
+      <div className="relative flex items-center justify-between p-4">
+        {/* Mobile Menu Button - Top Left */}
+        <div className="md:hidden">
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
               <SheetTrigger asChild>
                 <Button variant="ghost" size="icon" className="liquid-glass-btn">
@@ -96,6 +97,7 @@ export default function Navbar() {
             </Sheet>
         </div>
 
+        {/* Desktop nav - Hidden as requested */}
         <nav className="hidden md:flex items-center gap-6 text-sm">
             {navLinks.map(({ href, label }) => (
                 <Link
@@ -111,12 +113,13 @@ export default function Navbar() {
             ))}
         </nav>
 
+        {/* Login/Profile Buttons - Top Right */}
         <div className="flex items-center justify-end gap-2">
           {isMounted && (
             isAuthenticated ? (
               <>
                 <Link href="/cart">
-                    <Button variant="ghost" size="icon" className="hover:bg-primary/10">
+                    <Button variant="ghost" size="icon" className="liquid-glass-btn">
                         <ShoppingCart className="h-5 w-5" />
                         <span className="sr-only">Cart</span>
                     </Button>
