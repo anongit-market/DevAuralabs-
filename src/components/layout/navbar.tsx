@@ -65,7 +65,7 @@ export default function Navbar() {
   return (
     <header className={cn(
         "sticky top-0 z-50 w-full transition-shadow duration-300",
-        hasScrolled ? "shadow-lg shadow-primary/10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60" : "bg-transparent"
+        hasScrolled ? "shadow-lg shadow-primary/10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60" : "bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
       )}>
       <div className="container flex h-16 items-center justify-between">
         <div className="flex items-center gap-4">
@@ -126,11 +126,9 @@ export default function Navbar() {
                 </div>
               </SheetContent>
             </Sheet>
-            <Link href="/" className="font-bold text-lg text-foreground">DevAura Labs</Link>
           </div>
           
           <div className="hidden md:flex items-center gap-6">
-              <Link href="/" className="font-bold text-lg text-foreground">DevAura Labs</Link>
               <nav className="flex items-center gap-6 text-sm font-medium">
                 {navLinks.map(({ href, label }) => (
                   <Link
