@@ -21,7 +21,6 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import Logo from '@/components/logo';
 import { cn } from '@/lib/utils';
 import { useState, useEffect } from 'react';
 
@@ -49,13 +48,12 @@ export default function Navbar() {
     localStorage.removeItem('isAuthenticated');
     setIsAuthenticated(false);
     // a full page reload is a good way to reset all state
-    window.location.href = '/'; 
+    window.location.href = '/';
   };
-
 
   return (
     <header className="sticky top-0 z-50 w-full p-4">
-      <div className="container mx-auto flex items-center justify-between">
+      <div className="flex items-center justify-between">
         <div className="flex items-center gap-4 md:hidden">
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
               <SheetTrigger asChild>
@@ -67,36 +65,6 @@ export default function Navbar() {
               <SheetContent side="left">
                 <SheetTitle className="sr-only">Mobile Menu</SheetTitle>
                 <div className="flex flex-col h-full">
-                  <div className="mb-8">
-                      <Logo onLinkClick={() => setIsOpen(false)}/>
-                  </div>
-                  <nav className="flex flex-col gap-6 text-lg font-medium">
-                    {navLinks.map(({ href, label }) => (
-                      <Link
-                        key={href}
-                        href={href}
-                        onClick={() => setIsOpen(false)}
-                        className={cn(
-                          'transition-colors hover:text-primary',
-                            pathname === href ? 'text-primary' : 'text-foreground'
-                        )}
-                      >
-                        {label}
-                      </Link>
-                    ))}
-                     {isMounted && isAuthenticated && (
-                      <Link
-                        href="/profile/my-courses"
-                        onClick={() => setIsOpen(false)}
-                        className={cn(
-                          'transition-colors hover:text-primary',
-                          pathname === '/profile/my-courses' ? 'text-primary' : 'text-foreground'
-                        )}
-                      >
-                        My Courses
-                      </Link>
-                    )}
-                  </nav>
                   <div className="mt-auto">
                     {isMounted && (
                       !isAuthenticated ? (
@@ -182,7 +150,7 @@ export default function Navbar() {
               <Link href="/login">
                   <Button className="glass-btn" variant="outline" size="sm">
                   Login
-                  </Button>
+                  </button>
               </Link>
             )
           )}
