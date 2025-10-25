@@ -31,7 +31,7 @@ export default function CourseCard({ course }: CourseCardProps) {
 
   return (
     <div className="glass-card flex flex-col h-full">
-      <div className="relative w-full overflow-hidden rounded-t-2xl" style={{paddingTop: '125%' /* 4:5 aspect ratio */}}>
+      <div className="relative w-full overflow-hidden rounded-t-2xl aspect-video">
         <div
           className="absolute inset-0"
         >

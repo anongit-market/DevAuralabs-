@@ -1,3 +1,4 @@
+
 'use client';
 
 import { courses } from '@/lib/data';
@@ -12,10 +13,14 @@ import {
 import { useState, useCallback, useEffect } from 'react';
 import { EmblaCarouselType } from 'embla-carousel-react';
 
-const TWEEN_FACTOR = 1.2;
+const CIRCULAR_EFFECT_FACTOR = 10;
 
-const useTweening = (api: EmblaCarouselType | undefined) => {
-  const [tweenValues, setTweenValues] = useState<number[]>([]);
+const useCircularEffect = (api: EmblaCarouselType | undefined) => {
+  const [transforms, setTransforms] = useState<{
+    opacity: number,
+    scale: number,
+    rotateY: number,
+  }[]>([]);
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
@@ -25,22 +30,29 @@ const useTweening = (api: EmblaCarouselType | undefined) => {
   const onScroll = useCallback(() => {
     if (!api || !isMounted) return;
 
-    const engine = api.internalEngine();
     const scrollProgress = api.scrollProgress();
+    
+    const newTransforms = api.scrollSnapList().map((scrollSnap, index) => {
+      let diffToTarget = scrollSnap - scrollProgress;
 
-    const getTweenValues = (scrollProgress: number) => {
-      return api.scrollSnapList().map((scrollSnap, index) => {
-        let diffToTarget = scrollSnap - scrollProgress;
-        const isSlideInView = Math.abs(diffToTarget) < 1;
-
-        if (isSlideInView) {
-          return 1 - Math.abs(diffToTarget);
+      // Handle looping
+      const slidesInView = api.slidesInView(true);
+      if (slidesInView.indexOf(index) === -1) {
+        if (Math.abs(diffToTarget) > 0.5) {
+          const sign = Math.sign(diffToTarget);
+          if (sign === -1) diffToTarget = 1 + diffToTarget;
+          else diffToTarget = diffToTarget - 1;
         }
-        return 0;
-      });
-    };
+      }
+      
+      const opacity = 1 - Math.abs(diffToTarget);
+      const scale = 1 - Math.abs(diffToTarget) * 0.15;
+      const rotateY = diffToTarget * CIRCULAR_EFFECT_FACTOR * -5;
 
-    setTweenValues(getTweenValues(scrollProgress));
+      return { opacity, scale, rotateY };
+    });
+
+    setTransforms(newTransforms);
   }, [api, isMounted]);
 
   useEffect(() => {
@@ -55,12 +67,13 @@ const useTweening = (api: EmblaCarouselType | undefined) => {
     };
   }, [api, onScroll, isMounted]);
 
-  return tweenValues;
+  return transforms;
 };
+
 
 export default function CoursesSection() {
   const [api, setApi] = useState<EmblaCarouselType | undefined>();
-  const tweenValues = useTweening(api);
+  const transforms = useCircularEffect(api);
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
@@ -75,37 +88,39 @@ export default function CoursesSection() {
           Equip yourself with the latest knowledge and skills to defend against digital threats.
         </p>
       </div>
-      <Carousel
-        setApi={setApi}
-        opts={{
-          align: 'center',
-          loop: true,
-        }}
-      >
-        <CarouselContent>
-          {courses.map((course, index) => (
-            <CarouselItem key={course.id} className="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/4 xl:basis-1/5">
-              <div
-                className="p-1 h-full"
-                style={{
-                  ...(isMounted && tweenValues.length && {
-                    opacity: tweenValues[index],
-                    transform: `scale(${tweenValues[index]})`,
-                  }),
-                }}
-              >
-                <CourseCard course={course} />
-              </div>
-            </CarouselItem>
-          ))}
-        </CarouselContent>
-        {isMounted && (
-          <>
-            <CarouselPrevious className="hidden md:flex" />
-            <CarouselNext className="hidden md:flex" />
-          </>
-        )}
-      </Carousel>
+      <div style={{ perspective: '1000px' }}>
+        <Carousel
+          setApi={setApi}
+          opts={{
+            align: 'center',
+            loop: true,
+          }}
+        >
+          <CarouselContent style={{ transformStyle: 'preserve-3d' }}>
+            {courses.map((course, index) => (
+              <CarouselItem key={course.id} className="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/4 xl:basis-1/5">
+                <div
+                  className="p-1 h-full transition-transform duration-200 ease-out"
+                  style={{
+                    ...(isMounted && transforms.length && {
+                      opacity: transforms[index].opacity,
+                      transform: `scale(${transforms[index].scale}) rotateY(${transforms[index].rotateY}deg)`,
+                    }),
+                  }}
+                >
+                  <CourseCard course={course} />
+                </div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          {isMounted && (
+            <>
+              <CarouselPrevious className="hidden md:flex" />
+              <CarouselNext className="hidden md:flex" />
+            </>
+          )}
+        </Carousel>
+      </div>
     </section>
   );
 }
