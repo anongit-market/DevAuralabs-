@@ -54,10 +54,10 @@ export default function Navbar() {
 
 
   return (
-    <header className="sticky top-0 z-50 w-full">
-      <div className="container flex h-16 items-center justify-between">
+    <header className="sticky top-0 z-50 w-full p-4">
+      <div className="flex h-16 items-center justify-between">
         <div className="flex items-center gap-4">
-          <div className="md:hidden flex items-center gap-4">
+          <div className="md:hidden">
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
               <SheetTrigger asChild>
                 <Button variant="ghost" size="icon" className="glass-btn">
