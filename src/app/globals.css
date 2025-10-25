@@ -36,14 +36,6 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
-  
-  .hero-bg {
-    background-color: hsl(var(--background));
-    opacity: 0.8;
-    background-image:  radial-gradient(hsl(var(--accent)/0.1) 1px, transparent 1px), radial-gradient(hsl(var(--accent)/0.1) 1px, hsl(var(--background)) 1px);
-    background-size: 40px 40px;
-    background-position: 0 0, 20px 20px;
-  }
 }
 
 @layer components {

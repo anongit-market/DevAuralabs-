@@ -7,6 +7,7 @@ import { Toaster } from '@/components/ui/toaster';
 import Navbar from '@/components/layout/navbar';
 import Footer from '@/components/layout/footer';
 import { usePathname } from 'next/navigation';
+import Script from 'next/script';
 
 // Using a constant for metadata since the layout is now a client component
 // export const metadata: Metadata = {
@@ -42,6 +43,8 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap"
           rel="stylesheet"
         />
+        <Script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js" strategy="beforeInteractive" />
+        <Script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.globe.min.js" strategy="afterInteractive" />
       </head>
       <body className="font-body antialiased bg-background text-foreground">
         <div className="relative flex min-h-screen flex-col">

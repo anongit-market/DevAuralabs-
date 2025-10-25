@@ -1,12 +1,13 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import Logo from '@/components/logo';
+import VantaBackground from '@/components/vanta-background';
 
 export default function HeroSection() {
   return (
     <section className="relative w-full h-[80vh] min-h-[500px] flex items-center justify-center text-center overflow-hidden pt-12">
-      <div className="absolute inset-0 hero-bg z-0" />
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent to-background z-10" />
+      <VantaBackground />
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/50 to-background z-10" />
 
       <div className="container relative z-20 px-4">
         <div className="flex justify-center -mt-12 mb-12">
