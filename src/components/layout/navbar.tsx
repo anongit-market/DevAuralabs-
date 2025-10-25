@@ -97,7 +97,7 @@ export default function Navbar() {
             </Sheet>
         </div>
 
-        {/* Desktop nav - Hidden as requested */}
+        {/* Desktop nav */}
         <nav className="hidden md:flex items-center gap-6 text-sm">
             {navLinks.map(({ href, label }) => (
                 <Link
