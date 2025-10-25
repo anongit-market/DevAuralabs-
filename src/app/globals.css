@@ -87,20 +87,26 @@
         0 0 15px hsl(var(--primary) / 0.3);
   }
 
+  .liquid-glass-btn {
+    @apply bg-white/10 border border-white/20 rounded-lg shadow-lg;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+
+  @supports (backdrop-filter: url(#liquid-glass)) {
+    .liquid-glass-btn {
+      -webkit-backdrop-filter: url(#liquid-glass);
+      backdrop-filter: url(#liquid-glass);
+    }
+  }
+
+
   .glowing-text {
     text-shadow: 0 0 5px hsl(var(--primary) / 0.8), 0 0 10px hsl(var(--primary) / 0.5);
   }
 
   .glowing-icon {
     @apply text-primary drop-shadow-[0_0_5px_hsl(var(--primary)/0.8)];
-  }
-
-  .glowing-btn {
-     @apply border border-primary text-primary font-bold shadow-[0_0_10px_hsl(var(--primary)/0.6)] transition-all duration-300;
-  }
-
-  .glowing-btn:hover {
-    @apply bg-primary/10 shadow-[0_0_20px_hsl(var(--primary)/0.8)];
   }
 
 }

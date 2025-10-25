@@ -52,12 +52,12 @@ export default function Navbar() {
   };
 
   return (
-    <header className="absolute top-0 z-50 w-full p-4">
+    <header className="sticky top-0 z-50 w-full p-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4 md:hidden">
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="glass-btn">
+                <Button variant="ghost" size="icon" className="liquid-glass-btn">
                   <Menu className="h-5 w-5" />
                   <span className="sr-only">Toggle Menu</span>
                 </Button>
@@ -97,7 +97,18 @@ export default function Navbar() {
         </div>
 
         <nav className="hidden md:flex items-center gap-6 text-sm">
-            {/* Desktop nav links removed as requested */}
+            {navLinks.map(({ href, label }) => (
+                <Link
+                key={href}
+                href={href}
+                className={cn(
+                    'transition-colors hover:text-primary',
+                    pathname === href ? 'text-primary font-semibold' : 'text-muted-foreground'
+                )}
+                >
+                {label}
+                </Link>
+            ))}
         </nav>
 
         <div className="flex items-center justify-end gap-2">
@@ -112,7 +123,7 @@ export default function Navbar() {
                 </Link>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="relative h-8 w-8 rounded-full glass-btn">
+                    <Button variant="ghost" className="relative h-8 w-8 rounded-full liquid-glass-btn">
                       <Avatar className="h-9 w-9">
                         <AvatarImage src="https://i.pravatar.cc/150?u=a042581f4e29026704d" alt="@user" />
                         <AvatarFallback>
@@ -150,7 +161,7 @@ export default function Navbar() {
               </>
             ) : (
               <Link href="/login">
-                  <Button className="glass-btn" variant="outline" size="sm">
+                  <Button className="liquid-glass-btn" variant="outline" size="sm">
                   Login
                   </Button>
               </Link>
