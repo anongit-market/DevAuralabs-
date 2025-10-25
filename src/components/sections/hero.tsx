@@ -16,7 +16,7 @@ export default function HeroSection() {
         <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tighter mb-4 text-transparent bg-clip-text bg-gradient-to-r from-gray-200 to-gray-500">
           Master. Build. Secure.
         </h1>
-        <p className="text-xl md:text-2xl font-bold mb-8 glowing-text">
+        <p className="text-xl md:text-2xl font-bold mb-8 text-primary">
           All in One Platform.
         </p>
         <p className="max-w-2xl mx-auto text-muted-foreground md:text-xl mb-12">

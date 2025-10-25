@@ -55,7 +55,7 @@ export default function SettingsPage() {
   return (
     <div className="container mx-auto max-w-xl py-12 px-4">
         <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold glowing-text">Settings</h1>
+            <h1 className="text-4xl font-bold">Settings</h1>
             <p className="text-lg text-muted-foreground mt-2">Manage your account security.</p>
         </div>
         <Card className="glass-card">

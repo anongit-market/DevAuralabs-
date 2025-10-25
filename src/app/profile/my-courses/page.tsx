@@ -24,7 +24,7 @@ export default function MyCoursesPage() {
   return (
     <div className="container mx-auto max-w-5xl py-12 px-4">
       <div className="text-center mb-12">
-        <h1 className="text-4xl font-bold glowing-text">My Courses</h1>
+        <h1 className="text-4xl font-bold">My Courses</h1>
         <p className="text-lg text-muted-foreground mt-2">Continue your learning journey.</p>
       </div>
 

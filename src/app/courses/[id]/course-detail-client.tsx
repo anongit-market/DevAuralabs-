@@ -78,7 +78,7 @@ export default function CourseDetailClient({ course }: { course: Course }) {
               {course.level}
             </Badge>
           </div>
-          <h1 className="text-4xl font-bold mb-4 glowing-text">{course.title}</h1>
+          <h1 className="text-4xl font-bold mb-4">{course.title}</h1>
           <p className="text-lg text-muted-foreground mb-8">{course.description}</p>
           
           <div className="space-y-4">
@@ -104,7 +104,7 @@ export default function CourseDetailClient({ course }: { course: Course }) {
                     <Button size="lg" className="w-full gradient-btn gradient-btn-1" onClick={handleBuyNow}>
                         Buy Now
                     </Button>
-                    <Button size="lg" variant="outline" className="w-full glowing-btn" onClick={handleAddToCart}>
+                    <Button size="lg" variant="outline" className="w-full" onClick={handleAddToCart}>
                         <ShoppingCart className="mr-2 h-5 w-5" />
                         Add to Cart
                     </Button>

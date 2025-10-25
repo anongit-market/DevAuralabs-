@@ -39,7 +39,7 @@ export default function SkillCard({ skill }: SkillCardProps) {
             />
         )}
          <div className="absolute top-3 right-3 bg-background/70 backdrop-blur-sm p-2 rounded-full">
-            {Icon && <Icon className="h-6 w-6 glowing-icon text-secondary" />}
+            {Icon && <Icon className="h-6 w-6 text-secondary" />}
         </div>
       </div>
       <div className="p-6 flex flex-col flex-grow">

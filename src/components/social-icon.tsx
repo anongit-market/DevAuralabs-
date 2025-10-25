@@ -48,7 +48,7 @@ export default function SocialIcon({ name, className }: SocialIconProps) {
   return (
     <div
       className={cn(
-        "text-muted-foreground transition-colors hover:text-primary hover:drop-shadow-[0_0_5px_hsl(var(--primary)/0.8)]",
+        "text-muted-foreground transition-colors hover:text-primary",
         className
       )}
     >

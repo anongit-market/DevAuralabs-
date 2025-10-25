@@ -62,7 +62,7 @@ export default function LoginPage() {
             <div className="glass-card p-8 space-y-6">
                 <div className="text-center space-y-2">
                     <div className="flex justify-center">
-                        <ShieldEllipsis className="h-12 w-12 glowing-icon" />
+                        <ShieldEllipsis className="h-12 w-12 text-primary" />
                     </div>
                     <h1 className="text-3xl font-bold">Welcome Back</h1>
                     <p className="text-muted-foreground">Enter your credentials to access your account</p>

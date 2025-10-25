@@ -5,7 +5,7 @@ export default function AboutPage() {
     <div className="container mx-auto py-20 px-4">
       <div className="max-w-4xl mx-auto text-center">
         <div className="flex justify-center mb-8">
-            <ShieldEllipsis className="w-24 h-24 glowing-icon"/>
+            <ShieldEllipsis className="w-24 h-24 text-primary"/>
         </div>
         <h1 className="text-4xl md:text-5xl font-bold mb-6">About DevAura Labs</h1>
         <div className="prose prose-invert lg:prose-xl mx-auto text-muted-foreground space-y-6">

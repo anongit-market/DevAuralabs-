@@ -113,7 +113,7 @@ export default function AiRecommendationForm() {
       {recommendations && (
         <Card className="mt-8 bg-transparent border-primary/20">
           <CardHeader>
-            <CardTitle className="glowing-text">Recommended For You</CardTitle>
+            <CardTitle>Recommended For You</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="whitespace-pre-wrap text-foreground">{recommendations}</p>

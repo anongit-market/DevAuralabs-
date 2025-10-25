@@ -24,7 +24,7 @@ export default function CheckoutPage({ params }: { params: { id: string } }) {
   return (
     <div className="container mx-auto max-w-4xl py-12 px-4">
       <div className="text-center mb-12">
-        <h1 className="text-4xl font-bold glowing-text">Complete Your Purchase</h1>
+        <h1 className="text-4xl font-bold">Complete Your Purchase</h1>
         <p className="text-lg text-muted-foreground mt-2">You are one step away from mastering new skills.</p>
       </div>
       <div className="grid md:grid-cols-2 gap-12">
@@ -78,7 +78,7 @@ export default function CheckoutPage({ params }: { params: { id: string } }) {
                 <Label htmlFor="coupon">Coupon Code (Optional)</Label>
                 <div className="flex gap-2">
                     <Input id="coupon" placeholder="ENTERCODE" className="bg-background/50" />
-                    <Button variant="outline" className="glowing-btn">Apply</Button>
+                    <Button variant="outline">Apply</Button>
                 </div>
               </div>
             </CardContent>

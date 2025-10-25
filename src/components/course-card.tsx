@@ -49,7 +49,7 @@ export default function CourseCard({ course }: CourseCardProps) {
             {level}
         </Badge>
         <div className="absolute top-2 right-2 bg-background/70 backdrop-blur-sm p-1.5 rounded-full">
-            {Icon && <Icon className="h-4 w-4 glowing-icon" />}
+            {Icon && <Icon className="h-4 w-4 text-primary" />}
         </div>
       </div>
       <div className="p-1 flex flex-col flex-grow items-center text-center">

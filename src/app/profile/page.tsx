@@ -16,7 +16,7 @@ export default function ProfilePage() {
   return (
     <div className="container mx-auto max-w-xl py-12 px-4">
       <div className="text-center mb-12">
-        <h1 className="text-4xl font-bold glowing-text">Your Profile</h1>
+        <h1 className="text-4xl font-bold">Your Profile</h1>
         <p className="text-lg text-muted-foreground mt-2">Manage your account details.</p>
       </div>
       <Card className="glass-card">
