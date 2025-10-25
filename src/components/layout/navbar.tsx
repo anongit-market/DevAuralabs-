@@ -64,8 +64,22 @@ export default function Navbar() {
               </SheetTrigger>
               <SheetContent side="left">
                 <SheetTitle className="sr-only">Mobile Menu</SheetTitle>
-                <div className="flex flex-col h-full">
-                  <div className="mt-auto">
+                <nav className="flex flex-col gap-4 text-lg font-medium mt-10">
+                    {navLinks.map(({ href, label }) => (
+                        <Link
+                        key={href}
+                        href={href}
+                        onClick={() => setIsOpen(false)}
+                        className={cn(
+                            'transition-colors hover:text-primary',
+                            pathname === href ? 'text-primary' : 'text-muted-foreground'
+                        )}
+                        >
+                        {label}
+                        </Link>
+                    ))}
+                </nav>
+                <div className="mt-auto">
                     {isMounted && (
                       !isAuthenticated ? (
                         <Link href="/login" onClick={() => setIsOpen(false)}>
@@ -78,7 +92,6 @@ export default function Navbar() {
                       )
                     )}
                   </div>
-                </div>
               </SheetContent>
             </Sheet>
         </div>
