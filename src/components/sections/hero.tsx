@@ -1,7 +1,11 @@
+
+'use client';
+
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import Logo from '@/components/logo';
 import VantaBackground from '@/components/vanta-background';
+import { TypeAnimation } from 'react-type-animation';
 
 export default function HeroSection() {
   return (
@@ -13,9 +17,20 @@ export default function HeroSection() {
         <div className="flex justify-center -mt-12 mb-12">
           <Logo />
         </div>
-        <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tighter mb-4 text-transparent bg-clip-text bg-gradient-to-r from-gray-200 to-gray-500">
-          Master. Build. Secure.
-        </h1>
+        <TypeAnimation
+          sequence={[
+            'Master.',
+            1000,
+            'Build.',
+            1000,
+            'Secure.',
+            1000,
+          ]}
+          wrapper="h1"
+          speed={50}
+          className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tighter mb-4 text-transparent bg-clip-text bg-gradient-to-r from-gray-200 to-gray-500"
+          repeat={Infinity}
+        />
         <p className="text-xl md:text-2xl font-bold mb-8 text-primary">
           All in One Platform.
         </p>
