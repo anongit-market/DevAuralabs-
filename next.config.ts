@@ -1,3 +1,4 @@
+
 import type {NextConfig} from 'next';
 
 const nextConfig: NextConfig = {
@@ -35,9 +36,6 @@ const nextConfig: NextConfig = {
         pathname: '/**',
       },
     ],
-  },
-  devIndicators: {
-    buildActivity: false,
   },
   // The following is a workaround for a known issue in Next.js, where cross-origin
   // requests are blocked in development.
