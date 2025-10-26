@@ -5,33 +5,9 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import Logo from '@/components/logo';
 import VantaBackground from '@/components/vanta-background';
-import { useEffect, useState } from 'react';
-import MetallicText from '@/components/metallic-text';
-import { parseLogoImage } from '@/components/metallic-text';
-import { TypingAnimation } from '@/components/typing-animation';
+import { TypeAnimation } from 'react-type-animation';
 
 export default function HeroSection() {
-  const [imageData, setImageData] = useState(null);
-  const [isLoaded, setIsLoaded] = useState(false);
-
-  useEffect(() => {
-    async function loadImage() {
-      try {
-        const response = await fetch('/hero-text.svg');
-        if (!response.ok) {
-          throw new Error('Failed to fetch SVG');
-        }
-        const svgBlob = await response.blob();
-        const file = new File([svgBlob], 'hero-text.svg', { type: 'image/svg+xml' });
-        const { imageData: parsedImageData } = await parseLogoImage(file);
-        setImageData(parsedImageData);
-        setIsLoaded(true);
-      } catch (error) {
-        console.error('Error loading or parsing SVG:', error);
-      }
-    }
-    loadImage();
-  }, []);
 
   return (
     <section className="relative w-full h-[80vh] min-h-[500px] flex items-center justify-center text-center overflow-hidden pt-12">
@@ -44,19 +20,20 @@ export default function HeroSection() {
         </div>
         
         <div className="relative flex justify-center items-center h-24 md:h-32 lg:h-40 mb-4">
-          <TypingAnimation
-            words={["Master", "Build", "Secure"]}
-            loop
-            typeSpeed={100}
-            deleteSpeed={100}
-            pauseDelay={1500}
-            className={`text-4xl md:text-6xl lg:text-7xl font-bold tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-gray-200 via-gray-400 to-gray-200 [text-shadow:0_2px_4px_rgba(0,0,0,0.2)] transition-opacity duration-500 ${isLoaded ? 'opacity-0' : 'opacity-100'}`}
+          <TypeAnimation
+            sequence={[
+              'Master',
+              1500,
+              'Build',
+              1500,
+              'Secure',
+              1500,
+            ]}
+            wrapper="span"
+            speed={50}
+            className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-gray-200 via-gray-400 to-gray-200 [text-shadow:0_2px_4px_rgba(0,0,0,0.2)]"
+            repeat={Infinity}
           />
-           {imageData && (
-            <div className={`absolute inset-0 transition-opacity duration-500 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
-              <MetallicText imageData={imageData} />
-            </div>
-          )}
         </div>
         
         <p className="text-xl md:text-2xl font-bold mb-8 text-primary">
