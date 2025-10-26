@@ -8,18 +8,24 @@ import VantaBackground from '@/components/vanta-background';
 import { useEffect, useState } from 'react';
 import MetallicText from '@/components/metallic-text';
 import { parseLogoImage } from '@/components/metallic-text';
+import { TypeAnimation } from 'react-type-animation';
 
 export default function HeroSection() {
   const [imageData, setImageData] = useState(null);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
     async function loadImage() {
       try {
         const response = await fetch('/hero-text.svg');
+        if (!response.ok) {
+          throw new Error('Failed to fetch SVG');
+        }
         const svgBlob = await response.blob();
         const file = new File([svgBlob], 'hero-text.svg', { type: 'image/svg+xml' });
         const { imageData: parsedImageData } = await parseLogoImage(file);
         setImageData(parsedImageData);
+        setIsLoaded(true);
       } catch (error) {
         console.error('Error loading or parsing SVG:', error);
       }
@@ -37,13 +43,26 @@ export default function HeroSection() {
           <Logo />
         </div>
         
-        <div className="flex justify-center items-center h-24 md:h-32 lg:h-40 mb-4">
-          {imageData ? (
-            <MetallicText imageData={imageData} />
-          ) : (
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-gray-200 via-gray-400 to-gray-200 [text-shadow:0_2px_4px_rgba(0,0,0,0.2)]">
-              Master. Build. Secure.
-            </h1>
+        <div className="relative flex justify-center items-center h-24 md:h-32 lg:h-40 mb-4">
+          <TypeAnimation
+            sequence={[
+              'Master.',
+              1000,
+              'Build.',
+              1000,
+              'Secure.',
+              1000,
+            ]}
+            wrapper="h1"
+            speed={10}
+            className={`text-4xl md:text-6xl lg:text-7xl font-bold tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-gray-200 via-gray-400 to-gray-200 [text-shadow:0_2px_4px_rgba(0,0,0,0.2)] transition-opacity duration-500 ${isLoaded ? 'opacity-0' : 'opacity-100'}`}
+            repeat={Infinity}
+            cursor={true}
+          />
+           {imageData && (
+            <div className={`absolute inset-0 transition-opacity duration-500 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
+              <MetallicText imageData={imageData} />
+            </div>
           )}
         </div>
         
