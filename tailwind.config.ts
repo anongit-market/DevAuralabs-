@@ -90,7 +90,7 @@ export default {
           '50%': { 'background-position': '400% 0' },
           '100%': { 'background-position': '0 0' },
         },
-        'blink-cursor': {
+         'blink-cursor': {
           '0%, 100%': { opacity: '1' },
           '50%': { opacity: '0' },
         },
