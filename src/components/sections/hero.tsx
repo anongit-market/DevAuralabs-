@@ -8,7 +8,7 @@ import VantaBackground from '@/components/vanta-background';
 import { useEffect, useState } from 'react';
 import MetallicText from '@/components/metallic-text';
 import { parseLogoImage } from '@/components/metallic-text';
-import { TypeAnimation } from 'react-type-animation';
+import { TypingAnimation } from '@/components/typing-animation';
 
 export default function HeroSection() {
   const [imageData, setImageData] = useState(null);
@@ -44,20 +44,13 @@ export default function HeroSection() {
         </div>
         
         <div className="relative flex justify-center items-center h-24 md:h-32 lg:h-40 mb-4">
-          <TypeAnimation
-            sequence={[
-              'Master',
-              1000,
-              'Build',
-              1000,
-              'Secure',
-              1000,
-            ]}
-            wrapper="h1"
-            speed={10}
+          <TypingAnimation
+            as="h1"
+            words={["Master", "Build", "Secure"]}
+            loop={true}
             className={`text-4xl md:text-6xl lg:text-7xl font-bold tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-gray-200 via-gray-400 to-gray-200 [text-shadow:0_2px_4px_rgba(0,0,0,0.2)] transition-opacity duration-500 ${isLoaded ? 'opacity-0' : 'opacity-100'}`}
-            repeat={Infinity}
-            cursor={true}
+            showCursor={true}
+            blinkCursor={true}
           />
            {imageData && (
             <div className={`absolute inset-0 transition-opacity duration-500 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
