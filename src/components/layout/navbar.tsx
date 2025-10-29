@@ -37,15 +37,6 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   useEffect(() => {
     setIsMounted(true);
@@ -61,10 +52,7 @@ export default function Navbar() {
   };
 
   return (
-    <header className={cn(
-      "sticky top-0 z-50 w-full transition-all duration-300",
-      isScrolled ? "glass-header" : ""
-    )}>
+    <header className="sticky top-0 z-50 w-full transition-all duration-300">
       <div className="container mx-auto flex items-center justify-between p-4">
         <div className="flex items-center gap-2">
             {/* Mobile Menu Button - Top Left */}
