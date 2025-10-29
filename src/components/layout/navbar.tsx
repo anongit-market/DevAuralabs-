@@ -67,51 +67,52 @@ export default function Navbar() {
       isScrolled ? "glass-header" : ""
     )}>
       <div className="container mx-auto flex items-center justify-between p-4">
-        <div className="flex items-center gap-2 w-40 h-12">
-            {/* Logo removed from here */}
-        </div>
-
-        {/* Mobile Menu Button - Top Left */}
-        <div className="md:hidden">
-            <Sheet open={isOpen} onOpenChange={setIsOpen}>
-              <SheetTrigger asChild>
-                <div className="glass-icon-btn">
-                  <Menu className="h-5 w-5" />
-                  <span className="sr-only">Toggle Menu</span>
-                </div>
-              </SheetTrigger>
-              <SheetContent side="left">
-                <SheetTitle className="sr-only">Mobile Menu</SheetTitle>
-                <nav className="flex flex-col gap-4 text-lg font-medium mt-10">
-                    {navLinks.map(({ href, label }) => (
-                        <Link
-                        key={href}
-                        href={href}
-                        onClick={() => setIsOpen(false)}
-                        className={cn(
-                            'transition-colors hover:text-primary',
-                            pathname === href ? 'text-primary' : 'text-muted-foreground'
+        <div className="flex items-center gap-2">
+            {/* Mobile Menu Button - Top Left */}
+            <div className="md:hidden">
+                <Sheet open={isOpen} onOpenChange={setIsOpen}>
+                  <SheetTrigger asChild>
+                    <div className="glass-icon-btn">
+                      <Menu className="h-5 w-5" />
+                      <span className="sr-only">Toggle Menu</span>
+                    </div>
+                  </SheetTrigger>
+                  <SheetContent side="left">
+                    <SheetTitle className="sr-only">Mobile Menu</SheetTitle>
+                    <nav className="flex flex-col gap-4 text-lg font-medium mt-10">
+                        {navLinks.map(({ href, label }) => (
+                            <Link
+                            key={href}
+                            href={href}
+                            onClick={() => setIsOpen(false)}
+                            className={cn(
+                                'transition-colors hover:text-primary',
+                                pathname === href ? 'text-primary' : 'text-muted-foreground'
+                            )}
+                            >
+                            {label}
+                            </Link>
+                        ))}
+                    </nav>
+                    <div className="mt-auto">
+                        {isMounted && (
+                          !isAuthenticated ? (
+                            <Link href="/login" onClick={() => setIsOpen(false)}>
+                              <Button className="w-full" variant="outline">Login</Button>
+                            </Link>
+                          ) : (
+                            <Button className="w-full" variant="destructive" onClick={() => { handleLogout(); setIsOpen(false); }}>
+                              Logout
+                            </Button>
+                          )
                         )}
-                        >
-                        {label}
-                        </Link>
-                    ))}
-                </nav>
-                <div className="mt-auto">
-                    {isMounted && (
-                      !isAuthenticated ? (
-                        <Link href="/login" onClick={() => setIsOpen(false)}>
-                          <Button className="w-full" variant="outline">Login</Button>
-                        </Link>
-                      ) : (
-                        <Button className="w-full" variant="destructive" onClick={() => { handleLogout(); setIsOpen(false); }}>
-                          Logout
-                        </Button>
-                      )
-                    )}
-                  </div>
-              </SheetContent>
-            </Sheet>
+                      </div>
+                  </SheetContent>
+                </Sheet>
+            </div>
+            <div className="w-40 h-12 hidden md:block">
+                {/* Logo removed from here */}
+            </div>
         </div>
 
         {/* Desktop nav */}
