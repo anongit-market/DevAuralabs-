@@ -4,7 +4,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
-import Navbar from '@/components/layout/navbar';
 import Footer from '@/components/layout/footer';
 import { usePathname } from 'next/navigation';
 import Script from 'next/script';
@@ -42,8 +41,7 @@ export default function RootLayout({
           </filter>
         </svg>
         <div className="relative flex min-h-screen flex-col">
-          <Navbar />
-          <main className="flex-1 pt-20">{children}</main>
+          <main className="flex-1">{children}</main>
           {showFooter && <Footer />}
         </div>
         <Toaster />
