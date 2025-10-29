@@ -68,7 +68,9 @@ export default function Navbar() {
     )}>
       <div className="container mx-auto flex items-center justify-between p-4">
         <Link href="/" className="flex items-center gap-2">
-            <span className="font-bold text-lg">DevAura Labs</span>
+            <div className="w-40 h-12">
+                <Logo />
+            </div>
         </Link>
 
         {/* Mobile Menu Button - Top Left */}
