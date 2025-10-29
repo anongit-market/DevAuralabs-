@@ -64,13 +64,10 @@ export default function Navbar() {
   return (
     <header className={cn(
       "sticky top-0 z-50 w-full transition-all duration-300",
-      isScrolled ? "glass-header" : "bg-transparent"
+      isScrolled ? "glass-header" : ""
     )}>
       <div className="container mx-auto flex items-center justify-between p-4">
         <Link href="/" className="flex items-center gap-2">
-            <div className="w-8 h-8">
-                <Logo />
-            </div>
             <span className="font-bold text-lg">DevAura Labs</span>
         </Link>
 
