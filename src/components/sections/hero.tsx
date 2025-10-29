@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import VantaBackground from '@/components/vanta-background';
 import { TypeAnimation } from 'react-type-animation';
+import Logo from '@/components/logo';
 
 export default function HeroSection() {
 
@@ -15,6 +16,10 @@ export default function HeroSection() {
 
       <div className="container relative z-20 px-4">
         
+        <div className="w-40 h-16 mx-auto mb-4">
+            <Logo />
+        </div>
+
         <div className="relative flex justify-center items-center h-24 md:h-32 lg:h-40 mb-4">
           <TypeAnimation
             sequence={[
