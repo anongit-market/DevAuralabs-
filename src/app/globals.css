@@ -154,4 +154,16 @@
     border-color: hsl(var(--primary) / 0.5);
     background-color: hsl(var(--primary) / 0.1);
   }
+
+  .glass-header {
+    @apply bg-background/50 border-b border-white/10;
+  }
+
+  @supports (backdrop-filter: blur(12px)) or (-webkit-backdrop-filter: blur(12px)) {
+    .glass-header {
+      background-color: hsl(var(--background) / 0.5);
+      -webkit-backdrop-filter: blur(12px);
+      backdrop-filter: blur(12px);
+    }
+  }
 }

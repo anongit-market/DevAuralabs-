@@ -10,7 +10,7 @@ import { TypeAnimation } from 'react-type-animation';
 export default function HeroSection() {
 
   return (
-    <section className="relative w-full h-[80vh] min-h-[500px] flex items-center justify-center text-center overflow-hidden pt-12">
+    <section className="relative w-full h-screen min-h-[500px] flex items-center justify-center text-center overflow-hidden -mt-20">
       <VantaBackground />
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/50 to-background z-10" />
 
