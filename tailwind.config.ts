@@ -17,8 +17,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        body: ['Aldrich', 'sans-serif'],
-        headline: ['Aldrich', 'sans-serif'],
+        body: ['Oxanium', 'sans-serif'],
+        headline: ['Oxanium', 'sans-serif'],
         code: ['monospace'],
       },
       colors: {
