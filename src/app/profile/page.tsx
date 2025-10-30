@@ -2,7 +2,7 @@
 'use client';
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { User, Mail, Smartphone } from 'lucide-react';
+import { User, Mail, Smartphone, Shield } from 'lucide-react';
 
 export default function ProfilePage() {
   
@@ -11,6 +11,7 @@ export default function ProfilePage() {
     name: 'John Doe',
     email: 'john.doe@example.com',
     mobile: '+91 00000-00000',
+    role: 'Administrator',
   };
 
   return (
@@ -44,6 +45,13 @@ export default function ProfilePage() {
             <div>
               <p className="text-sm text-muted-foreground">Mobile Number</p>
               <p className="font-semibold">{userData.mobile}</p>
+            </div>
+          </div>
+           <div className="flex items-center gap-4">
+            <Shield className="h-5 w-5 text-primary" />
+            <div>
+              <p className="text-sm text-muted-foreground">Role</p>
+              <p className="font-semibold">{userData.role}</p>
             </div>
           </div>
         </CardContent>

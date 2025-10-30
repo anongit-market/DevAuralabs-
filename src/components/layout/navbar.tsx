@@ -40,25 +40,11 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
-  const [userRole, setUserRole] = useState('Learner');
 
   useEffect(() => {
     setIsMounted(true);
     const authStatus = localStorage.getItem('isAuthenticated') === 'true';
     setIsAuthenticated(authStatus);
-
-    // In a real app, user data including role would come from an API/context
-    // For this simulation, we'll hardcode 'John Doe' as an administrator
-    if (authStatus) {
-        // This is a placeholder for a real user object check
-        const isJohnDoe = true; // Simulate checking if the user is John Doe
-        if(isJohnDoe) {
-            setUserRole('Administrator');
-        } else {
-            setUserRole('Learner');
-        }
-    }
-
   }, [pathname]);
 
   const handleLogout = () => {
@@ -73,11 +59,11 @@ export default function Navbar() {
   }
 
   return (
-    <header className="w-full z-50 top-0 absolute">
+    <header className="w-full z-50 absolute">
       <div className="container mx-auto flex items-center justify-between p-4">
         {/* Mobile Menu Button - Top Left */}
         <div className="md:hidden">
-          {isMounted && (pathname === '/' || pathname === '/login' || pathname === '/signup') && (
+          {isMounted && (
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
               <SheetTrigger asChild>
                 <div className="glass-icon-btn">
@@ -170,9 +156,6 @@ export default function Navbar() {
                         <p className="text-sm font-medium leading-none">John Doe</p>
                         <p className="text-xs leading-none text-muted-foreground">
                           john.doe@example.com
-                        </p>
-                        <p className="text-xs leading-none text-muted-foreground pt-1">
-                          {userRole}
                         </p>
                       </div>
                     </DropdownMenuLabel>
