@@ -217,17 +217,24 @@
   }
 
   @keyframes spin-glow {
-    from {
+    0%, 100% {
       transform: rotate(0deg);
+      box-shadow: 0 0 2px #a855f7, 0 0 8px #a855f7, 0 0 16px #a855f7;
     }
-    to {
-      transform: rotate(360deg);
+    25% {
+      transform: rotate(90deg);
+      box-shadow: 0 0 4px #d8b4fe, 0 0 12px #d8b4fe, 0 0 24px #d8b4fe;
+    }
+    50% {
+      transform: rotate(180deg);
+      box-shadow: 0 0 2px #a855f7, 0 0 8px #a855f7, 0 0 16px #a855f7;
+    }
+    75% {
+      transform: rotate(270deg);
+      box-shadow: 0 0 4px #c084fc, 0 0 12px #c084fc, 0 0 24px #c084fc;
     }
   }
 
-  .spin-glow-animation {
-    box-shadow: 0 0 8px #a855f7, 0 0 16px #a855f7;
-  }
   .spin-glow-animation::before {
     content: '';
     position: absolute;
@@ -236,13 +243,7 @@
     width: calc(100% + 4px);
     height: calc(100% + 4px);
     border-radius: 50%;
-    background-image: conic-gradient(
-      from 180deg at 50% 50%,
-      rgba(168, 85, 247, 0.8) 0deg,
-      rgba(168, 85, 247, 0.5) 120deg,
-      transparent 360deg
-    );
-    animation: spin-glow 2.5s linear infinite;
+    animation: spin-glow 3s linear infinite;
     z-index: -1;
   }
 }
