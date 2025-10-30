@@ -162,8 +162,8 @@
   }
 
   .aura-glass-input {
-    @apply rounded-2xl text-base text-white border-2 border-white/20;
-    @apply focus:ring-2 focus:ring-green-400 focus:border-green-400;
+    @apply rounded-2xl text-base text-white border-2 border-primary/20;
+    @apply focus:ring-2 focus:ring-primary focus:border-primary;
     font-weight: 700;
   }
 
@@ -181,9 +181,9 @@
   }
 
   .aura-send-btn {
-    @apply rounded-full bg-green-500 h-9 w-9;
-    @apply hover:bg-green-400;
-    box-shadow: 0 0 15px hsl(var(--aura-green) / 0.5);
+    @apply rounded-full bg-primary h-9 w-9;
+    @apply hover:bg-primary/90;
+    box-shadow: 0 0 15px hsl(var(--primary) / 0.5);
   }
 
   .aura-glass-btn {
@@ -199,7 +199,7 @@
   }
   
   .green-glow {
-     box-shadow: 0 0 15px hsl(var(--aura-green) / 0.7);
+     box-shadow: 0 0 15px hsl(var(--primary) / 0.7);
   }
 
   .listening-btn-glow {
@@ -209,7 +209,7 @@
   .listening-btn-glow::before {
     content: '';
     @apply absolute -inset-1 rounded-full;
-    background-image: conic-gradient(from 180deg at 50% 50%, hsl(var(--aura-green)/0.8) 0deg, transparent 60deg, transparent 360deg);
+    background-image: conic-gradient(from 180deg at 50% 50%, hsl(var(--primary)/0.8) 0deg, transparent 60deg, transparent 360deg);
     animation: spin 1.5s linear infinite;
     z-index: -1;
   }
