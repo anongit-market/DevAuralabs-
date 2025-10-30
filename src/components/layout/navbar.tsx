@@ -24,6 +24,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 import { useState, useEffect } from 'react';
 import type { LucideIcon } from 'lucide-react';
+import Logo from '../logo';
 
 const navLinks: { href: string; label: string; icon: LucideIcon }[] = [
   { href: '/', label: 'Menu', icon: LayoutGrid },
@@ -66,7 +67,11 @@ export default function Navbar() {
                     </div>
                   </SheetTrigger>
                   <SheetContent side="left" className="glass-header">
-                    <SheetTitle className="sr-only">Mobile Menu</SheetTitle>
+                    <SheetTitle>
+                        <div className='w-40 h-auto mx-auto'>
+                            <Logo />
+                        </div>
+                    </SheetTitle>
                     <nav className="flex flex-col gap-2 text-lg font-medium mt-10">
                         {navLinks.map(({ href, label, icon: Icon }) => (
                             <Link
@@ -75,7 +80,7 @@ export default function Navbar() {
                             onClick={() => setIsOpen(false)}
                             className={cn(
                                 'flex items-center gap-4 rounded-lg px-4 py-3 text-xl transition-colors hover:text-primary',
-                                pathname === href ? 'bg-muted text-primary' : 'text-muted-foreground'
+                                pathname === href ? 'text-primary bg-white/10 backdrop-blur-sm' : 'text-muted-foreground'
                             )}
                             >
                             <Icon className="h-6 w-6" />
