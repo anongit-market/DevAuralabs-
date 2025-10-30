@@ -38,11 +38,8 @@ const nextConfig: NextConfig = {
     ],
   },
   experimental: {
-    useLightningCSS: true,
-    turbotrace: {},
     cpus: 1,
     memoryBasedWorkersCount: true,
-    nextScriptWorkers: true,
     optimizePackageImports: [
         'lucide-react',
     ],
