@@ -40,17 +40,12 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
-  const [isTransparentPage, setIsTransparentPage] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
     const authStatus = localStorage.getItem('isAuthenticated') === 'true';
     setIsAuthenticated(authStatus);
-    
-    // Check if on a page that should have a transparent header
-    setIsTransparentPage(pathname === '/' || pathname === '/login');
-
-  }, [pathname]); // Re-check on path change
+  }, [pathname]);
 
   const handleLogout = () => {
     localStorage.removeItem('isAuthenticated');
@@ -65,8 +60,7 @@ export default function Navbar() {
 
   return (
     <header className={cn(
-      "w-full z-50 top-0",
-      !isTransparentPage && "glass-header"
+      "w-full z-50 top-0 sticky glass-header"
     )}>
       <div className="container mx-auto flex items-center justify-between p-4">
         {/* Mobile Menu Button - Top Left */}
@@ -119,8 +113,7 @@ export default function Navbar() {
         
         {/* Desktop nav */}
         <nav className={cn(
-            "hidden md:flex items-center gap-6 text-sm",
-            isTransparentPage && "invisible"
+            "hidden md:flex items-center gap-6 text-sm"
         )}>
             {navLinks.map(({ href, label }) => (
                 <Link
