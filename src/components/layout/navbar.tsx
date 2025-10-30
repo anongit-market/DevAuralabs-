@@ -65,8 +65,8 @@ export default function Navbar() {
 
   return (
     <header className={cn(
-      "w-full z-50",
-      !isTransparentPage && "sticky top-0 glass-header"
+      "w-full z-50 top-0",
+      !isTransparentPage && "glass-header"
     )}>
       <div className="container mx-auto flex items-center justify-between p-4">
         {/* Mobile Menu Button - Top Left */}
