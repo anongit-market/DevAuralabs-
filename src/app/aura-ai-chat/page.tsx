@@ -90,7 +90,7 @@ export default function AuraAiChatPage() {
             >
               {message.sender === 'aura' && (
                 <Avatar className="h-8 w-8 border-2 border-green-glow">
-                  <AvatarImage src="https://i.ibb.co/20tFWD4P/IMG-20251019-191415-1.png" />
+                  <AvatarImage src="https://i.ibb.co/20tFWD4/IMG-20251019-191415-1.png" />
                   <AvatarFallback>A</AvatarFallback>
                 </Avatar>
               )}
@@ -181,7 +181,7 @@ export default function AuraAiChatPage() {
   const renderListeningUI = () => (
     <div className="flex flex-col h-full w-full max-w-2xl mx-auto p-4 text-white items-center justify-center text-center">
       <div className="listening-indicator">
-        <img src="https://i.ibb.co/20tFWD4P/IMG-20251019-191415-1.png" alt="Aura AI" className="w-24 h-24"/>
+        <img src="https://i.ibb.co/20tFWD4/IMG-20251019-191415-1.png" alt="Aura AI" className="w-24 h-24"/>
       </div>
       <p className='mt-8 text-zinc-300'>Listening...</p>
       <p className="text-xl mt-4 max-w-md">
