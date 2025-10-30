@@ -10,16 +10,13 @@ export default function FloatingAiButton() {
 
   return (
     <Link href="/aura-ai-chat" className="fixed bottom-8 right-8 z-50 group">
-      <div
-        className="relative h-16 w-16 transition-all duration-300 ease-in-out group-hover:scale-110"
-      >
-        <Image
-          src={logoImage?.imageUrl || ''}
-          alt="Aura AI"
-          fill
-          className="object-contain"
-        />
-      </div>
+      <Image
+        src={logoImage?.imageUrl || ''}
+        alt="Aura AI"
+        width={64}
+        height={64}
+        className="object-contain transition-all duration-300 ease-in-out group-hover:scale-110"
+      />
     </Link>
   );
 }
