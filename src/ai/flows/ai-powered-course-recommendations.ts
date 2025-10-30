@@ -12,12 +12,7 @@ import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
 const AIPoweredCourseRecommendationsInputSchema = z.object({
-  interests: z
-    .string()
-    .describe('The users interests related to cybersecurity and skill development.'),
-  goals: z
-    .string()
-    .describe('The users goals for taking courses in cybersecurity and skill development.'),
+  message: z.string().describe('The user\'s message or query.'),
 });
 export type AIPoweredCourseRecommendationsInput = z.infer<
   typeof AIPoweredCourseRecommendationsInputSchema
@@ -27,7 +22,7 @@ const AIPoweredCourseRecommendationsOutputSchema = z.object({
   courseRecommendations: z
     .string()
     .describe(
-      'A list of recommended courses based on the users interests and goals.'
+      'A helpful, conversational response that provides course recommendations if relevant to the user\'s message.'
     ),
 });
 export type AIPoweredCourseRecommendationsOutput = z.infer<
@@ -44,16 +39,17 @@ const prompt = ai.definePrompt({
   name: 'aiPoweredCourseRecommendationsPrompt',
   input: {schema: AIPoweredCourseRecommendationsInputSchema},
   output: {schema: AIPoweredCourseRecommendationsOutputSchema},
-  prompt: `You are an AI assistant designed to provide personalized course recommendations in cybersecurity and skill development.
+  prompt: `You are Aura, an AI assistant for DevAura Labs, a platform for cybersecurity courses and web development services. Be friendly and conversational.
 
-  Based on the user's interests and goals, recommend relevant courses.
+  Your primary goal is to help users by recommending relevant courses from the platform based on their interests and goals.
 
-  Interests: {{{interests}}}
-  Goals: {{{goals}}}
+  If the user's message is about learning, cybersecurity, web development, or related skills, provide a helpful response that includes a list of recommended courses.
 
-  Provide a list of courses that align with these interests and goals.
-  Ensure the courses recommended match the users interests and goals closely.
-  Courses Recommended:`,
+  If the user's message is not related to courses or the platform's services, provide a friendly, polite response indicating that you are an assistant for DevAura Labs and can help with questions about their offerings.
+
+  User's message: {{{message}}}
+  
+  Your response:`,
 });
 
 const aiPoweredCourseRecommendationsFlow = ai.defineFlow(

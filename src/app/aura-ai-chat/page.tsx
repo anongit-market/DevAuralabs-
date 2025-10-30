@@ -10,6 +10,7 @@ import { cn } from '@/lib/utils';
 import VantaFogBackground from '@/components/vanta-fog-background';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import TypingAnimation from '@/components/typing-animation';
+import { getCourseRecommendations } from '@/app/actions';
 
 type Message = {
   id: string;
@@ -30,7 +31,7 @@ export default function AuraAiChatPage() {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isLoading]);
 
-  const handleSend = (text: string = input) => {
+  const handleSend = async (text: string = input) => {
     if (!text.trim() || isLoading) return;
 
     const userMessage: Message = {
@@ -41,17 +42,26 @@ export default function AuraAiChatPage() {
     setMessages((prev) => [...prev, userMessage]);
     setInput('');
     setIsLoading(true);
+
+    const result = await getCourseRecommendations({ message: text });
     
-    // Simulate AI response
-    setTimeout(() => {
-      const aiResponse: Message = {
-        id: `aura-${Date.now()}`,
-        text: "I'm sorry, I am a demo assistant and my capabilities are limited. I can only show you how a conversation would look.",
-        sender: 'aura',
-      };
-      setIsLoading(false);
-      setMessages((prev) => [...prev, aiResponse]);
-    }, 2500);
+    let aiResponse: Message;
+    if (result.success && result.data) {
+        aiResponse = {
+            id: `aura-${Date.now()}`,
+            text: result.data.courseRecommendations,
+            sender: 'aura',
+        };
+    } else {
+        aiResponse = {
+            id: `aura-${Date.now()}`,
+            text: result.error || "I'm having trouble connecting right now. Please try again later.",
+            sender: 'aura',
+        };
+    }
+
+    setIsLoading(false);
+    setMessages((prev) => [...prev, aiResponse]);
   };
   
   const startListening = () => {
@@ -128,7 +138,7 @@ export default function AuraAiChatPage() {
           <div ref={messagesEndRef} />
         </div>
 
-        <footer className="px-4 pt-2">
+        <footer className="px-4 pt-2 pb-4">
            <div className="relative">
             <Textarea
               value={input}
@@ -169,7 +179,7 @@ export default function AuraAiChatPage() {
             <p className="text-white mt-2">What Do You Want To Chat About Today?</p>
         </div>
         
-        <footer className="px-4 pt-2">
+        <footer className="px-4 pt-2 pb-4">
           <div className="relative">
             <Textarea
               value={input}
