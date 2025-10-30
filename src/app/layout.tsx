@@ -20,12 +20,6 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.ico" />
       </head>
       <body className="antialiased bg-background text-foreground">
-        <svg style={{ display: 'none' }}>
-          <filter id="liquid-glass" colorInterpolationFilters="linearRGB" filterUnits="objectBoundingBox" primitiveUnits="userSpaceOnUse">
-              <feTurbulence type="fractalNoise" baseFrequency="0.01 0.04" numOctaves="3" result="NOISE" />
-              <feDisplacementMap in="SourceGraphic" in2="NOISE" scale="10" xChannelSelector="R" yChannelSelector="G"/>
-          </filter>
-        </svg>
         <div className="relative flex min-h-screen flex-col">
           <Navbar />
           <main className="flex-1">{children}</main>

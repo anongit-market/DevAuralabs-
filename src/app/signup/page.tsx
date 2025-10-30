@@ -110,8 +110,7 @@ export default function SignupPage() {
                         name="mobile"
                         render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Mobile Number</FormLabel>
-                            <FormControl>
+                            <FormLabel>Mobile Number</FormLabel>                            <FormControl>
                             <Input placeholder="+91 00000-00000" {...field} className="bg-background/50"/>
                             </FormControl>
                             <FormMessage />
