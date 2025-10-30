@@ -4,6 +4,7 @@ import SkillsSection from '@/components/sections/skills-section';
 import ServicesSection from '@/components/sections/services-section';
 import AiRecommendationSection from '@/components/sections/ai-recommendation-section';
 import { Separator } from '@/components/ui/separator';
+import FloatingAiButton from '@/components/floating-ai-button';
 
 export default function Home() {
   return (
@@ -18,6 +19,7 @@ export default function Home() {
         <Separator className="my-12 md:my-24 bg-white/10" />
         <AiRecommendationSection />
       </div>
+      <FloatingAiButton />
     </div>
   );
 }
