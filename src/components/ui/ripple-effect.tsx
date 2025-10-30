@@ -33,7 +33,7 @@ export const RippleEffect: React.FC = () => {
       if (ripple.parentElement) {
         ripple.remove();
       }
-    }, 600);
+    }, 700);
   };
 
   return (
