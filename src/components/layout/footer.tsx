@@ -12,7 +12,7 @@ const quickLinks = [
 const socialLinks = [
   { name: 'Twitter', href: '#' },
   { name: 'LinkedIn', href: '#' },
-  { name: 'GitHub', href: '#' },
+  { name: 'WhatsApp', href: '#' },
 ];
 
 export default function Footer() {
