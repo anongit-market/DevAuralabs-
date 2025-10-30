@@ -13,29 +13,19 @@ import { getCourses, getSkills } from '@/ai/tools/get-data';
 import {z} from 'genkit';
 
 const AIPoweredCourseRecommendationsInputSchema = z.object({
-  message: z.string().describe("The user's message or query."),
+  interests: z.string().describe('The user\'s interests.'),
+  goals: z.string().describe('The user\'s goals.'),
 });
 export type AIPoweredCourseRecommendationsInput = z.infer<
   typeof AIPoweredCourseRecommendationsInputSchema
 >;
 
-const CourseSchema = z.object({
-    id: z.string(),
-    title: z.string(),
-    level: z.string(),
-    price: z.number(),
-    description: z.string(),
-    image: z.string(),
-    icon: z.string(),
-});
-
 const AIPoweredCourseRecommendationsOutputSchema = z.object({
-  response: z
+  courseRecommendations: z
     .string()
     .describe(
-      "A helpful, conversational response that provides course recommendations if relevant to the user's message."
+      "A helpful, conversational response that provides course recommendations if relevant to the user's interests and goals."
     ),
-  courses: z.array(CourseSchema).optional().describe("A list of recommended courses."),
 });
 export type AIPoweredCourseRecommendationsOutput = z.infer<
   typeof AIPoweredCourseRecommendationsOutputSchema
@@ -69,14 +59,14 @@ Website Knowledge Base:
 - **Your Role**: As Aura, you should be proactive. If a user asks a general question about learning a new skill, use your tools to see if DevAura Labs offers a relevant course or program and recommend it. If a user asks about services, describe the website creation service.
 
 Interaction Flow:
-1.  Analyze the user's message to understand their intent.
+1.  Analyze the user's message to understand their interests and goals.
 2.  If their query is about learning, courses, or skills, use the \`getCourses\` or \`getSkills\` tools to get up-to-date information from the database.
-3.  Formulate a helpful, conversational response for the \`response\` field.
-4.  If you retrieved courses, populate the \`courses\` field in the output with the course data. Only include courses that are highly relevant to the user's query.
-5.  If the query is about building a website, describe the "Website Creation Service" and suggest they fill out the form on the services page.
-6.  If the user's message is not related to the platform's offerings (e.g., asking for the weather), provide a friendly, polite response indicating that you are an assistant for DevAura Labs and can only help with questions about their offerings.
+3.  Formulate a helpful, conversational response for the \`courseRecommendations\` field. Include course titles, descriptions, levels, and prices in a human-readable format.
+4.  If the query is about building a website, describe the "Website Creation Service" and suggest they fill out the form on the services page.
+5.  If the user's message is not related to the platform's offerings (e.g., asking for the weather), provide a friendly, polite response indicating that you are an assistant for DevAura Labs and can only help with questions about their offerings.
 
-User's message: {{{message}}}
+User's interests: {{{interests}}}
+User's goals: {{{goals}}}
 
 Your response:`,
 });
