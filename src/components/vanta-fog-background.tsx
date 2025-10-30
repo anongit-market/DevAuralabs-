@@ -43,10 +43,10 @@ const VantaFogBackground = () => {
             highlightColor: 0xffffff,
             midtoneColor: 0x5e5eff,
             lowlightColor: 0x808080,
-            baseColor: 0x0,
-            blurFactor: 0.7,
-            speed: 1.5,
-            zoom: 1.0,
+            baseColor: 0x333333,
+            blurFactor: 0.6,
+            speed: 1.8,
+            zoom: 1.2,
           });
           setVantaEffect(effect);
         }
