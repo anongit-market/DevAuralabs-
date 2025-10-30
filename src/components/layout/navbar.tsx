@@ -2,7 +2,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Menu, User, ShoppingCart } from 'lucide-react';
+import { Menu, User, ShoppingCart, LayoutGrid, BookOpen, Briefcase, Info, UserCog } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 
 import { Button } from '@/components/ui/button';
@@ -23,13 +23,14 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 import { useState, useEffect } from 'react';
+import type { LucideIcon } from 'lucide-react';
 
-const navLinks = [
-  { href: '/', label: 'Home' },
-  { href: '/courses', label: 'Courses' },
-  { href: '/services', label: 'Services' },
-  { href: '/about', label: 'About' },
-  { href: '/admin', label: 'Admin Panel' },
+const navLinks: { href: string; label: string; icon: LucideIcon }[] = [
+  { href: '/', label: 'Menu', icon: LayoutGrid },
+  { href: '/courses', label: 'Courses', icon: BookOpen },
+  { href: '/services', label: 'Services', icon: Briefcase },
+  { href: '/about', label: 'About', icon: Info },
+  { href: '/admin', label: 'Admin Panel', icon: UserCog },
 ];
 
 export default function Navbar() {
@@ -66,18 +67,19 @@ export default function Navbar() {
                   </SheetTrigger>
                   <SheetContent side="left">
                     <SheetTitle className="sr-only">Mobile Menu</SheetTitle>
-                    <nav className="flex flex-col gap-4 text-lg font-medium mt-10">
-                        {navLinks.map(({ href, label }) => (
+                    <nav className="flex flex-col gap-2 text-lg font-medium mt-10">
+                        {navLinks.map(({ href, label, icon: Icon }) => (
                             <Link
                             key={href}
                             href={href}
                             onClick={() => setIsOpen(false)}
                             className={cn(
-                                'transition-colors hover:text-primary',
-                                pathname === href ? 'text-primary' : 'text-muted-foreground'
+                                'flex items-center gap-4 rounded-lg px-4 py-3 text-xl transition-colors hover:text-primary',
+                                pathname === href ? 'bg-muted text-primary' : 'text-muted-foreground'
                             )}
                             >
-                            {label}
+                            <Icon className="h-6 w-6" />
+                            <span>{label}</span>
                             </Link>
                         ))}
                     </nav>
