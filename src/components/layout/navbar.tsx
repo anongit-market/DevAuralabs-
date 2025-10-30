@@ -31,7 +31,7 @@ const navLinks: { href: string; label: string; icon: LucideIcon }[] = [
   { href: '/', label: 'Menu', icon: LayoutGrid },
   { href: '/courses', label: 'Courses', icon: BookOpen },
   { href: '/services', label: 'Services', icon: Briefcase },
-  { href: '/xino-ai-chat', label: 'Xino AI', icon: Sparkles },
+  { href: '/aura-ai-chat', label: 'Aura AI', icon: Sparkles },
   { href: '/about', label: 'About', icon: Info },
   { href: '/admin', label: 'Admin Panel', icon: UserCog },
 ];
@@ -72,7 +72,7 @@ export default function Navbar() {
     window.location.href = '/';
   };
 
-  if (pathname === '/xino-ai-chat') {
+  if (pathname === '/aura-ai-chat') {
     return null; // Don't render the navbar on the chat page
   }
 
