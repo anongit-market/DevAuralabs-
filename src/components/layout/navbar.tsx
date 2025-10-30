@@ -2,7 +2,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Menu, User, ShoppingCart, LayoutGrid, BookOpen, Briefcase, Info, UserCog } from 'lucide-react';
+import { Menu, User, ShoppingCart, LayoutGrid, BookOpen, Briefcase, Info, UserCog, Sparkles } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 
 import { Button } from '@/components/ui/button';
@@ -30,6 +30,7 @@ const navLinks: { href: string; label: string; icon: LucideIcon }[] = [
   { href: '/', label: 'Menu', icon: LayoutGrid },
   { href: '/courses', label: 'Courses', icon: BookOpen },
   { href: '/services', label: 'Services', icon: Briefcase },
+  { href: '/xino-ai-chat', label: 'Xino AI', icon: Sparkles },
   { href: '/about', label: 'About', icon: Info },
   { href: '/admin', label: 'Admin Panel', icon: UserCog },
 ];
@@ -58,18 +59,21 @@ export default function Navbar() {
     window.location.href = '/';
   };
 
+  if (pathname === '/xino-ai-chat') {
+    return null; // Don't render the navbar on the chat page
+  }
+
   return (
     <header className={cn(
       "sticky top-0 z-50 w-full",
-      isTransparentPage ? "bg-transparent" : "glass-header"
+      isTransparentPage ? "absolute" : "glass-header"
     )}>
       <div className="container mx-auto flex items-center justify-between p-4">
         <div className={cn(
           "flex items-center gap-2",
-          isTransparentPage && "md:invisible"
         )}>
             {/* Mobile Menu Button - Top Left */}
-            <div className="md:hidden">
+            <div className={cn("md:hidden", isTransparentPage && "invisible")}>
                 <Sheet open={isOpen} onOpenChange={setIsOpen}>
                   <SheetTrigger asChild>
                     <div className="glass-icon-btn">
@@ -185,7 +189,7 @@ export default function Navbar() {
                 </DropdownMenu>
               </>
             ) : (
-              <Link href="/login" className="glass-icon-btn login-btn text-sm text-foreground">
+              <Link href="/login" className="glass-icon-btn login-btn text-foreground">
                   Login
               </Link>
             )

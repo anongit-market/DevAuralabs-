@@ -27,6 +27,8 @@
     --input: 225 25% 15%;
     --ring: 232 100% 59%;
     --radius: 1rem;
+    --xino-green: 158 82% 57%;
+    --xino-dark: 210 20% 12%;
   }
 }
 
@@ -57,11 +59,11 @@
      background-color: transparent;
   }
   
-  @supports (backdrop-filter: blur(12px)) or (-webkit-backdrop-filter: blur(12px)) {
+  @supports (backdrop-filter: blur(8px)) or (-webkit-backdrop-filter: blur(8px)) {
     .gradient-btn-1, .gradient-btn-2 {
-      background-color: rgba(255, 255, 255, 0.05);
-      -webkit-backdrop-filter: blur(12px);
-      backdrop-filter: blur(12px);
+      background-color: hsla(0,0%,100%,.1);
+      -webkit-backdrop-filter: blur(8px);
+      backdrop-filter: blur(8px);
     }
   }
 
@@ -120,11 +122,11 @@
     @apply h-9 px-4 w-auto;
   }
   
-  @supports (backdrop-filter: blur(12px)) or (-webkit-backdrop-filter: blur(12px)) {
+  @supports (backdrop-filter: blur(8px)) or (-webkit-backdrop-filter: blur(8px)) {
     .glass-icon-btn {
-      background-color: hsl(var(--background) / 0.2);
-      -webkit-backdrop-filter: blur(12px);
-      backdrop-filter: blur(12px);
+      background-color: hsla(0,0%,100%,.1);
+      -webkit-backdrop-filter: blur(8px);
+      backdrop-filter: blur(8px);
     }
   }
   
@@ -160,4 +162,58 @@
       opacity: 0;
     }
   }
+
+  /* Xino AI Chat Styles */
+  .xino-chat-container {
+    background: #000;
+  }
+
+  .xino-input {
+    @apply h-12 bg-zinc-900/70 border-zinc-700 rounded-full pl-6 pr-24 text-base text-white placeholder:text-zinc-500;
+    @apply focus:ring-2 focus:ring-green-400 focus:border-green-400;
+  }
+
+  .xino-send-btn {
+    @apply rounded-full bg-green-500 h-9 w-9;
+    @apply hover:bg-green-400;
+    box-shadow: 0 0 15px hsl(var(--xino-green) / 0.5);
+  }
+
+  .xino-glass-btn {
+    @apply bg-zinc-800/50 border border-zinc-700/80 rounded-full text-white;
+    @apply hover:bg-zinc-700/70 hover:text-white;
+    backdrop-filter: blur(8px);
+  }
+
+  .xino-glass-card {
+    @apply bg-zinc-800/50 border border-zinc-700/80 rounded-2xl transition-colors;
+    @apply hover:bg-zinc-800/80 hover:border-zinc-600;
+    backdrop-filter: blur(8px);
+  }
+  
+  .green-glow {
+     box-shadow: 0 0 15px hsl(var(--xino-green) / 0.7);
+  }
+
+  .listening-indicator {
+    @apply relative flex items-center justify-center;
+  }
+
+  .listening-indicator::before {
+    content: '';
+    @apply absolute w-48 h-48 rounded-full;
+    background-image: conic-gradient(from 180deg at 50% 50%, hsl(var(--xino-green)/0.8) 0deg, transparent 60deg, transparent 360deg);
+    animation: spin 1.5s linear infinite;
+    z-index: -1;
+  }
+
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
 }
+
