@@ -40,12 +40,23 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+  const [headerClass, setHeaderClass] = useState("w-full z-50");
 
   useEffect(() => {
     setIsMounted(true);
     const authStatus = localStorage.getItem('isAuthenticated') === 'true';
     setIsAuthenticated(authStatus);
   }, [pathname]);
+
+  useEffect(() => {
+    if (isMounted) {
+      if (pathname === '/' || pathname === '/login' || pathname === '/signup') {
+        setHeaderClass("w-full z-50 absolute");
+      } else {
+        setHeaderClass("w-full z-50 top-0 sticky glass-header");
+      }
+    }
+  }, [pathname, isMounted]);
 
   const handleLogout = () => {
     localStorage.removeItem('isAuthenticated');
@@ -59,7 +70,7 @@ export default function Navbar() {
   }
 
   return (
-    <header className="w-full z-50 absolute">
+    <header className={headerClass}>
       <div className="container mx-auto flex items-center justify-between p-4">
         {/* Mobile Menu Button - Top Left */}
         <div className="md:hidden">
