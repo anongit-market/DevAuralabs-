@@ -65,63 +65,58 @@ export default function Navbar() {
 
   return (
     <header className={cn(
-      "sticky top-0 z-50 w-full",
-      isTransparentPage ? "absolute" : "glass-header"
+      "w-full z-50",
+      isTransparentPage ? "absolute top-0" : "sticky top-0 glass-header"
     )}>
       <div className="container mx-auto flex items-center justify-between p-4">
-        <div className={cn(
-          "flex items-center gap-2",
-        )}>
-            {/* Mobile Menu Button - Top Left */}
-            <div className={cn("md:hidden", isTransparentPage && "invisible")}>
-                <Sheet open={isOpen} onOpenChange={setIsOpen}>
-                  <SheetTrigger asChild>
-                    <div className="glass-icon-btn">
-                      <Menu className="h-5 w-5" />
-                      <span className="sr-only">Toggle Menu</span>
-                    </div>
-                  </SheetTrigger>
-                  <SheetContent side="left" className="glass-header">
-                    <SheetTitle>
-                        <div className='w-40 h-auto mx-auto'>
-                            <Logo />
-                        </div>
-                    </SheetTitle>
-                    <nav className="flex flex-col gap-2 text-lg font-medium mt-10">
-                        {navLinks.map(({ href, label, icon: Icon }) => (
-                            <Link
-                            key={href}
-                            href={href}
-                            onClick={() => setIsOpen(false)}
-                            className={cn(
-                                'flex items-center gap-4 rounded-lg px-4 py-3 text-xl transition-colors hover:text-primary',
-                                pathname === href ? 'text-foreground bg-white/10 backdrop-blur-md border border-white/20 shadow-[0_0_12px_rgba(255,255,255,0.4)]' : 'text-muted-foreground'
-                            )}
-                            >
-                            <Icon className="h-6 w-6" />
-                            <span>{label}</span>
-                            </Link>
-                        ))}
-                    </nav>
-                    <div className="mt-auto">
-                        {isMounted && (
-                          !isAuthenticated ? (
-                            <Link href="/login" onClick={() => setIsOpen(false)}>
-                              <Button className="w-full" variant="outline">Login</Button>
-                            </Link>
-                          ) : (
-                            <Button className="w-full" variant="destructive" onClick={() => { handleLogout(); setIsOpen(false); }}>
-                              Logout
-                            </Button>
-                          )
-                        )}
-                      </div>
-                  </SheetContent>
-                </Sheet>
-            </div>
-            
+        {/* Mobile Menu Button - Top Left */}
+        <div className="md:hidden">
+          <Sheet open={isOpen} onOpenChange={setIsOpen}>
+            <SheetTrigger asChild>
+              <div className="glass-icon-btn">
+                <Menu className="h-5 w-5" />
+                <span className="sr-only">Toggle Menu</span>
+              </div>
+            </SheetTrigger>
+            <SheetContent side="left" className="glass-header">
+              <SheetTitle>
+                  <div className='w-40 h-auto mx-auto'>
+                      <Logo />
+                  </div>
+              </SheetTitle>
+              <nav className="flex flex-col gap-2 text-lg font-medium mt-10">
+                  {navLinks.map(({ href, label, icon: Icon }) => (
+                      <Link
+                      key={href}
+                      href={href}
+                      onClick={() => setIsOpen(false)}
+                      className={cn(
+                          'flex items-center gap-4 rounded-lg px-4 py-3 text-xl transition-colors hover:text-primary',
+                          pathname === href ? 'text-foreground bg-white/10 backdrop-blur-md border border-white/20 shadow-[0_0_12px_rgba(255,255,255,0.4)]' : 'text-muted-foreground'
+                      )}
+                      >
+                      <Icon className="h-6 w-6" />
+                      <span>{label}</span>
+                      </Link>
+                  ))}
+              </nav>
+              <div className="mt-auto">
+                  {isMounted && (
+                    !isAuthenticated ? (
+                      <Link href="/login" onClick={() => setIsOpen(false)}>
+                        <Button className="w-full" variant="outline">Login</Button>
+                      </Link>
+                    ) : (
+                      <Button className="w-full" variant="destructive" onClick={() => { handleLogout(); setIsOpen(false); }}>
+                        Logout
+                      </Button>
+                    )
+                  )}
+                </div>
+            </SheetContent>
+          </Sheet>
         </div>
-
+        
         {/* Desktop nav */}
         <nav className={cn(
             "hidden md:flex items-center gap-6 text-sm",
