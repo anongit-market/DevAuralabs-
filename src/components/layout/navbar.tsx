@@ -53,7 +53,7 @@ export default function Navbar() {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-transparent glass-header">
+    <header className="sticky top-0 z-50 w-full bg-transparent">
       <div className="container mx-auto flex items-center justify-between p-4">
         <div className="flex items-center gap-2">
             {/* Mobile Menu Button - Top Left */}
