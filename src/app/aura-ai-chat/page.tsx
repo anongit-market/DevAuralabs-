@@ -5,7 +5,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { Menu, Mic, X, Send } from 'lucide-react';
+import { Menu, Mic, X, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import VantaFogBackground from '@/components/vanta-fog-background';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
@@ -127,7 +127,7 @@ export default function AuraAiChatPage() {
               <Mic className="h-5 w-5" />
             </Button>
             <Button size="icon" className={cn("absolute right-2 bottom-2 aura-send-btn", isListening && "listening-btn-glow")} onClick={() => handleSend()}>
-                {isListening ? <Mic className="h-5 w-5" /> : <Send className="h-5 w-5" />}
+                {isListening ? <Mic className="h-5 w-5" /> : <ChevronRight className="h-6 w-6" />}
             </Button>
           </div>
         </footer>
@@ -161,7 +161,7 @@ export default function AuraAiChatPage() {
               <Mic className="h-5 w-5" />
             </Button>
             <Button size="icon" className={cn("absolute right-2 bottom-2 aura-send-btn", isListening && "listening-btn-glow")} onClick={isListening ? stopListening : () => handleSend()}>
-                {isListening ? <Mic className="h-5 w-5" /> : <Send className="h-5 w-5" />}
+                {isListening ? <Mic className="h-5 w-5" /> : <ChevronRight className="h-6 w-6" />}
             </Button>
           </div>
         </footer>
