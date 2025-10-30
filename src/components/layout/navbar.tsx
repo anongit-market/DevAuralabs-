@@ -65,7 +65,7 @@ export default function Navbar() {
                       <span className="sr-only">Toggle Menu</span>
                     </div>
                   </SheetTrigger>
-                  <SheetContent side="left">
+                  <SheetContent side="left" className="glass-header">
                     <SheetTitle className="sr-only">Mobile Menu</SheetTitle>
                     <nav className="flex flex-col gap-2 text-lg font-medium mt-10">
                         {navLinks.map(({ href, label, icon: Icon }) => (
