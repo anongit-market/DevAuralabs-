@@ -22,13 +22,15 @@ export const getCourses = ai.defineTool(
                 level: z.string(),
                 price: z.number(),
                 description: z.string(),
+                image: z.string(),
+                icon: z.string(),
             })
         ),
     },
     async () => {
         // In a real app, you would fetch this from a database.
         // For now, we'll return the static data.
-        return courses.map(({ id, title, level, price, description }) => ({ id, title, level, price, description }));
+        return courses.map(({ id, title, level, price, description, image, icon }) => ({ id, title, level, price, description, image, icon }));
     }
 );
 
@@ -43,12 +45,14 @@ export const getSkills = ai.defineTool(
                 title: z.string(),
                 progress: z.number(),
                 description: z.string(),
+                image: z.string(),
+                icon: z.string(),
             })
         ),
     },
     async () => {
         // In a real app, you would fetch this from a database.
         // For now, we'll return the static data.
-        return skills.map(({ id, title, progress, description }) => ({ id, title, progress, description }));
+        return skills.map(({ id, title, progress, description, image, icon }) => ({ id, title, progress, description, image, icon }));
     }
 );
