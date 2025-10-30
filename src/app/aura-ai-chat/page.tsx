@@ -4,8 +4,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { ArrowUp, Book, BrainCircuit, HeartPulse, Menu, Mic, X } from 'lucide-react';
+import { Textarea } from '@/components/ui/textarea';
+import { ArrowUp, Menu, Mic, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import VantaFogBackground from '@/components/vanta-fog-background';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
@@ -15,12 +15,6 @@ type Message = {
   text: string;
   sender: 'user' | 'aura';
 };
-
-const suggestionChips = [
-  { icon: Book, title: 'Education', subtitle: 'How to apply to universities?' },
-  { icon: BrainCircuit, title: 'Productivity', subtitle: 'Be 10x more productive with your work' },
-  { icon: HeartPulse, title: 'Health and wellness', subtitle: 'Make you health better than ever' },
-];
 
 export default function AuraAiChatPage() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -56,10 +50,6 @@ export default function AuraAiChatPage() {
     }, 1000);
   };
   
-  const handleSuggestionClick = (title: string) => {
-    handleSend(`Tell me more about ${title}.`);
-  };
-
   const startListening = () => {
     setIsListening(true);
     setTimeout(() => {
@@ -119,14 +109,15 @@ export default function AuraAiChatPage() {
 
         <footer className="p-4">
           <div className="relative">
-            <Input
+            <Textarea
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+              onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && (e.preventDefault(), handleSend())}
               placeholder="What is on your mind?"
-              className="aura-input"
+              className="aura-input min-h-[96px]"
+              rows={4}
             />
-            <Button size="icon" className="absolute right-2 top-1/2 -translate-y-1/2 aura-send-btn" onClick={() => handleSend()}>
+            <Button size="icon" className="absolute right-2 bottom-4 aura-send-btn" onClick={() => handleSend()}>
               <ArrowUp className="h-5 w-5" />
             </Button>
           </div>
@@ -144,35 +135,23 @@ export default function AuraAiChatPage() {
 
         <div className="flex-1 flex flex-col justify-center">
             <h1 className="text-4xl font-bold">HI {userName.toUpperCase()}!</h1>
-            <p className="text-zinc-400 mt-2">What Do You Want To Chat About Today?</p>
-
-            <div className="space-y-4 mt-8">
-                {suggestionChips.map(chip => (
-                    <button key={chip.title} onClick={() => handleSuggestionClick(chip.title)} className="w-full text-left aura-glass-card p-4 flex items-center gap-4">
-                        <chip.icon className="h-6 w-6 text-green-400" />
-                        <div>
-                            <p className="font-semibold">{chip.title}</p>
-                            <p className="text-sm text-zinc-400">{chip.subtitle}</p>
-                        </div>
-                    </button>
-                ))}
-            </div>
+            <p className="text-white mt-2">What Do You Want To Chat About Today?</p>
         </div>
         
         <footer className="p-4">
           <div className="relative">
-            <Input
+            <Textarea
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+              onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && (e.preventDefault(), handleSend())}
               placeholder="What is on your mind?"
-              className="aura-input"
+              className="aura-input min-h-[96px]"
+              rows={4}
             />
-             <Button size="icon" className="absolute right-12 top-1/2 -translate-y-1/2 aura-glass-btn h-8 w-8" onClick={() => {}}>
-              {/* This would be an image attachment button */}
+             <Button size="icon" className="absolute right-12 bottom-4 aura-glass-btn h-8 w-8" onClick={() => {}}>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg>
             </Button>
-            <Button size="icon" className="absolute right-2 top-1/2 -translate-y-1/2 aura-send-btn" onClick={startListening}>
+            <Button size="icon" className="absolute right-2 bottom-4 aura-send-btn" onClick={startListening}>
               <ArrowUp className="h-5 w-5" />
             </Button>
           </div>
