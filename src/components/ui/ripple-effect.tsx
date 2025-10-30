@@ -5,7 +5,11 @@ import React from 'react';
 
 export const RippleEffect: React.FC = () => {
   const createRipple = (event: React.MouseEvent<HTMLDivElement>) => {
-    const button = event.currentTarget;
+    const container = event.currentTarget;
+    const button = container.parentElement;
+
+    if (!button) return;
+
     const ripple = document.createElement("span");
     const rect = button.getBoundingClientRect();
     const size = Math.max(rect.width, rect.height);
@@ -18,26 +22,24 @@ export const RippleEffect: React.FC = () => {
 
     ripple.classList.add("ripple");
     
-    // Check if a ripple element already exists and remove it
-    const rippleEffect = button.getElementsByClassName("ripple")[0];
-    if (rippleEffect) {
-      rippleEffect.remove();
+    const existingRipple = button.getElementsByClassName("ripple")[0];
+    if (existingRipple) {
+      existingRipple.remove();
     }
     
     button.appendChild(ripple);
 
-    // Remove the ripple element after the animation is done
     setTimeout(() => {
-        if(ripple.parentElement) {
-            ripple.remove();
-        }
-    }, 700);
+      if (ripple.parentElement) {
+        ripple.remove();
+      }
+    }, 600);
   };
 
   return (
     <div
-      className="absolute inset-0"
-      onClick={createRipple}
+      className="absolute inset-0 overflow-hidden rounded-lg"
+      onMouseDown={createRipple}
     />
   );
 };
