@@ -3,9 +3,10 @@
 
 import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
-import Script from 'next/script';
 import Footer from '@/components/layout/footer';
 import Navbar from '@/components/layout/navbar';
+import { GeistSans } from 'geist/font/sans';
+import { GeistMono } from 'geist/font/mono';
 
 export default function RootLayout({
   children,
@@ -14,7 +15,7 @@ export default function RootLayout({
 }>) {
 
   return (
-    <html lang="en" className="dark">
+    <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable} dark`}>
       <head>
         <title>DevAura Labs</title>
         <meta name="description" content="Master. Build. Secure — All in One Platform." />

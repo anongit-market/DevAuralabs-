@@ -17,9 +17,9 @@ export default {
     },
     extend: {
       fontFamily: {
-        body: ['Gued', 'sans-serif'],
-        headline: ['Gued', 'sans-serif'],
-        code: ['monospace'],
+        body: ['var(--font-geist-sans)'],
+        headline: ['var(--font-geist-sans)'],
+        code: ['var(--font-geist-mono)'],
       },
       colors: {
         background: 'hsl(var(--background))',
