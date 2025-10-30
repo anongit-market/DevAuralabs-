@@ -68,7 +68,7 @@
 
   .gradient-btn:before {
     content: '';
-    background: linear-gradient(45deg, hsl(var(--primary)), hsl(var(--secondary)), hsl(var(--primary)), hsl(var(--secondary)));
+    background: transparent;
     position: absolute;
     top: -2px;
     left:-2px;
