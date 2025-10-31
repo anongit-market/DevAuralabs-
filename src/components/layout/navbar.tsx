@@ -33,7 +33,6 @@ const navLinks: { href: string; label: string; icon: LucideIcon }[] = [
   { href: '/services', label: 'Services', icon: Briefcase },
   { href: '/aura-ai-chat', label: 'Aura AI', icon: Sparkles },
   { href: '/about', label: 'About', icon: Info },
-  { href: '/admin', label: 'Admin Panel', icon: UserCog },
 ];
 
 const socialLinks = [
