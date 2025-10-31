@@ -1,4 +1,6 @@
 import CoursesSection from "@/components/sections/courses-section";
+import SkillsSection from "@/components/sections/skills-section";
+import { Separator } from "@/components/ui/separator";
 
 export default function CoursesPage() {
   return (
@@ -10,6 +12,8 @@ export default function CoursesPage() {
         </p>
       </div>
       <CoursesSection />
+      <Separator className="my-12 md:my-24 bg-white/10" />
+      <SkillsSection />
     </div>
   );
 }

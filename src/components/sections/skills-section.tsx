@@ -1,5 +1,7 @@
 import { skills } from '@/lib/data';
 import SkillCard from '@/components/skill-card';
+import { Button } from '../ui/button';
+import Link from 'next/link';
 
 export default function SkillsSection() {
   return (
@@ -14,6 +16,13 @@ export default function SkillsSection() {
         {skills.map((skill) => (
           <SkillCard key={skill.id} skill={skill} />
         ))}
+      </div>
+      <div className="text-center mt-12">
+        <Link href="/courses">
+            <Button className="gradient-btn gradient-btn-2 relative">
+                View All
+            </Button>
+        </Link>
       </div>
     </section>
   );
