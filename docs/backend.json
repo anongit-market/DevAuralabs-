@@ -1,14 +1,50 @@
 {
   "entities": {
+    "User": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "User",
+      "type": "object",
+      "description": "Represents a user of the DevAura Labs platform.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the User entity."
+        },
+        "email": {
+          "type": "string",
+          "description": "Email address of the user.",
+          "format": "email"
+        },
+        "firstName": {
+          "type": "string",
+          "description": "First name of the user."
+        },
+        "lastName": {
+          "type": "string",
+          "description": "Last name of the user."
+        },
+        "role": {
+          "type": "string",
+          "description": "Role of the user (e.g., admin, student)."
+        }
+      },
+      "required": [
+        "id",
+        "email",
+        "firstName",
+        "lastName",
+        "role"
+      ]
+    },
     "Course": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "title": "Course",
       "type": "object",
-      "description": "Represents a cybersecurity course offered by DevAura Labs.",
+      "description": "Represents a course offered by DevAura Labs.",
       "properties": {
         "id": {
           "type": "string",
-          "description": "Unique identifier for the course."
+          "description": "Unique identifier for the Course entity."
         },
         "title": {
           "type": "string",
@@ -16,67 +52,63 @@
         },
         "description": {
           "type": "string",
-          "description": "Detailed description of the course content."
-        },
-        "icon": {
-          "type": "string",
-          "description": "Icon representing the course (e.g., URL to an image)."
-        },
-        "rating": {
-          "type": "number",
-          "description": "Average rating of the course (e.g., 4.5)."
+          "description": "Description of the course."
         },
         "level": {
           "type": "string",
-          "description": "Difficulty level of the course (e.g., Beginner, Intermediate, Advanced)."
+          "description": "Level of the course (e.g., Beginner, Intermediate, Advanced)."
         },
         "price": {
           "type": "number",
           "description": "Price of the course."
         },
-        "category": {
-          "type": "string",
-          "description": "Category of the course."
+        "rating": {
+          "type": "number",
+          "description": "Average rating of the course."
         }
       },
       "required": [
         "id",
         "title",
         "description",
-        "icon",
-        "rating",
         "level",
         "price",
-        "category"
+        "rating"
       ]
     },
-    "SkillDevelopmentProgram": {
+    "Enrollment": {
       "$schema": "http://json-schema.org/draft-07/schema#",
-      "title": "SkillDevelopmentProgram",
+      "title": "Enrollment",
       "type": "object",
-      "description": "Represents a skill development program offered by DevAura Labs.",
+      "description": "Represents a user's enrollment in a course.",
       "properties": {
         "id": {
           "type": "string",
-          "description": "Unique identifier for the skill development program."
+          "description": "Unique identifier for the Enrollment entity."
         },
-        "title": {
+        "userId": {
           "type": "string",
-          "description": "Title of the skill development program."
+          "description": "Reference to User. (Relationship: User 1:N Enrollment)"
         },
-        "description": {
+        "courseId": {
           "type": "string",
-          "description": "Detailed description of the program."
+          "description": "Reference to Course. (Relationship: Course 1:N Enrollment)"
+        },
+        "enrollmentDate": {
+          "type": "string",
+          "description": "Date the user enrolled in the course.",
+          "format": "date-time"
         },
         "progress": {
           "type": "number",
-          "description": "User's progress in the program (e.g., percentage completed)."
+          "description": "The current progress of the enrolled user in the course, as a percentage."
         }
       },
       "required": [
         "id",
-        "title",
-        "description",
+        "userId",
+        "courseId",
+        "enrollmentDate",
         "progress"
       ]
     },
@@ -88,7 +120,7 @@
       "properties": {
         "id": {
           "type": "string",
-          "description": "Unique identifier for the website request."
+          "description": "Unique identifier for the WebsiteRequest entity."
         },
         "userId": {
           "type": "string",
@@ -96,122 +128,36 @@
         },
         "description": {
           "type": "string",
-          "description": "Detailed description of the website requirements."
+          "description": "Description of the requested website."
         },
-        "deadline": {
+        "requirements": {
           "type": "string",
-          "description": "Desired deadline for the website creation.",
-          "format": "date-time"
+          "description": "Specific requirements for the website."
         },
         "status": {
           "type": "string",
-          "description": "Current status of the website request (e.g., Pending, In Progress, Completed)."
+          "description": "Status of the website request (e.g., pending, in progress, completed)."
+        },
+        "requestDate": {
+          "type": "string",
+          "description": "Date the website request was submitted.",
+          "format": "date-time"
         }
       },
       "required": [
         "id",
         "userId",
         "description",
-        "deadline",
-        "status"
+        "requirements",
+        "status",
+        "requestDate"
       ]
-    },
-    "User": {
-      "$schema": "http://json-schema.org/draft-07/schema#",
-      "title": "User",
-      "type": "object",
-      "description": "Represents a user of the DevAura Labs platform.",
-      "properties": {
-        "id": {
-          "type": "string",
-          "description": "Unique identifier for the user."
-        },
-        "email": {
-          "type": "string",
-          "description": "User's email address.",
-          "format": "email"
-        },
-        "name": {
-          "type": "string",
-          "description": "User's full name."
-        },
-        "role": {
-          "type": "string",
-          "description": "User's role (e.g., Admin, Student)."
-        }
-      },
-      "required": [
-        "id",
-        "email",
-        "name",
-        "role"
-      ]
-    },
-    "ChatSession": {
-      "$schema": "http://json-schema.org/draft-07/schema#",
-      "title": "ChatSession",
-      "type": "object",
-      "description": "Represents a single chat session for a user.",
-      "properties": {
-        "id": {
-          "type": "string",
-          "description": "Unique identifier for the chat session."
-        },
-        "title": {
-          "type": "string",
-          "description": "A title for the chat session, often the first user message."
-        },
-        "timestamp": {
-          "type": "object",
-          "description": "Server timestamp of when the session was created or last updated."
-        },
-        "userId": {
-          "type": "string",
-          "description": "The ID of the user who owns this chat session."
-        }
-      },
-      "required": ["id", "title", "timestamp", "userId"]
-    },
-    "ChatMessage": {
-      "$schema": "http://json-schema.org/draft-07/schema#",
-      "title": "ChatMessage",
-      "type": "object",
-      "description": "Represents a single message within a chat session.",
-      "properties": {
-        "id": {
-          "type": "string",
-          "description": "Unique identifier for the message."
-        },
-        "text": {
-          "type": "string",
-          "description": "The content of the message."
-        },
-        "sender": {
-          "type": "string",
-          "enum": ["user", "aura"],
-          "description": "Who sent the message."
-        },
-        "timestamp": {
-          "type": "object",
-          "description": "Server timestamp of when the message was sent."
-        },
-        "courses": {
-          "type": "array",
-          "items": {
-            "$ref": "#/backend/entities/Course"
-          },
-          "description": "Optional list of course recommendations included in the message."
-        }
-      },
-      "required": ["id", "text", "sender", "timestamp"]
     }
   },
   "auth": {
     "providers": [
       "password",
-      "anonymous",
-      "google.com",
-      "facebook.com"
+      "anonymous"
     ]
   },
   "firestore": {
@@ -223,11 +169,47 @@
           "schema": {
             "$ref": "#/backend/entities/User"
           },
-          "description": "Stores user profiles. The 'userId' parameter is the unique identifier for each user.",
+          "description": "Collection of user profiles.  User documents are created via Firebase Authentication.",
           "params": [
             {
               "name": "userId",
               "description": "The unique identifier for the user."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/courses/{courseId}",
+        "definition": {
+          "entityName": "Course",
+          "schema": {
+            "$ref": "#/backend/entities/Course"
+          },
+          "description": "Collection of courses offered by DevAura Labs.",
+          "params": [
+            {
+              "name": "courseId",
+              "description": "The unique identifier for the course."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/enrollments/{enrollmentId}",
+        "definition": {
+          "entityName": "Enrollment",
+          "schema": {
+            "$ref": "#/backend/entities/Enrollment"
+          },
+          "description": "Collection of enrollments for a specific user. Uses path-based ownership for authorization independence.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier for the user."
+            },
+            {
+              "name": "enrollmentId",
+              "description": "The unique identifier for the enrollment."
             }
           ]
         }
@@ -239,11 +221,11 @@
           "schema": {
             "$ref": "#/backend/entities/WebsiteRequest"
           },
-          "description": "Stores website requests for each user. Includes denormalized 'userId' for authorization independence.",
+          "description": "Collection of website requests for a specific user. Uses path-based ownership for authorization independence.",
           "params": [
             {
               "name": "userId",
-              "description": "The unique identifier for the user who created the request."
+              "description": "The unique identifier for the user."
             },
             {
               "name": "websiteRequestId",
@@ -253,58 +235,22 @@
         }
       },
       {
-        "path": "/users/{userId}/chats/{chatId}",
+        "path": "/roles_admin/{userId}",
         "definition": {
-            "entityName": "ChatSession",
-            "schema": {
-                "$ref": "#/backend/entities/ChatSession"
-            },
-            "description": "Stores metadata for a user's chat sessions."
-        }
-      },
-      {
-          "path": "/users/{userId}/chats/{chatId}/messages/{messageId}",
-          "definition": {
-              "entityName": "ChatMessage",
-              "schema": {
-                  "$ref": "#/backend/entities/ChatMessage"
-              },
-              "description": "Stores the individual messages for a specific chat session."
-          }
-      },
-      {
-        "path": "/courses/{courseId}",
-        "definition": {
-          "entityName": "Course",
+          "entityName": "adminRole",
           "schema": {
-            "$ref": "#/backend/entities/Course"
+            "$ref": "#/backend/entities/User"
           },
-          "description": "Stores course information. The 'courseId' parameter is the unique identifier for each course.",
+          "description": "Documents in this collection indicate admin status. Existence of a document with a user ID grants admin privileges.",
           "params": [
             {
-              "name": "courseId",
-              "description": "The unique identifier for the course."
-            }
-          ]
-        }
-      },
-      {
-        "path": "/skill_development_programs/{skillDevelopmentProgramId}",
-        "definition": {
-          "entityName": "SkillDevelopmentProgram",
-          "schema": {
-            "$ref": "#/backend/entities/SkillDevelopmentProgram"
-          },
-          "description": "Stores skill development programs. The 'skillDevelopmentProgramId' parameter is the unique identifier for each program.",
-          "params": [
-            {
-              "name": "skillDevelopmentProgramId",
-              "description": "The unique identifier for the skill development program."
+              "name": "userId",
+              "description": "The unique identifier for the user who has admin role."
             }
           ]
         }
       }
     ],
-    "reasoning": "The Firestore structure is designed to ensure Authorization Independence, DBAC, and QAPs. User data is stored under `/users/{userId}`. Website requests and chat sessions are stored as subcollections under each user (`/users/{userId}/website_requests/{websiteRequestId}` and `/users/{userId}/chats/{chatId}` respectively), ensuring clear ownership and easy querying of a user's data. Messages are a subcollection of chats. Denormalization is applied by including the `userId` field within documents where necessary. Courses and skill development programs are stored in top-level collections for public access. This structure facilitates robust, path-based security rules."
+    "reasoning": "The Firestore structure is designed to support the DevAura Labs platform, focusing on courses, enrollments, and website requests, while adhering to the core principles of Authorization Independence, Clarity of Intent, DBAC (Database-Based Access Control), QAPs (Rules are not Filters), and Invariants. \n\n**Authorization Independence:**\n\n*   The structure uses path-based ownership for `WebsiteRequest` entities. This means that the security rules can be written to allow a user to only access their own website requests without needing to `get()` data from other collections.\n*   The `Enrollment` collection is also path-based `/users/{userId}/enrollments/{enrollmentId}`, so only the user can access their enrollments, and no `get()` calls are necessary.\n\n**Structural Segregation:**\n\n*   The structure segregates user-specific data (enrollments, website requests) into subcollections under the `/users/{userId}` path. This ensures that all documents within a given subcollection share the same security requirements, simplifying the rules.\n\n**Access Modeling:**\n\n*   **Private Data:** User-owned data (`Enrollment`, `WebsiteRequest`) uses path-based ownership (`/users/{userId}/{entity}/{entityId}`).\n\n**QAPs (Rules Are Not Filters):**\n\n*   The design supports secure `list` operations by structuring data such that listing operations can be scoped to a user's own data (e.g., listing enrollments for a specific user) or to publicly accessible data (e.g., listing all courses).\n\n**Example Scenario:**\n\n*   A user creates a `WebsiteRequest`. The request is stored under `/users/{userId}/website_requests/{websiteRequestId}`. The security rules ensure that only the user with the matching `userId` can read or write to that document.\n*   An admin can manage all courses in the `/courses` collection. Admin status is checked via existence of a document in the `/roles_admin/{userId}` collection."
   }
 }
