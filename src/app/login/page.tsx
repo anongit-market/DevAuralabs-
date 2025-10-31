@@ -14,7 +14,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
-import { ShieldEllipsis, Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -70,7 +70,19 @@ export default function LoginPage() {
           <div className="glass-card p-8 space-y-6">
             <div className="text-center space-y-2">
               <div className="flex justify-center">
-                <ShieldEllipsis className="h-12 w-12 text-primary" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="h-12 w-12 text-primary"
+                >
+                  <circle cx="12" cy="8" r="4" />
+                  <path d="M5.5 20.5c0-3.31 2.91-6 6.5-6s6.5 2.69 6.5 6" />
+                </svg>
               </div>
               <h1 className="text-3xl font-bold">Welcome Back</h1>
               <p className="text-muted-foreground">Enter your credentials to access your account</p>
