@@ -235,9 +235,9 @@ export default function Navbar() {
               </>
             ) : (
                 <Link href="/login">
-                    <Button className="glass-icon-btn login-btn text-foreground">
+                    <div className="glass-icon-btn login-btn text-foreground">
                         Login
-                    </Button>
+                    </div>
               </Link>
             )
           ) : (
