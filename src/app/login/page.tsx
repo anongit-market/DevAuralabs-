@@ -154,7 +154,7 @@ export default function LoginPage() {
         <p>You assume full responsibility for all actions taken under your credentials. DevAura Labs is not liable for any damages or losses resulting from your actions, whether intentional or unintentional.</p>
       </ScrollArea>
       <div className="flex justify-end gap-2">
-        <Button variant="ghost" onClick={() => router.push('/login')}>Cancel</Button>
+        <Button variant="ghost" onClick={() => router.push('/')}>Cancel</Button>
         <Button onClick={() => setAdminStep('consent')}>I Agree</Button>
       </div>
     </div>
@@ -219,7 +219,7 @@ export default function LoginPage() {
       </Form>
        <Separator className="my-4 bg-white/10" />
        <p className="text-center text-xs text-muted-foreground">
-          <button onClick={() => router.push('/login')} className="font-semibold text-primary hover:underline">
+          <button onClick={() => setView('user')} className="font-semibold text-primary hover:underline">
               User Login
           </button>
       </p>

@@ -2,7 +2,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Menu, User, ShoppingCart, LayoutGrid, BookOpen, Briefcase, Info, Sparkles } from 'lucide-react';
+import { Menu, User, ShoppingCart, LayoutGrid, BookOpen, Briefcase, Info, Sparkles, LogIn } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
 import { signOut } from 'firebase/auth';
 
@@ -164,7 +164,7 @@ export default function Navbar() {
         {/* Desktop nav */}
         <nav className={cn(
             "hidden md:flex items-center gap-6 text-sm",
-            (pathname === '/' || pathname === '/login' || pathname === '/signup') && "invisible"
+            (pathname === '/login' || pathname === '/signup') && "invisible"
         )}>
             {navLinks.map(({ href, label }) => (
                 <Link
@@ -231,11 +231,23 @@ export default function Navbar() {
                 </DropdownMenu>
               </>
             ) : (
-                <Link href="/login">
-                    <div className="glass-icon-btn login-btn text-foreground">
-                        Login
-                    </div>
-              </Link>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                     <div className="glass-icon-btn login-btn text-foreground">
+                       <LogIn className="mr-2 h-4 w-4" />
+                       <span>Login</span>
+                     </div>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-56" align="end" forceMount>
+                    <DropdownMenuItem asChild>
+                       <Link href="/login">User Login</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem asChild>
+                        <Link href="/login?view=admin">Connect Private</Link>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
             )
           ) : (
             <Skeleton className="h-9 w-20 rounded-md" />
