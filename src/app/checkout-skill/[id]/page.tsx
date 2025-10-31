@@ -77,7 +77,7 @@ export default function CheckoutSkillPage({ params }: { params: { id: string } }
                 </div>
               </div>
                <div className="space-y-2">
-                <Label htmlFor="coupon">Coupon Code (Optional)</Label>
+                <Label htmlFor="coupon">Promo Code (Optional)</Label>
                 <div className="flex gap-2">
                     <Input id="coupon" placeholder="ENTERCODE" className="bg-background/50" />
                     <Button variant="outline">Apply</Button>
