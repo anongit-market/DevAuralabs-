@@ -18,6 +18,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { useAdmin } from '@/context/admin-context';
 import { Checkbox } from '@/components/ui/checkbox';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { User } from 'lucide-react';
 
 const GoogleIcon = (props: React.SVGProps<SVGSVGElement>) => (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24px" height="24px" {...props}>
@@ -125,6 +126,12 @@ export default function LoginPage() {
               <FacebookIcon className="mr-2 h-5 w-5"/> Continue with Facebook
           </Button>
       </div>
+
+      <Separator className="my-4 bg-white/10" />
+
+      <Button variant="secondary" className="w-full" onClick={() => router.push('/')}>
+        <User className="mr-2 h-4 w-4" /> Continue as Guest
+      </Button>
 
       <p className="text-center text-sm text-muted-foreground pt-4">
         By continuing, you agree to our{' '}
