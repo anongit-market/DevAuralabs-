@@ -18,9 +18,9 @@ export default function SkillsSection() {
         ))}
       </div>
       <div className="text-center mt-12">
-        <Link href="/courses">
+        <Link href="/profile/my-courses">
             <Button className="gradient-btn gradient-btn-2 relative">
-                View All
+                My Courses
             </Button>
         </Link>
       </div>
