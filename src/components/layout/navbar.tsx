@@ -127,17 +127,6 @@ export default function Navbar() {
                         <span>{label}</span>
                         </Link>
                     ))}
-                    <Link
-                      href="/login?view=admin"
-                      onClick={() => setIsOpen(false)}
-                      className="flex items-center gap-4 rounded-lg px-4 py-3 text-xl transition-colors text-muted-foreground hover:text-primary"
-                    >
-                      <KeyRound className="h-6 w-6" />
-                      <div>
-                        <span className="text-lg">Connect Private</span>
-                        <p className="text-xs text-muted-foreground">(Authorized Only)</p>
-                      </div>
-                    </Link>
                 </nav>
                 <div className="mt-auto">
                     <div className="flex items-center justify-center gap-4 my-4">
