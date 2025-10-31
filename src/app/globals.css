@@ -59,6 +59,11 @@
      background-color: transparent;
   }
   
+  .gradient-btn-2.text-green:hover {
+    background-color: hsl(var(--aura-green) / 0.1);
+    border-color: hsl(var(--aura-green) / 0.5);
+  }
+  
   @supports (backdrop-filter: blur(8px)) or (-webkit-backdrop-filter: blur(8px)) {
     .gradient-btn-1, .gradient-btn-2 {
       background-color: hsla(0,0%,100%,.1);
