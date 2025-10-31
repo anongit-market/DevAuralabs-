@@ -1,3 +1,4 @@
+
 import { skills } from '@/lib/data';
 import SkillCard from '@/components/skill-card';
 import { Button } from '../ui/button';
@@ -18,9 +19,9 @@ export default function SkillsSection() {
         ))}
       </div>
       <div className="text-center mt-12">
-        <Link href="/profile/my-courses">
+        <Link href="/courses">
             <Button className="gradient-btn gradient-btn-2 relative">
-                My Courses
+                View More
             </Button>
         </Link>
       </div>
