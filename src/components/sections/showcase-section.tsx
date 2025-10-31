@@ -24,7 +24,7 @@ const ShowcaseCard = ({
   return (
     <div
       className={cn(
-        'relative w-full cursor-pointer overflow-hidden p-4 rounded-2xl bg-black border border-white/10',
+        'relative w-full cursor-pointer overflow-hidden p-4 rounded-2xl bg-black border border-primary/20 shadow-[0_0_15px_hsl(var(--primary)/0.5)]',
         className
       )}
     >
