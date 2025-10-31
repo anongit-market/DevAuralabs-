@@ -34,13 +34,11 @@ const ShowcaseCard = ({
 };
 
 export default function ShowcaseSection() {
-    const duplicatedImages = [...showcaseImages, ...showcaseImages];
-  
     return (
       <section id="showcase" className="py-12 md:py-16">
         <div className="relative w-full overflow-hidden bg-transparent">
-          <div className="flex w-max marquee-content">
-            {duplicatedImages.map((image, index) => (
+          <div className="flex justify-center w-full">
+            {showcaseImages.map((image, index) => (
               <ShowcaseCard key={index} img={image.url} alt={image.alt} />
             ))}
           </div>
