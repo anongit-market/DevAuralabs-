@@ -5,6 +5,7 @@ import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { icons } from '@/lib/data';
 import { Button } from './ui/button';
 import { RippleEffect } from './ui/ripple-effect';
+import Link from 'next/link';
 
 type Skill = {
   id: string;
@@ -24,7 +25,7 @@ const getPlaceholderImage = (id: string) => {
 };
 
 export default function SkillCard({ skill }: SkillCardProps) {
-  const { title, icon, progress, description, image } = skill;
+  const { id, title, icon, progress, description, image } = skill;
   const placeholder = getPlaceholderImage(image);
   const Icon = icons[icon];
 
@@ -54,10 +55,12 @@ export default function SkillCard({ skill }: SkillCardProps) {
             </div>
             <Progress value={progress} className="h-2 [&>div]:bg-secondary" />
         </div>
-        <Button className="w-full gradient-btn gradient-btn-2 mt-auto relative">
-          Enroll Now
-          <RippleEffect />
-        </Button>
+        <Link href={`/skills/${id}`} className="mt-auto w-full">
+            <Button className="w-full gradient-btn gradient-btn-2 relative">
+            Enroll Now
+            <RippleEffect />
+            </Button>
+        </Link>
       </div>
     </div>
   );
