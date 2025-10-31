@@ -39,13 +39,14 @@ const useCircularEffect = (api: EmblaCarouselType | undefined) => {
       let diffToTarget = scrollSnap - scrollProgress;
 
       // Handle looping to create a seamless circular effect
-      const slidesInView = api.slidesInView(true);
-      if (engine.options.loop && slidesInView.indexOf(index) === -1) {
-        const sign = Math.sign(diffToTarget);
-        if (sign === -1) {
-          diffToTarget = 1 + diffToTarget;
-        } else {
-          diffToTarget = diffToTarget - 1;
+      if (engine.options.loop) {
+        if (Math.abs(diffToTarget) > 0.5) {
+          const sign = Math.sign(diffToTarget);
+          if (sign === -1) {
+            diffToTarget = 1 + diffToTarget;
+          } else {
+            diffToTarget = diffToTarget - 1;
+          }
         }
       }
       
@@ -58,6 +59,7 @@ const useCircularEffect = (api: EmblaCarouselType | undefined) => {
 
     setTransforms(newTransforms);
   }, [api, isMounted]);
+
 
   useEffect(() => {
     if (!api || !isMounted) return;
