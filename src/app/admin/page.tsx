@@ -14,8 +14,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import AddCourseForm from '@/components/add-course-form';
 import AddSkillForm from '@/components/add-skill-form';
+import Link from 'next/link';
 
 export default function AdminPage() {
   const { isAdmin, isLoading, logout } = useAdmin();
@@ -72,19 +72,11 @@ export default function AdminPage() {
             <CardDescription>Manage your platform content.</CardDescription>
           </CardHeader>
           <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-             <Dialog>
-                <DialogTrigger asChild>
-                    <Button variant="outline" className="w-full">
-                        <PlusCircle className="mr-2 h-4 w-4" /> Add New Course
-                    </Button>
-                </DialogTrigger>
-                <DialogContent className="sm:max-w-[425px] glass-card">
-                    <DialogHeader>
-                    <DialogTitle>Add New Course</DialogTitle>
-                    </DialogHeader>
-                    <AddCourseForm />
-                </DialogContent>
-            </Dialog>
+             <Link href="/admin/add-course">
+                <Button variant="outline" className="w-full">
+                    <PlusCircle className="mr-2 h-4 w-4" /> Add New Course
+                </Button>
+            </Link>
 
              <Dialog>
                 <DialogTrigger asChild>

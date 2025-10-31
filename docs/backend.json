@@ -1,3 +1,4 @@
+
 {
   "entities": {
     "User": {
@@ -65,6 +66,25 @@
         "rating": {
           "type": "number",
           "description": "Average rating of the course."
+        },
+        "currency": {
+          "type": "string",
+          "description": "The currency of the price (e.g. USD, INR).",
+          "enum": ["USD", "INR"]
+        },
+        "startDate": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The start date of the course."
+        },
+        "endDate": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The end date of the course."
+        },
+        "duration": {
+            "type": "string",
+            "description": "The total duration of the course (e.g. '40 hours')."
         }
       },
       "required": [
@@ -73,7 +93,11 @@
         "description",
         "level",
         "price",
-        "rating"
+        "rating",
+        "currency",
+        "startDate",
+        "endDate",
+        "duration"
       ]
     },
     "Skill": {
