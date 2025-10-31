@@ -14,26 +14,26 @@ import {
 
 const ShowcaseCard = ({
   img,
-  alt,
+  title,
   className,
 }: {
   img: string;
-  alt: string;
+  title: string;
   className?: string;
 }) => {
   return (
     <div
       className={cn(
-        'relative w-full aspect-video cursor-pointer overflow-hidden p-4',
+        'relative w-full cursor-pointer overflow-hidden p-4 glass-card',
         className
       )}
     >
-      <div className="flex flex-row items-center justify-center gap-2 w-full h-full">
+        <h3 className="text-xl font-bold text-center mb-4 text-primary">{title}</h3>
+      <div className="relative flex flex-row items-center justify-center gap-2 w-full h-full aspect-video">
         <Image
           className="object-contain"
-          width={400}
-          height={400}
-          alt={alt}
+          fill
+          alt={title}
           src={img}
           unoptimized
         />
@@ -57,7 +57,7 @@ export default function ShowcaseSection() {
                     {showcaseImages.map((image, index) => (
                         <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/1">
                             <div className="p-1">
-                                <ShowcaseCard img={image.url} alt={image.alt} />
+                                <ShowcaseCard img={image.url} title={image.alt} />
                             </div>
                         </CarouselItem>
                     ))}
