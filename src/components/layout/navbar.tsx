@@ -4,6 +4,7 @@
 import Link from 'next/link';
 import { Menu, User, ShoppingCart, LayoutGrid, BookOpen, Briefcase, Info, UserCog, Sparkles, Loader2 } from 'lucide-react';
 import { usePathname } from 'next/navigation';
+import { signOut } from 'firebase/auth';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -26,6 +27,8 @@ import { useState, useEffect } from 'react';
 import type { LucideIcon } from 'lucide-react';
 import Logo from '../logo';
 import SocialIcon from '../social-icon';
+import { useAuth, useUser } from '@/firebase';
+
 
 const navLinks: { href: string; label: string; icon: LucideIcon }[] = [
   { href: '/', label: 'Menu', icon: LayoutGrid },
@@ -41,30 +44,19 @@ const socialLinks = [
   { name: 'WhatsApp', href: '#' },
 ];
 
-type UserData = {
-  name: string;
-  email: string;
-};
-
 export default function Navbar() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [userData, setUserData] = useState<UserData | null>(null);
   const [isMounted, setIsMounted] = useState(false);
   const [headerClass, setHeaderClass] = useState("w-full z-50");
+  
+  const auth = useAuth();
+  const { user, isUserLoading } = useUser();
+
 
   useEffect(() => {
     setIsMounted(true);
-    const authStatus = localStorage.getItem('isAuthenticated') === 'true';
-    setIsAuthenticated(authStatus);
-    if (authStatus) {
-      const savedUser = localStorage.getItem('userData');
-      if (savedUser) {
-        setUserData(JSON.parse(savedUser));
-      }
-    }
-  }, [pathname]);
+  }, []);
 
   useEffect(() => {
     if (isMounted) {
@@ -77,12 +69,7 @@ export default function Navbar() {
   }, [pathname, isMounted]);
 
   const handleLogout = () => {
-    localStorage.removeItem('isAuthenticated');
-    localStorage.removeItem('userData');
-    setIsAuthenticated(false);
-    setUserData(null);
-    // a full page reload is a good way to reset all state
-    window.location.href = '/';
+    signOut(auth);
   };
 
   if (pathname === '/aura-ai-chat') {
@@ -133,7 +120,7 @@ export default function Navbar() {
                         ))}
                     </div>
                     {isMounted && (
-                      !isAuthenticated ? (
+                      !user && !isUserLoading ? (
                         <Link href="/login" onClick={() => setIsOpen(false)}>
                           <Button className="w-full" variant="outline">Login</Button>
                         </Link>
@@ -170,8 +157,8 @@ export default function Navbar() {
 
         {/* Login/Profile Buttons - Top Right */}
         <div className="flex items-center justify-end gap-2">
-          {isMounted ? (
-            isAuthenticated && userData ? (
+          {isMounted && !isUserLoading ? (
+            user ? (
               <>
                 <Link href="/cart" className="glass-icon-btn">
                     <ShoppingCart className="h-5 w-5" />
@@ -181,9 +168,9 @@ export default function Navbar() {
                   <DropdownMenuTrigger asChild>
                     <div className="glass-icon-btn h-10 w-10">
                       <Avatar className="h-9 w-9">
-                        <AvatarImage src="https://i.pravatar.cc/150?u=a042581f4e29026704d" alt="@user" />
+                        <AvatarImage src={user.photoURL || "https://i.pravatar.cc/150?u=a042581f4e29026704d"} alt={user.displayName || 'user'} />
                         <AvatarFallback>
-                            {userData.name.charAt(0) || <User className="h-5 w-5" />}
+                            {user.displayName ? user.displayName.charAt(0) : <User className="h-5 w-5" />}
                         </AvatarFallback>
                       </Avatar>
                     </div>
@@ -191,9 +178,9 @@ export default function Navbar() {
                   <DropdownMenuContent className="w-56" align="end" forceMount>
                     <DropdownMenuLabel className="font-normal">
                       <div className="flex flex-col space-y-1">
-                        <p className="text-sm font-medium leading-none">{userData.name}</p>
+                        <p className="text-sm font-medium leading-none">{user.displayName || 'User'}</p>
                         <p className="text-xs leading-none text-muted-foreground">
-                          {userData.email}
+                          {user.email}
                         </p>
                       </div>
                     </DropdownMenuLabel>
@@ -203,9 +190,6 @@ export default function Navbar() {
                     </DropdownMenuItem>
                      <DropdownMenuItem asChild>
                       <Link href="/profile/my-courses">My Courses</Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link href="/admin">Dashboard</Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
                       <Link href="/profile/settings">Settings</Link>

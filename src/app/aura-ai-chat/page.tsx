@@ -22,11 +22,14 @@ import TypingAnimation from '@/components/typing-animation';
 import { getCourseRecommendations } from '@/app/actions';
 import type { AIPoweredCourseRecommendationsOutput } from '@/ai/flows/ai-powered-course-recommendations';
 import CourseChatCard from '@/components/course-chat-card';
+import { useUser, useFirestore, useCollection, useMemoFirebase, addDocumentNonBlocking } from '@/firebase';
+import { collection, serverTimestamp, query, orderBy, addDoc, doc, setDoc } from 'firebase/firestore';
 
 type Message = {
   id: string;
   text: string;
   sender: 'user' | 'aura';
+  timestamp: any;
   // @ts-ignore
   courses?: AIPoweredCourseRecommendationsOutput['courses'];
 };
@@ -34,139 +37,125 @@ type Message = {
 type ChatSession = {
   id: string;
   title: string;
-  messages: Message[];
-  timestamp: number;
-};
-
-type UserData = {
-  name: string;
-  email: string;
+  timestamp: any;
+  userId: string;
 };
 
 
 export default function AuraAiChatPage() {
   const [currentChatId, setCurrentChatId] = useState<string | null>(null);
-  const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isSending, setIsSending] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const [userData, setUserData] = useState<UserData | null>(null);
   const logoImage = PlaceHolderImages.find(p => p.id === 'ai-logo');
-  const [isMounted, setIsMounted] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [chatHistory, setChatHistory] = useState<ChatSession[]>([]);
   const router = useRouter();
 
+  const { user, isUserLoading } = useUser();
+  const firestore = useFirestore();
 
+  // Redirect if not logged in
   useEffect(() => {
-    setIsMounted(true);
-    const authStatus = localStorage.getItem('isAuthenticated') === 'true';
-    setIsAuthenticated(authStatus);
-
-    if (!authStatus) {
+    if (!isUserLoading && !user) {
       router.push('/login?next=/aura-ai-chat');
-      return;
     }
+  }, [user, isUserLoading, router]);
 
-    const savedUser = localStorage.getItem('userData');
-    if (savedUser) {
-      setUserData(JSON.parse(savedUser));
-    }
+  // Fetch user's chat sessions
+  const chatSessionsQuery = useMemoFirebase(() => 
+    user ? query(collection(firestore, 'users', user.uid, 'chats'), orderBy('timestamp', 'desc')) : null
+  , [firestore, user]);
+  const { data: chatHistory, isLoading: isHistoryLoading } = useCollection<ChatSession>(chatSessionsQuery);
 
-    const savedHistory = localStorage.getItem('chatHistory');
-    if (savedHistory) {
-      const parsedHistory = JSON.parse(savedHistory) as ChatSession[];
-      setChatHistory(parsedHistory);
-    }
-    
-    const activeChatId = localStorage.getItem('activeChatId');
-    if (activeChatId) {
-      const activeChat = (JSON.parse(savedHistory || '[]') as ChatSession[]).find(chat => chat.id === activeChatId);
-      if (activeChat) {
-        setCurrentChatId(activeChat.id);
-        setMessages(activeChat.messages);
-      } else {
-        startNewChat();
-      }
-    } else {
-        startNewChat();
-    }
-  }, [router]);
+  // Fetch messages for the current chat
+  const messagesQuery = useMemoFirebase(() => 
+    user && currentChatId ? query(collection(firestore, 'users', user.uid, 'chats', currentChatId, 'messages'), orderBy('timestamp', 'asc')) : null
+  , [firestore, user, currentChatId]);
+  const { data: messages, isLoading: areMessagesLoading } = useCollection<Message>(messagesQuery);
+  
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isLoading]);
-
+  
+  // Set the first chat as active, or create a new one
   useEffect(() => {
-    if (!isMounted || !currentChatId) return;
+      if (!isHistoryLoading && chatHistory) {
+          if (chatHistory.length > 0 && !currentChatId) {
+              setCurrentChatId(chatHistory[0].id);
+          }
+      }
+  }, [chatHistory, isHistoryLoading, currentChatId]);
 
-    const updatedHistory = chatHistory.filter(chat => chat.id !== currentChatId);
-    const currentSession = chatHistory.find(chat => chat.id === currentChatId) || { id: currentChatId, messages: [], title: '', timestamp: Date.now() };
 
-    const updatedSession: ChatSession = {
-        ...currentSession,
-        messages: messages,
-        title: messages.length > 0 ? messages[0].text.substring(0, 30) : 'New Chat',
-        timestamp: Date.now(),
-    };
-    
-    const newHistory = [updatedSession, ...updatedHistory.filter(chat => chat.messages.length > 0)].sort((a, b) => b.timestamp - a.timestamp);
-
-    setChatHistory(newHistory);
-    localStorage.setItem('chatHistory', JSON.stringify(newHistory));
-    localStorage.setItem('activeChatId', currentChatId);
-  }, [messages, currentChatId, isMounted]);
-
-  const startNewChat = () => {
+  const startNewChat = async () => {
+    if (!user) return;
     const newChatId = `chat-${Date.now()}`;
+    const newChatSession: Omit<ChatSession, 'id'> = {
+        title: 'New Chat',
+        timestamp: serverTimestamp(),
+        userId: user.uid,
+    };
+    await setDoc(doc(firestore, 'users', user.uid, 'chats', newChatId), newChatSession);
     setCurrentChatId(newChatId);
-    setMessages([]);
-    localStorage.setItem('activeChatId', newChatId);
   }
   
   const loadChat = (chatId: string) => {
-    const chatToLoad = chatHistory.find(chat => chat.id === chatId);
-    if(chatToLoad) {
-        setCurrentChatId(chatToLoad.id);
-        setMessages(chatToLoad.messages);
-        localStorage.setItem('activeChatId', chatToLoad.id);
-    }
+    setCurrentChatId(chatId);
   }
 
-
   const handleSend = async (text: string = input) => {
-    if (!text.trim() || isLoading) return;
+    if (!text.trim() || isSending || !user || !firestore) return;
 
-    const userMessage: Message = {
-      id: `user-${Date.now()}`,
+    setIsSending(true);
+    setInput('');
+    
+    let activeChatId = currentChatId;
+
+    // Create a new chat session if one doesn't exist
+    if (!activeChatId) {
+        const newChatRef = await addDoc(collection(firestore, 'users', user.uid, 'chats'), {
+            title: text.substring(0, 30),
+            timestamp: serverTimestamp(),
+            userId: user.uid,
+        });
+        activeChatId = newChatRef.id;
+        setCurrentChatId(activeChatId);
+    }
+    
+    const userMessage: Omit<Message, 'id'> = {
       text,
       sender: 'user',
+      timestamp: serverTimestamp(),
     };
-    setMessages((prev) => [...prev, userMessage]);
-    setInput('');
-    setIsLoading(true);
 
+    const messagesCol = collection(firestore, 'users', user.uid, 'chats', activeChatId, 'messages');
+    addDocumentNonBlocking(messagesCol, userMessage);
+
+
+    setIsLoading(true);
     const result = await getCourseRecommendations({ interests: text, goals: '' });
     
-    let aiResponse: Message;
+    let aiResponse: Omit<Message, 'id'>;
     if (result.success && result.data) {
         aiResponse = {
-            id: `aura-${Date.now()}`,
             text: result.data.courseRecommendations,
             sender: 'aura',
             courses: result.data.courses,
+            timestamp: serverTimestamp(),
         };
     } else {
         aiResponse = {
-            id: `aura-${Date.now()}`,
             text: result.error || "I'm having trouble connecting right now. Please try again later.",
             sender: 'aura',
+            timestamp: serverTimestamp(),
         };
     }
 
+    addDocumentNonBlocking(messagesCol, aiResponse);
     setIsLoading(false);
-    setMessages((prev) => [...prev, aiResponse]);
+    setIsSending(false);
   };
   
   const startListening = () => {
@@ -182,7 +171,7 @@ export default function AuraAiChatPage() {
     handleSend("Hey Aura, can you help plan a weekend trip to the mountains?");
   };
 
-  if (!isMounted || !isAuthenticated) {
+  if (isUserLoading || !user) {
     return (
         <div className="h-screen w-full bg-black flex items-center justify-center">
             <VantaFogBackground />
@@ -210,7 +199,7 @@ export default function AuraAiChatPage() {
             <DropdownMenuContent align="start" className="bg-zinc-900/80 border-zinc-700 text-white backdrop-blur-md">
                 <DropdownMenuLabel>Recent Chats</DropdownMenuLabel>
                 <DropdownMenuSeparator className="bg-zinc-700"/>
-                {chatHistory.slice(0, 5).map(chat => (
+                {chatHistory?.slice(0, 5).map(chat => (
                     <DropdownMenuItem key={chat.id} onSelect={() => loadChat(chat.id)} className="focus:bg-zinc-800 focus:text-white">
                         {chat.title}
                     </DropdownMenuItem>
@@ -221,15 +210,15 @@ export default function AuraAiChatPage() {
                  </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          <h2 className="text-xl font-bold">{chatHistory.find(c => c.id === currentChatId)?.title || 'New Chat'}</h2>
+          <h2 className="text-xl font-bold">{chatHistory?.find(c => c.id === currentChatId)?.title || 'New Chat'}</h2>
           <Avatar className="h-9 w-9">
-            <AvatarImage src="https://i.pravatar.cc/150?u=a042581f4e29026704d" />
-            <AvatarFallback>{userData?.name.charAt(0) || 'U'}</AvatarFallback>
+            <AvatarImage src={user.photoURL || "https://i.pravatar.cc/150?u=a042581f4e29026704d"} />
+            <AvatarFallback>{user.displayName?.charAt(0) || 'U'}</AvatarFallback>
           </Avatar>
         </header>
 
         <div className="flex-1 overflow-y-auto p-4 space-y-6">
-          {messages.map((message) => (
+          {messages?.map((message) => (
             <div
               key={message.id}
               className={cn(
@@ -255,6 +244,7 @@ export default function AuraAiChatPage() {
                 <p className="whitespace-pre-wrap">{message.text}</p>
                  {message.courses && message.courses.length > 0 && (
                     <div className="mt-4 space-y-4">
+                        {/*@ts-ignore*/}
                         {message.courses.map(course => (
                             <CourseChatCard key={course.id} course={course} />
                         ))}
@@ -263,8 +253,8 @@ export default function AuraAiChatPage() {
               </div>
                {message.sender === 'user' && (
                  <Avatar className="h-8 w-8">
-                    <AvatarImage src="https://i.pravatar.cc/150?u=a042581f4e29026704d" />
-                    <AvatarFallback>{userData?.name.charAt(0) || 'U'}</AvatarFallback>
+                    <AvatarImage src={user.photoURL || "https://i.pravatar.cc/150?u=a042581f4e29026704d"} />
+                    <AvatarFallback>{user.displayName?.charAt(0) || 'U'}</AvatarFallback>
                 </Avatar>
               )}
             </div>
@@ -280,7 +270,7 @@ export default function AuraAiChatPage() {
                 </div>
             </div>
           )}
-           {messages.length === 0 && !isLoading && (
+           {!areMessagesLoading && messages?.length === 0 && !isLoading && (
              <div className="text-center text-zinc-400 pt-20">
                 <MessageSquare className="mx-auto h-16 w-16" />
                 <h2 className="mt-4 text-2xl font-bold text-white">Ask Aura Anything</h2>
@@ -299,13 +289,13 @@ export default function AuraAiChatPage() {
               placeholder="Ask Aura anything..."
               className="aura-glass-input min-h-[56px] pt-3 pr-24"
               rows={1}
-              disabled={isLoading}
+              disabled={isSending}
             />
-            <Button size="icon" className="absolute right-12 bottom-2 aura-glass-btn h-8 w-8" onClick={startListening} disabled={isLoading}>
+            <Button size="icon" className="absolute right-12 bottom-2 aura-glass-btn h-8 w-8" onClick={startListening} disabled={isSending}>
               <Mic className="h-5 w-5" />
             </Button>
-            <Button size="icon" className={cn("absolute right-2 bottom-2 aura-send-btn", isListening && "listening-btn-glow")} onClick={() => handleSend()} disabled={isLoading || !input.trim()}>
-                {isLoading ? (
+            <Button size="icon" className={cn("absolute right-2 bottom-2 aura-send-btn", isListening && "listening-btn-glow")} onClick={() => handleSend()} disabled={isSending || !input.trim()}>
+                {isSending ? (
                     <Loader2 className="h-5 w-5 animate-spin" />
                 ) : isListening ? (
                     <Mic className="h-5 w-5" />
@@ -335,7 +325,7 @@ export default function AuraAiChatPage() {
             <DropdownMenuContent align="start" className="bg-zinc-900/80 border-zinc-700 text-white backdrop-blur-md">
                 <DropdownMenuLabel>Recent Chats</DropdownMenuLabel>
                 <DropdownMenuSeparator className="bg-zinc-700"/>
-                 {chatHistory.slice(0, 5).map(chat => (
+                 {chatHistory?.slice(0, 5).map(chat => (
                     <DropdownMenuItem key={chat.id} onSelect={() => loadChat(chat.id)} className="focus:bg-zinc-800 focus:text-white">
                         {chat.title}
                     </DropdownMenuItem>
@@ -349,7 +339,7 @@ export default function AuraAiChatPage() {
         </header>
 
         <div className="flex-1 flex flex-col justify-center">
-            <h1 className="text-4xl font-bold">HI {userData?.name.split(' ')[0].toUpperCase()}!</h1>
+            <h1 className="text-4xl font-bold">HI {user.displayName?.split(' ')[0].toUpperCase() || 'USER'}!</h1>
             <p className="text-white mt-2">What Do You Want To Chat About Today?</p>
         </div>
         
@@ -362,13 +352,13 @@ export default function AuraAiChatPage() {
               placeholder="Ask Aura anything..."
               className="aura-glass-input min-h-[56px] pt-3 pr-24"
               rows={1}
-              disabled={isLoading}
+              disabled={isSending}
             />
-            <Button size="icon" className="absolute right-12 bottom-2 aura-glass-btn h-8 w-8" onClick={startListening} disabled={isLoading}>
+            <Button size="icon" className="absolute right-12 bottom-2 aura-glass-btn h-8 w-8" onClick={startListening} disabled={isSending}>
               <Mic className="h-5 w-5" />
             </Button>
-            <Button size="icon" className={cn("absolute right-2 bottom-2 aura-send-btn", isListening && "listening-btn-glow")} onClick={isListening ? stopListening : () => handleSend()} disabled={isLoading || !input.trim()}>
-                 {isLoading ? (
+            <Button size="icon" className={cn("absolute right-2 bottom-2 aura-send-btn", isListening && "listening-btn-glow")} onClick={isListening ? stopListening : () => handleSend()} disabled={isSending || !input.trim()}>
+                 {isSending ? (
                     <Loader2 className="h-5 w-5 animate-spin" />
                 ) : isListening ? (
                     <Mic className="h-5 w-5" />
@@ -385,7 +375,7 @@ export default function AuraAiChatPage() {
     <div className="h-screen w-full bg-black aura-chat-container">
       <VantaFogBackground />
       <div className="relative z-10 h-full w-full backdrop-blur-sm bg-black/30">
-        {messages.length > 0 ? renderChatUI() : renderWelcomeUI()}
+        {areMessagesLoading || (messages && messages.length > 0) ? renderChatUI() : renderWelcomeUI()}
       </div>
     </div>
   );

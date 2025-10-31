@@ -10,6 +10,7 @@ import { CheckCircle, ShoppingCart } from 'lucide-react';
 import type { courses } from '@/lib/data';
 import { useToast } from '@/hooks/use-toast';
 import { useEffect, useState } from 'react';
+import { useUser } from '@/firebase';
 
 const getPlaceholderImage = (id: string) => {
   return PlaceHolderImages.find((img) => img.id === id);
@@ -20,18 +21,16 @@ type Course = (typeof courses)[0];
 export default function CourseDetailClient({ course }: { course: Course }) {
   const router = useRouter();
   const { toast } = useToast();
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+  const { user } = useUser();
 
   useEffect(() => {
     setIsMounted(true);
-    const authStatus = localStorage.getItem('isAuthenticated') === 'true';
-    setIsAuthenticated(authStatus);
   }, []);
 
   const handleBuyNow = () => {
     if (!isMounted) return;
-    if (!isAuthenticated) {
+    if (!user) {
       router.push(`/signup?next=/checkout/${course.id}`);
     } else {
       router.push(`/checkout/${course.id}`);
@@ -40,7 +39,7 @@ export default function CourseDetailClient({ course }: { course: Course }) {
 
   const handleAddToCart = () => {
     if (!isMounted) return;
-    if (!isAuthenticated) {
+    if (!user) {
       router.push(`/signup?next=/courses/${course.id}`);
     } else {
       // In a real app, you'd have a cart state management (e.g., Context, Redux)

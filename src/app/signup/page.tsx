@@ -21,6 +21,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import VantaBackground from '@/components/vanta-background';
 import Footer from '@/components/layout/footer';
+import { useAuth, useUser, initiateEmailSignUp } from '@/firebase';
 
 const formSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
@@ -40,6 +41,8 @@ export default function SignupPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const next = searchParams.get('next');
+  const auth = useAuth();
+  const { user, isUserLoading } = useUser();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -51,24 +54,23 @@ export default function SignupPage() {
       confirmPassword: '',
     },
   });
-
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-    // Simulate successful signup
-    localStorage.setItem('isAuthenticated', 'true');
-    const userData = { name: values.name, email: values.email };
-    localStorage.setItem('userData', JSON.stringify(userData));
-
+  
+  if (user) {
     toast({
       title: 'Sign-up Successful',
       description: 'Welcome to DevAura Labs!',
     });
-    
     if (next) {
       router.push(next);
     } else {
       router.push('/');
     }
+  }
+
+
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    initiateEmailSignUp(auth, values.email, values.password);
+    // In a real app you would also update the user profile with the name
   }
 
   return (
@@ -168,7 +170,7 @@ export default function SignupPage() {
                     </FormItem>
                   )}
                 />
-                <Button type="submit" className="w-full gradient-btn gradient-btn-1 relative">
+                <Button type="submit" className="w-full gradient-btn gradient-btn-1 relative" disabled={isUserLoading}>
                   Create Account
                 </Button>
               </form>

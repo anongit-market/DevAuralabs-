@@ -21,6 +21,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import VantaBackground from '@/components/vanta-background';
 import Footer from '@/components/layout/footer';
+import { initiateEmailSignIn, useAuth, useUser } from '@/firebase';
 
 const formSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email.' }),
@@ -33,6 +34,8 @@ export default function LoginPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const next = searchParams.get('next');
+  const auth = useAuth();
+  const { user, isUserLoading } = useUser();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -41,24 +44,22 @@ export default function LoginPage() {
       password: '',
     },
   });
-
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-    // Simulate successful login
-    localStorage.setItem('isAuthenticated', 'true');
-    // For demonstration, let's set a default user if they log in directly
-    const defaultUser = { name: 'John Doe', email: values.email };
-    localStorage.setItem('userData', JSON.stringify(defaultUser));
+  
+  if (user) {
     toast({
       title: 'Login Successful',
       description: 'Welcome back!',
     });
-
     if (next) {
       router.push(next);
     } else {
       router.push('/');
     }
+  }
+
+
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    initiateEmailSignIn(auth, values.email, values.password);
   }
 
   return (
@@ -116,7 +117,7 @@ export default function LoginPage() {
                     Forgot password?
                   </Link>
                 </div>
-                <Button type="submit" className="w-full gradient-btn gradient-btn-1 relative">
+                <Button type="submit" className="w-full gradient-btn gradient-btn-1 relative" disabled={isUserLoading}>
                   Login
                 </Button>
               </form>

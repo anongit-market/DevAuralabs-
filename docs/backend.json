@@ -146,6 +146,64 @@
         "name",
         "role"
       ]
+    },
+    "ChatSession": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "ChatSession",
+      "type": "object",
+      "description": "Represents a single chat session for a user.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the chat session."
+        },
+        "title": {
+          "type": "string",
+          "description": "A title for the chat session, often the first user message."
+        },
+        "timestamp": {
+          "type": "object",
+          "description": "Server timestamp of when the session was created or last updated."
+        },
+        "userId": {
+          "type": "string",
+          "description": "The ID of the user who owns this chat session."
+        }
+      },
+      "required": ["id", "title", "timestamp", "userId"]
+    },
+    "ChatMessage": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "ChatMessage",
+      "type": "object",
+      "description": "Represents a single message within a chat session.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the message."
+        },
+        "text": {
+          "type": "string",
+          "description": "The content of the message."
+        },
+        "sender": {
+          "type": "string",
+          "enum": ["user", "aura"],
+          "description": "Who sent the message."
+        },
+        "timestamp": {
+          "type": "object",
+          "description": "Server timestamp of when the message was sent."
+        },
+        "courses": {
+          "type": "array",
+          "items": {
+            "$ref": "#/backend/entities/Course"
+          },
+          "description": "Optional list of course recommendations included in the message."
+        }
+      },
+      "required": ["id", "text", "sender", "timestamp"]
     }
   },
   "auth": {
@@ -193,6 +251,26 @@
         }
       },
       {
+        "path": "/users/{userId}/chats/{chatId}",
+        "definition": {
+            "entityName": "ChatSession",
+            "schema": {
+                "$ref": "#/backend/entities/ChatSession"
+            },
+            "description": "Stores metadata for a user's chat sessions."
+        }
+      },
+      {
+          "path": "/users/{userId}/chats/{chatId}/messages/{messageId}",
+          "definition": {
+              "entityName": "ChatMessage",
+              "schema": {
+                  "$ref": "#/backend/entities/ChatMessage"
+              },
+              "description": "Stores the individual messages for a specific chat session."
+          }
+      },
+      {
         "path": "/courses/{courseId}",
         "definition": {
           "entityName": "Course",
@@ -225,6 +303,6 @@
         }
       }
     ],
-    "reasoning": "The Firestore structure is designed to ensure Authorization Independence, DBAC, and QAPs. User data is stored under `/users/{userId}`. Website requests are stored as subcollections under each user (`/users/{userId}/website_requests/{websiteRequestId}`), ensuring clear ownership and easy querying of a user's requests. Denormalization is applied by including the `userId` field within the WebsiteRequest document itself; this ensures authorization rules do not need to perform `get()` operations to verify ownership. Courses are stored in a top-level `/courses` collection, allowing for easy listing and filtering. Similarly, skill development programs are stored in a `/skill_development_programs` collection. Since access to courses and skill development programs is likely public or managed via other mechanisms (e.g., purchase), this flat structure is appropriate. The `id` field in each document acts as the unique identifier.\n\nThis structure facilitates listing all courses and skill development programs without complex security rules. Path-based ownership for website requests provides simple and robust authorization rules. The denormalized `userId` in the `website_requests` collection enables authorization independence, preventing the need for expensive and fragile `get()` calls in security rules."
+    "reasoning": "The Firestore structure is designed to ensure Authorization Independence, DBAC, and QAPs. User data is stored under `/users/{userId}`. Website requests and chat sessions are stored as subcollections under each user (`/users/{userId}/website_requests/{websiteRequestId}` and `/users/{userId}/chats/{chatId}` respectively), ensuring clear ownership and easy querying of a user's data. Messages are a subcollection of chats. Denormalization is applied by including the `userId` field within documents where necessary. Courses and skill development programs are stored in top-level collections for public access. This structure facilitates robust, path-based security rules."
   }
 }
