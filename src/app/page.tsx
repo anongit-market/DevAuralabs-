@@ -31,7 +31,7 @@ export default function Home() {
         <ServicesSection />
       </div>
       {isAdmin && <AdminFAB />}
-      {user && <FloatingAiButton />}
+      {(user || isAdmin) && <FloatingAiButton />}
       <Footer />
     </div>
   );
