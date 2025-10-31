@@ -2,7 +2,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Menu, User, ShoppingCart, LayoutGrid, BookOpen, Briefcase, Info, Sparkles, KeyRound } from 'lucide-react';
+import { Menu, User, ShoppingCart, LayoutGrid, BookOpen, Briefcase, Info, Sparkles } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
 import { signOut } from 'firebase/auth';
 
@@ -32,6 +32,7 @@ import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useAdmin } from '@/context/admin-context';
+import BackButton from './back-button';
 
 
 const AuraAiIcon = () => {
@@ -89,6 +90,8 @@ export default function Navbar() {
     router.push('/');
   }
 
+  const showBackButton = isMounted && pathname !== '/' && pathname !== '/login' && pathname !== '/signup';
+
   if (pathname === '/aura-ai-chat' || (isAdmin && pathname.startsWith('/admin'))) {
     return null; // Don't render the navbar on the chat page or admin pages
   }
@@ -96,61 +99,66 @@ export default function Navbar() {
   return (
     <header className={headerClass}>
       <div className="container mx-auto flex items-center justify-between p-4">
-        {/* Mobile Menu Button - Top Left */}
-        <div className="md:hidden">
-          {isMounted && (
-            <Sheet open={isOpen} onOpenChange={setIsOpen}>
-              <SheetTrigger asChild>
-                <div className="glass-icon-btn">
-                  <Menu className="h-5 w-5" />
-                  <span className="sr-only">Toggle Menu</span>
-                </div>
-              </SheetTrigger>
-              <SheetContent side="left" className="glass-header flex flex-col">
-                <SheetTitle>
-                    <div className='w-40 h-auto mx-auto'>
-                        <Logo />
+        
+        <div className='flex items-center gap-2'>
+            {showBackButton && <BackButton />}
+
+            {/* Mobile Menu Button - Top Left */}
+            <div className="md:hidden">
+            {isMounted && (
+                <Sheet open={isOpen} onOpenChange={setIsOpen}>
+                <SheetTrigger asChild>
+                    <div className="glass-icon-btn">
+                    <Menu className="h-5 w-5" />
+                    <span className="sr-only">Toggle Menu</span>
                     </div>
-                </SheetTitle>
-                <nav className="flex flex-col gap-2 text-lg font-medium mt-10">
-                    {navLinks.map(({ href, label, icon: Icon }) => (
-                        <Link
-                        key={href}
-                        href={href}
-                        onClick={() => setIsOpen(false)}
-                        className={cn(
-                            'flex items-center gap-4 rounded-lg px-4 py-3 text-xl transition-colors hover:text-primary',
-                            pathname === href ? 'text-foreground bg-white/10 backdrop-blur-md border border-white/20 shadow-[0_0_12px_rgba(255,255,255,0.4)]' : 'text-muted-foreground'
-                        )}
-                        >
-                        <Icon className="h-6 w-6" />
-                        <span>{label}</span>
-                        </Link>
-                    ))}
-                </nav>
-                <div className="mt-auto">
-                    <div className="flex items-center justify-center gap-4 my-4">
-                        {socialLinks.map((social) => (
-                        <Link key={social.name} href={social.href} target="_blank" rel="noopener noreferrer">
-                            <SocialIcon name={social.name} />
-                        </Link>
+                </SheetTrigger>
+                <SheetContent side="left" className="glass-header flex flex-col">
+                    <SheetTitle>
+                        <div className='w-40 h-auto mx-auto'>
+                            <Logo />
+                        </div>
+                    </SheetTitle>
+                    <nav className="flex flex-col gap-2 text-lg font-medium mt-10">
+                        {navLinks.map(({ href, label, icon: Icon }) => (
+                            <Link
+                            key={href}
+                            href={href}
+                            onClick={() => setIsOpen(false)}
+                            className={cn(
+                                'flex items-center gap-4 rounded-lg px-4 py-3 text-xl transition-colors hover:text-primary',
+                                pathname === href ? 'text-foreground bg-white/10 backdrop-blur-md border border-white/20 shadow-[0_0_12px_rgba(255,255,255,0.4)]' : 'text-muted-foreground'
+                            )}
+                            >
+                            <Icon className="h-6 w-6" />
+                            <span>{label}</span>
+                            </Link>
                         ))}
+                    </nav>
+                    <div className="mt-auto">
+                        <div className="flex items-center justify-center gap-4 my-4">
+                            {socialLinks.map((social) => (
+                            <Link key={social.name} href={social.href} target="_blank" rel="noopener noreferrer">
+                                <SocialIcon name={social.name} />
+                            </Link>
+                            ))}
+                        </div>
+                        {isMounted && (
+                        !user && !isUserLoading && !isAdmin ? (
+                            <Link href="/login" onClick={() => setIsOpen(false)}>
+                                <div className="glass-icon-btn login-btn text-foreground w-full">Login</div>
+                            </Link>
+                        ) : (
+                            <Button className="w-full" variant="destructive" onClick={() => { (isAdmin ? handleAdminLogout() : handleUserLogout()); setIsOpen(false); }}>
+                            Logout
+                            </Button>
+                        )
+                        )}
                     </div>
-                    {isMounted && (
-                      !user && !isUserLoading && !isAdmin ? (
-                        <Link href="/login" onClick={() => setIsOpen(false)}>
-                          <Button className="w-full" variant="outline">Login</Button>
-                        </Link>
-                      ) : (
-                        <Button className="w-full" variant="destructive" onClick={() => { (isAdmin ? handleAdminLogout() : handleUserLogout()); setIsOpen(false); }}>
-                          Logout
-                        </Button>
-                      )
-                    )}
-                  </div>
-              </SheetContent>
-            </Sheet>
-          )}
+                </SheetContent>
+                </Sheet>
+            )}
+            </div>
         </div>
         
         {/* Desktop nav */}
