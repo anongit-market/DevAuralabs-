@@ -95,14 +95,32 @@ service cloud.firestore {
 
     /**
      * @description Enforces user-ownership for chat sessions and messages.
+     * This block contains rules for listing chats and accessing individual chats and their messages.
      * @path /users/{userId}/chats/{chatId}
-     * @allow (read, write) - User can manage their own chat sessions.
-     * @deny (read, write) - User cannot manage other users' chat sessions.
-     * @principle Enforces path-based ownership for chats.
      */
     match /users/{userId}/chats/{chatId} {
-      allow read, write: if isOwner(userId) || isAdmin(); // Allow admin to view chats
+      /**
+       * @description Allows a user to list their own chat sessions.
+       * @path /users/{userId}/chats
+       * @allow (list) - User with UID `userId` can list their own chats.
+       * @deny (list) - User cannot list chats belonging to other users.
+       */
+      allow list, create: if isOwner(userId) || (userId == 'admin_user' && isAdmin());
       
+      /**
+       * @description Allows a user to access a specific chat session and its messages.
+       * @path /users/{userId}/chats/{chatId}
+       * @allow (get, update, delete) - User can manage their own chat document. Admins can also access for support.
+       * @deny - User cannot access another user's chat.
+       */
+      allow get, update, delete: if isOwner(userId) || isAdmin();
+      
+      /**
+       * @description Allows a user to read and write messages within their own chat session.
+       * @path /users/{userId}/chats/{chatId}/messages/{messageId}
+       * @allow (read, write) - User can manage messages in their own chat. Admins can also access.
+       * @deny - User cannot access messages in another user's chat.
+       */
       match /messages/{messageId} {
         allow read, write: if isOwner(userId) || isAdmin();
       }
@@ -134,5 +152,3 @@ service cloud.firestore {
     }
   }
 }
-
-    

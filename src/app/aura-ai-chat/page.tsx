@@ -59,6 +59,7 @@ export default function AuraAiChatPage() {
   const firestore = useFirestore();
 
   const [activeUser, setActiveUser] = useState<User | null>(null);
+  const [authChecked, setAuthChecked] = useState(false);
 
   // Redirect if not logged in
   useEffect(() => {
@@ -76,6 +77,7 @@ export default function AuraAiChatPage() {
       } else {
         router.push('/login?next=/aura-ai-chat');
       }
+      setAuthChecked(true);
     }
   }, [regularUser, isUserLoading, isAdmin, isAdminLoading, router]);
 
@@ -83,14 +85,14 @@ export default function AuraAiChatPage() {
 
   // Fetch user's chat sessions
   const chatSessionsQuery = useMemoFirebase(() => 
-    user ? query(collection(firestore, 'users', user.uid, 'chats'), orderBy('timestamp', 'desc')) : null
-  , [firestore, user]);
+    authChecked && user ? query(collection(firestore, 'users', user.uid, 'chats'), orderBy('timestamp', 'desc')) : null
+  , [firestore, user, authChecked]);
   const { data: chatHistory, isLoading: isHistoryLoading } = useCollection<ChatSession>(chatSessionsQuery);
 
   // Fetch messages for the current chat
   const messagesQuery = useMemoFirebase(() => 
-    user && currentChatId ? query(collection(firestore, 'users', user.uid, 'chats', currentChatId, 'messages'), orderBy('timestamp', 'asc')) : null
-  , [firestore, user, currentChatId]);
+    authChecked && user && currentChatId ? query(collection(firestore, 'users', user.uid, 'chats', currentChatId, 'messages'), orderBy('timestamp', 'asc')) : null
+  , [firestore, user, currentChatId, authChecked]);
   const { data: messages, isLoading: areMessagesLoading } = useCollection<Message>(messagesQuery);
   
 
@@ -196,7 +198,7 @@ export default function AuraAiChatPage() {
     handleSend("Hey Aura, can you help plan a weekend trip to the mountains?");
   };
 
-  if (isUserLoading || isAdminLoading || !user) {
+  if (isUserLoading || isAdminLoading || !user || !authChecked) {
     return (
         <div className="h-screen w-full bg-black flex items-center justify-center">
             <VantaFogBackground />
@@ -400,7 +402,7 @@ export default function AuraAiChatPage() {
     <div className="h-screen w-full bg-black aura-chat-container">
       <VantaFogBackground />
       <div className="relative z-10 h-full w-full backdrop-blur-sm bg-black/30">
-        {areMessagesLoading || (messages && messages.length > 0) ? renderChatUI() : renderWelcomeUI()}
+        {isHistoryLoading || areMessagesLoading || (messages && messages.length > 0) ? renderChatUI() : renderWelcomeUI()}
       </div>
     </div>
   );
