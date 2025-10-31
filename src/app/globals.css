@@ -50,9 +50,9 @@
 
 @layer components {
   .gradient-btn {
-    @apply px-8 py-3 text-sm font-bold text-primary-foreground rounded-lg transition-all duration-300 relative z-0 overflow-hidden;
+    @apply px-8 py-3 text-sm font-bold text-green rounded-lg transition-all duration-300 relative z-0 overflow-hidden;
     background-size: 200% auto;
-    border: 1px solid hsl(var(--primary) / 0.3);
+    border: 1px solid hsl(var(--aura-green) / 0.3);
   }
 
   .gradient-btn-1, .gradient-btn-2 {

@@ -25,7 +25,7 @@ export default function SkillsSection({ hideViewMore = false }: SkillsSectionPro
       {!hideViewMore && (
         <div className="text-center mt-12">
           <Link href="/courses">
-              <Button className="gradient-btn gradient-btn-2 relative">
+              <Button className="gradient-btn gradient-btn-2 relative text-green">
                   View More
               </Button>
           </Link>
