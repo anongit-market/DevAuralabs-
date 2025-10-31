@@ -23,6 +23,7 @@ import VantaBackground from '@/components/vanta-background';
 import Footer from '@/components/layout/footer';
 import { useAuth, useUser, initiateEmailSignUp, initiateGoogleSignIn, initiateFacebookSignIn } from '@/firebase';
 import { Separator } from '@/components/ui/separator';
+import { RippleEffect } from '@/components/ui/ripple-effect';
 
 const formSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
@@ -202,6 +203,7 @@ export default function SignupPage() {
                 />
                 <Button type="submit" className="w-full gradient-btn gradient-btn-1 relative" disabled={isUserLoading}>
                   Create Account
+                  <RippleEffect />
                 </Button>
               </form>
             </Form>

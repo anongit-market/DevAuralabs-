@@ -3,6 +3,7 @@ import { skills } from '@/lib/data';
 import SkillCard from '@/components/skill-card';
 import { Button } from '../ui/button';
 import Link from 'next/link';
+import { RippleEffect } from '../ui/ripple-effect';
 
 type SkillsSectionProps = {
   hideViewMore?: boolean;
@@ -27,6 +28,7 @@ export default function SkillsSection({ hideViewMore = false }: SkillsSectionPro
           <Link href="/courses">
               <Button variant="outline" className="gradient-btn gradient-btn-2 relative text-green">
                   View More
+                  <RippleEffect />
               </Button>
           </Link>
         </div>

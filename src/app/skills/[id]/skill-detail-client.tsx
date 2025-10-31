@@ -10,6 +10,7 @@ import type { skills } from '@/lib/data';
 import { useToast } from '@/hooks/use-toast';
 import { useEffect, useState } from 'react';
 import { useUser } from '@/firebase';
+import { RippleEffect } from '@/components/ui/ripple-effect';
 
 const getPlaceholderImage = (id: string) => {
   return PlaceHolderImages.find((img) => img.id === id);
@@ -99,6 +100,7 @@ export default function SkillDetailClient({ skill }: { skill: Skill }) {
                         <div className="flex flex-col gap-4">
                             <Button size="lg" className="w-full gradient-btn gradient-btn-1 relative" onClick={handleEnrollNow}>
                                 Enroll Now
+                                <RippleEffect />
                             </Button>
                         </div>
                         <div className="mt-8 text-xs text-center text-muted-foreground">

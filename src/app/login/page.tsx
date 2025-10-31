@@ -23,6 +23,7 @@ import VantaBackground from '@/components/vanta-background';
 import Footer from '@/components/layout/footer';
 import { initiateEmailSignIn, useAuth, useUser, initiateGoogleSignIn, initiateFacebookSignIn } from '@/firebase';
 import { Separator } from '@/components/ui/separator';
+import { RippleEffect } from '@/components/ui/ripple-effect';
 
 const formSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email.' }),
@@ -147,6 +148,7 @@ export default function LoginPage() {
                 </div>
                 <Button type="submit" className="w-full gradient-btn gradient-btn-1 relative" disabled={isUserLoading}>
                   Login
+                  <RippleEffect />
                 </Button>
               </form>
             </Form>

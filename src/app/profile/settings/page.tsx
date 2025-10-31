@@ -18,6 +18,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Eye, EyeOff } from 'lucide-react';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { RippleEffect } from '@/components/ui/ripple-effect';
 
 const passwordFormSchema = z.object({
   oldPassword: z.string().min(8, { message: 'Password must be at least 8 characters.' }),
@@ -122,6 +123,7 @@ export default function SettingsPage() {
                 />
                 <Button type="submit" className="w-full gradient-btn gradient-btn-2 mt-4 relative">
                   Update Password
+                  <RippleEffect />
                 </Button>
               </form>
             </Form>

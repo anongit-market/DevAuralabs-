@@ -20,6 +20,7 @@ import { useToast } from '@/hooks/use-toast';
 import { getCourseRecommendations } from '@/app/actions';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from './ui/button';
+import { RippleEffect } from './ui/ripple-effect';
 
 const formSchema = z.object({
   interests: z.string().min(10, 'Please describe your interests in at least 10 characters.'),
@@ -108,6 +109,7 @@ export default function AiRecommendationForm() {
                 Get Recommendations
               </>
             )}
+            <RippleEffect />
           </Button>
         </form>
       </Form>

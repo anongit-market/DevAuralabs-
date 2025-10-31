@@ -10,6 +10,7 @@ import { Progress } from '@/components/ui/progress';
 import { BookOpen, Award } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
+import { RippleEffect } from '@/components/ui/ripple-effect';
 
 const getPlaceholderImage = (id: string) => {
   return PlaceHolderImages.find((img) => img.id === id);
@@ -52,6 +53,7 @@ export default function MyLearningPage() {
             <Link href="/courses">
                 <Button className="gradient-btn gradient-btn-2 relative">
                     Explore Courses
+                    <RippleEffect />
                 </Button>
             </Link>
           </div>
@@ -94,6 +96,7 @@ export default function MyLearningPage() {
                                         <Button className="gradient-btn gradient-btn-2 relative">
                                             <BookOpen className="mr-2 h-4 w-4" />
                                             Continue Learning
+                                            <RippleEffect />
                                         </Button>
                                     </Link>
                                 </div>
@@ -144,6 +147,7 @@ export default function MyLearningPage() {
                                         <Button className="gradient-btn gradient-btn-2 relative">
                                             <Award className="mr-2 h-4 w-4" />
                                             Continue Program
+                                            <RippleEffect />
                                         </Button>
                                     </Link>
                                 </div>

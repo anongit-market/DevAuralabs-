@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/componen
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
+import { RippleEffect } from '@/components/ui/ripple-effect';
 
 const getPlaceholderImage = (id: string) => {
   return PlaceHolderImages.find((img) => img.id === id);
@@ -87,6 +88,7 @@ export default function CheckoutSkillPage({ params }: { params: { id: string } }
             <CardFooter>
               <Button size="lg" className="w-full gradient-btn gradient-btn-1 relative">
                 Pay ${price}
+                <RippleEffect />
               </Button>
             </CardFooter>
           </Card>

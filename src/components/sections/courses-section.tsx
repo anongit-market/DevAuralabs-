@@ -14,6 +14,7 @@ import { useState, useCallback, useEffect } from 'react';
 import { EmblaCarouselType } from 'embla-carousel-react';
 import { Button } from '../ui/button';
 import Link from 'next/link';
+import { RippleEffect } from '../ui/ripple-effect';
 
 const CIRCULAR_EFFECT_FACTOR = 10;
 
@@ -122,6 +123,7 @@ export default function CoursesSection() {
             <Link href="/profile/my-courses">
                 <Button className="gradient-btn gradient-btn-2 relative">
                     My Courses
+                    <RippleEffect />
                 </Button>
             </Link>
         </div>

@@ -10,6 +10,7 @@ import { Separator } from '@/components/ui/separator';
 import { Trash2, ShoppingBag } from 'lucide-react';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
+import { RippleEffect } from '@/components/ui/ripple-effect';
 
 const getPlaceholderImage = (id: string) => {
   return PlaceHolderImages.find((img) => img.id === id);
@@ -111,6 +112,7 @@ export default function CartPage() {
                 <Link href={`/checkout/${cartItems[0].id}`} className="w-full">
                   <Button size="lg" className="w-full gradient-btn gradient-btn-1 relative">
                     Proceed to Checkout
+                    <RippleEffect />
                   </Button>
                 </Link>
               </CardFooter>
@@ -126,6 +128,7 @@ export default function CartPage() {
             <Link href="/courses">
                 <Button className="gradient-btn gradient-btn-2 relative">
                     Explore Courses
+                    <RippleEffect />
                 </Button>
             </Link>
           </div>
