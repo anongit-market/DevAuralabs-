@@ -50,16 +50,21 @@
 
 @layer components {
   .gradient-btn {
-    @apply px-8 py-3 text-sm font-bold text-green rounded-lg transition-all duration-300 relative z-0 overflow-hidden;
+    @apply px-8 py-3 text-sm font-bold rounded-lg transition-all duration-300 relative z-0 overflow-hidden;
     background-size: 200% auto;
     border: 1px solid hsl(var(--aura-green) / 0.3);
   }
 
   .gradient-btn-1, .gradient-btn-2 {
      background-color: transparent;
+     @apply text-foreground;
   }
   
-  .gradient-btn-2.text-green:hover {
+  .gradient-btn-2 {
+    @apply text-green;
+  }
+
+  .gradient-btn-1:hover, .gradient-btn-2:hover {
     background-color: hsl(var(--aura-green) / 0.1);
     border-color: hsl(var(--aura-green) / 0.5);
   }
@@ -281,3 +286,5 @@
     }
   }
 }
+
+    
