@@ -2,7 +2,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Menu, User, ShoppingCart, LayoutGrid, BookOpen, Briefcase, Info, UserCog, Sparkles } from 'lucide-react';
+import { Menu, User, ShoppingCart, LayoutGrid, BookOpen, Briefcase, Info, UserCog, Sparkles, Loader2 } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 
 import { Button } from '@/components/ui/button';
@@ -41,10 +41,16 @@ const socialLinks = [
   { name: 'WhatsApp', href: '#' },
 ];
 
+type UserData = {
+  name: string;
+  email: string;
+};
+
 export default function Navbar() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userData, setUserData] = useState<UserData | null>(null);
   const [isMounted, setIsMounted] = useState(false);
   const [headerClass, setHeaderClass] = useState("w-full z-50");
 
@@ -52,6 +58,12 @@ export default function Navbar() {
     setIsMounted(true);
     const authStatus = localStorage.getItem('isAuthenticated') === 'true';
     setIsAuthenticated(authStatus);
+    if (authStatus) {
+      const savedUser = localStorage.getItem('userData');
+      if (savedUser) {
+        setUserData(JSON.parse(savedUser));
+      }
+    }
   }, [pathname]);
 
   useEffect(() => {
@@ -66,7 +78,9 @@ export default function Navbar() {
 
   const handleLogout = () => {
     localStorage.removeItem('isAuthenticated');
+    localStorage.removeItem('userData');
     setIsAuthenticated(false);
+    setUserData(null);
     // a full page reload is a good way to reset all state
     window.location.href = '/';
   };
@@ -156,8 +170,8 @@ export default function Navbar() {
 
         {/* Login/Profile Buttons - Top Right */}
         <div className="flex items-center justify-end gap-2">
-          {isMounted && (
-            isAuthenticated ? (
+          {isMounted ? (
+            isAuthenticated && userData ? (
               <>
                 <Link href="/cart" className="glass-icon-btn">
                     <ShoppingCart className="h-5 w-5" />
@@ -169,7 +183,7 @@ export default function Navbar() {
                       <Avatar className="h-9 w-9">
                         <AvatarImage src="https://i.pravatar.cc/150?u=a042581f4e29026704d" alt="@user" />
                         <AvatarFallback>
-                            <User className="h-5 w-5" />
+                            {userData.name.charAt(0) || <User className="h-5 w-5" />}
                         </AvatarFallback>
                       </Avatar>
                     </div>
@@ -177,9 +191,9 @@ export default function Navbar() {
                   <DropdownMenuContent className="w-56" align="end" forceMount>
                     <DropdownMenuLabel className="font-normal">
                       <div className="flex flex-col space-y-1">
-                        <p className="text-sm font-medium leading-none">John Doe</p>
+                        <p className="text-sm font-medium leading-none">{userData.name}</p>
                         <p className="text-xs leading-none text-muted-foreground">
-                          john.doe@example.com
+                          {userData.email}
                         </p>
                       </div>
                     </DropdownMenuLabel>
@@ -190,7 +204,9 @@ export default function Navbar() {
                      <DropdownMenuItem asChild>
                       <Link href="/profile/my-courses">My Courses</Link>
                     </DropdownMenuItem>
-                    <DropdownMenuItem>Dashboard</DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link href="/admin">Dashboard</Link>
+                    </DropdownMenuItem>
                     <DropdownMenuItem asChild>
                       <Link href="/profile/settings">Settings</Link>
                     </DropdownMenuItem>
@@ -206,6 +222,10 @@ export default function Navbar() {
                   Login
               </Link>
             )
+          ) : (
+            <div className="h-9 w-20 flex items-center justify-center">
+              <Loader2 className='h-5 w-5 animate-spin' />
+            </div>
           )}
         </div>
       </div>

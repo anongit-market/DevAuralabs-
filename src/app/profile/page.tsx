@@ -2,17 +2,50 @@
 'use client';
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { User, Mail, Smartphone, Shield } from 'lucide-react';
+import { User, Mail, Smartphone, Shield, Loader2 } from 'lucide-react';
+import { useEffect, useState } from 'react';
+
+type UserData = {
+  name: string;
+  email: string;
+  mobile?: string;
+  role?: string;
+};
 
 export default function ProfilePage() {
-  
-  // Static user data for display
-  const userData = {
-    name: 'John Doe',
-    email: 'john.doe@example.com',
-    mobile: '+91 00000-00000',
-    role: 'Administrator',
-  };
+  const [userData, setUserData] = useState<UserData | null>(null);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+    const savedUser = localStorage.getItem('userData');
+    if (savedUser) {
+      const parsedUser = JSON.parse(savedUser);
+      // Add some mock data if not present
+      setUserData({
+        role: 'Student',
+        mobile: '+91 00000-00000',
+        ...parsedUser
+      });
+    }
+  }, []);
+
+  if (!isMounted) {
+    return (
+      <div className="container mx-auto max-w-xl py-12 px-4 flex justify-center">
+        <Loader2 className="h-12 w-12 animate-spin" />
+      </div>
+    );
+  }
+
+  if (!userData) {
+    return (
+        <div className="container mx-auto max-w-xl py-12 px-4 text-center">
+            <h1 className="text-2xl font-bold">No User Data Found</h1>
+            <p className="text-muted-foreground">Please log in to view your profile.</p>
+        </div>
+    )
+  }
 
   return (
     <div className="container mx-auto max-w-xl py-12 px-4">

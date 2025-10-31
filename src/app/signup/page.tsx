@@ -56,6 +56,9 @@ export default function SignupPage() {
     console.log(values);
     // Simulate successful signup
     localStorage.setItem('isAuthenticated', 'true');
+    const userData = { name: values.name, email: values.email };
+    localStorage.setItem('userData', JSON.stringify(userData));
+
     toast({
       title: 'Sign-up Successful',
       description: 'Welcome to DevAura Labs!',

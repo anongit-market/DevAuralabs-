@@ -38,6 +38,11 @@ type ChatSession = {
   timestamp: number;
 };
 
+type UserData = {
+  name: string;
+  email: string;
+};
+
 
 export default function AuraAiChatPage() {
   const [currentChatId, setCurrentChatId] = useState<string | null>(null);
@@ -46,7 +51,7 @@ export default function AuraAiChatPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const [userName, setUserName] = useState('Josh');
+  const [userData, setUserData] = useState<UserData | null>(null);
   const logoImage = PlaceHolderImages.find(p => p.id === 'ai-logo');
   const [isMounted, setIsMounted] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -64,6 +69,11 @@ export default function AuraAiChatPage() {
       return;
     }
 
+    const savedUser = localStorage.getItem('userData');
+    if (savedUser) {
+      setUserData(JSON.parse(savedUser));
+    }
+
     const savedHistory = localStorage.getItem('chatHistory');
     if (savedHistory) {
       const parsedHistory = JSON.parse(savedHistory) as ChatSession[];
@@ -76,6 +86,8 @@ export default function AuraAiChatPage() {
       if (activeChat) {
         setCurrentChatId(activeChat.id);
         setMessages(activeChat.messages);
+      } else {
+        startNewChat();
       }
     } else {
         startNewChat();
@@ -212,7 +224,7 @@ export default function AuraAiChatPage() {
           <h2 className="text-xl font-bold">{chatHistory.find(c => c.id === currentChatId)?.title || 'New Chat'}</h2>
           <Avatar className="h-9 w-9">
             <AvatarImage src="https://i.pravatar.cc/150?u=a042581f4e29026704d" />
-            <AvatarFallback>JD</AvatarFallback>
+            <AvatarFallback>{userData?.name.charAt(0) || 'U'}</AvatarFallback>
           </Avatar>
         </header>
 
@@ -252,7 +264,7 @@ export default function AuraAiChatPage() {
                {message.sender === 'user' && (
                  <Avatar className="h-8 w-8">
                     <AvatarImage src="https://i.pravatar.cc/150?u=a042581f4e29026704d" />
-                    <AvatarFallback>{userName.charAt(0)}</AvatarFallback>
+                    <AvatarFallback>{userData?.name.charAt(0) || 'U'}</AvatarFallback>
                 </Avatar>
               )}
             </div>
@@ -337,7 +349,7 @@ export default function AuraAiChatPage() {
         </header>
 
         <div className="flex-1 flex flex-col justify-center">
-            <h1 className="text-4xl font-bold">HI {userName.toUpperCase()}!</h1>
+            <h1 className="text-4xl font-bold">HI {userData?.name.split(' ')[0].toUpperCase()}!</h1>
             <p className="text-white mt-2">What Do You Want To Chat About Today?</p>
         </div>
         
@@ -378,7 +390,3 @@ export default function AuraAiChatPage() {
     </div>
   );
 }
-
-    
-
-    

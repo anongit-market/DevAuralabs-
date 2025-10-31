@@ -46,6 +46,9 @@ export default function LoginPage() {
     console.log(values);
     // Simulate successful login
     localStorage.setItem('isAuthenticated', 'true');
+    // For demonstration, let's set a default user if they log in directly
+    const defaultUser = { name: 'John Doe', email: values.email };
+    localStorage.setItem('userData', JSON.stringify(defaultUser));
     toast({
       title: 'Login Successful',
       description: 'Welcome back!',
