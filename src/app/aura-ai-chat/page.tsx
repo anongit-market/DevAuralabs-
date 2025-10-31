@@ -91,14 +91,13 @@ export default function AuraAiChatPage() {
 
   const startNewChat = async () => {
     if (!user) return;
-    const newChatId = `chat-${Date.now()}`;
-    const newChatSession: Omit<ChatSession, 'id'> = {
+    const newChatSessionData = {
         title: 'New Chat',
         timestamp: serverTimestamp(),
         userId: user.uid,
     };
-    await setDoc(doc(firestore, 'users', user.uid, 'chats', newChatId), newChatSession);
-    setCurrentChatId(newChatId);
+    const newChatRef = await addDoc(collection(firestore, 'users', user.uid, 'chats'), newChatSessionData);
+    setCurrentChatId(newChatRef.id);
   }
   
   const loadChat = (chatId: string) => {
@@ -124,6 +123,12 @@ export default function AuraAiChatPage() {
         setCurrentChatId(activeChatId);
     }
     
+    if (!activeChatId) {
+      console.error("Failed to create or get a chat ID.");
+      setIsSending(false);
+      return;
+    }
+
     const userMessage: Omit<Message, 'id'> = {
       text,
       sender: 'user',
@@ -142,6 +147,7 @@ export default function AuraAiChatPage() {
         aiResponse = {
             text: result.data.courseRecommendations,
             sender: 'aura',
+            // @ts-ignore
             courses: result.data.courses,
             timestamp: serverTimestamp(),
         };
