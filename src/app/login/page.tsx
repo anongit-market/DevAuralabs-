@@ -126,7 +126,7 @@ export default function LoginPage() {
                 <Separator className="my-4 bg-white/10" />
                  <p className="text-center text-xs text-muted-foreground">
                     <button onClick={() => setView('admin')} className="font-semibold text-primary hover:underline">
-                        Admin Login
+                        connect private
                     </button>
                 </p>
               </>
