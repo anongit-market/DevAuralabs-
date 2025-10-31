@@ -26,12 +26,13 @@ type Skill = {
 
 export default function SkillDetailClient({ skill }: { skill: Skill }) {
   const router = useRouter();
+  const { toast } = useToast();
   const [isMounted, setIsMounted] = useState(false);
   const { user } = useUser();
   const firestore = useFirestore();
 
   const enrollmentsQuery = useMemoFirebase(
-    () => (user ? collection(firestore, 'users', user.uid, 'enrollments') : null),
+    () => (user && firestore ? collection(firestore, 'users', user.uid, 'enrollments') : null),
     [firestore, user]
   );
   const { data: enrollments, isLoading: enrollmentsLoading } = useCollection(enrollmentsQuery);
@@ -43,22 +44,11 @@ export default function SkillDetailClient({ skill }: { skill: Skill }) {
   const isPurchased = isMounted && user && !enrollmentsLoading && enrollments?.some(e => e.skillId === skill.id);
   
   const handleEnrollNow = () => {
-    if (!isMounted) return;
+    if (!isMounted || !firestore) return;
     if (!user) {
       router.push(`/signup?next=/checkout-skill/${skill.id}`);
     } else {
-      const enrollmentRef = collection(firestore, 'users', user.uid, 'enrollments');
-      addDocumentNonBlocking(enrollmentRef, {
-        skillId: skill.id,
-        type: 'skill',
-        enrollmentDate: serverTimestamp(),
-        progress: 0,
-        lastAccessed: serverTimestamp(),
-      });
-      toast({
-        title: 'Enrollment Successful!',
-        description: `You are now enrolled in ${skill.title}.`,
-      });
+      router.push(`/checkout-skill/${skill.id}`);
     }
   };
 
@@ -136,3 +126,5 @@ export default function SkillDetailClient({ skill }: { skill: Skill }) {
     </div>
   );
 }
+
+    

@@ -1,3 +1,4 @@
+
 'use client';
 import { notFound, useParams } from 'next/navigation';
 import SkillDetailClient from './skill-detail-client';
@@ -9,7 +10,7 @@ export default function SkillDetailPage() {
   const { id } = params;
   const firestore = useFirestore();
   
-  const skillRef = useMemoFirebase(() => doc(firestore, 'skills', id as string), [firestore, id]);
+  const skillRef = useMemoFirebase(() => firestore ? doc(firestore, 'skills', id as string) : null, [firestore, id]);
   const { data: skill, isLoading } = useDoc(skillRef);
 
   if (isLoading) {
@@ -22,3 +23,5 @@ export default function SkillDetailPage() {
 
   return <SkillDetailClient skill={skill} />;
 }
+
+    

@@ -22,7 +22,7 @@ export default function CheckoutSkillPage() {
   const { id } = params;
   const firestore = useFirestore();
 
-  const skillRef = useMemoFirebase(() => doc(firestore, 'skills', id as string), [firestore, id]);
+  const skillRef = useMemoFirebase(() => firestore ? doc(firestore, 'skills', id as string) : null, [firestore, id]);
   const { data: skill, isLoading } = useDoc(skillRef);
 
   if (isLoading) {
@@ -109,3 +109,5 @@ export default function CheckoutSkillPage() {
     </div>
   );
 }
+
+    

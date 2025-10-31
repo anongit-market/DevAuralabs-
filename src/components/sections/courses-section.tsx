@@ -81,7 +81,7 @@ export default function CoursesSection() {
   const [isMounted, setIsMounted] = useState(false);
   const firestore = useFirestore();
 
-  const coursesQuery = useMemoFirebase(() => collection(firestore, 'courses'), [firestore]);
+  const coursesQuery = useMemoFirebase(() => firestore ? collection(firestore, 'courses') : null, [firestore]);
   const { data: courses } = useCollection(coursesQuery);
 
   useEffect(() => {
@@ -135,3 +135,5 @@ export default function CoursesSection() {
     </section>
   );
 }
+
+    

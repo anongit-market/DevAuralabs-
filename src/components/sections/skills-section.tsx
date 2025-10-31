@@ -14,7 +14,7 @@ type SkillsSectionProps = {
 
 export default function SkillsSection({ hideViewMore = false }: SkillsSectionProps) {
   const firestore = useFirestore();
-  const skillsQuery = useMemoFirebase(() => collection(firestore, 'skills'), [firestore]);
+  const skillsQuery = useMemoFirebase(() => firestore ? collection(firestore, 'skills') : null, [firestore]);
   const { data: skills } = useCollection(skillsQuery);
 
   return (
@@ -43,3 +43,5 @@ export default function SkillsSection({ hideViewMore = false }: SkillsSectionPro
     </section>
   );
 }
+
+    

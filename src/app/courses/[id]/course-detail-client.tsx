@@ -35,7 +35,7 @@ export default function CourseDetailClient({ course }: { course: Course }) {
   const firestore = useFirestore();
 
   const enrollmentsQuery = useMemoFirebase(
-    () => (user ? collection(firestore, 'users', user.uid, 'enrollments') : null),
+    () => (user && firestore ? collection(firestore, 'users', user.uid, 'enrollments') : null),
     [firestore, user]
   );
   const { data: enrollments, isLoading: enrollmentsLoading } = useCollection(enrollmentsQuery);
@@ -47,7 +47,7 @@ export default function CourseDetailClient({ course }: { course: Course }) {
   const isPurchased = isMounted && user && !enrollmentsLoading && enrollments?.some(e => e.courseId === course.id);
 
   const handleBuyNow = () => {
-    if (!isMounted) return;
+    if (!isMounted || !firestore) return;
     if (!user) {
       router.push(`/signup?next=/checkout/${course.id}`);
     } else {
@@ -69,7 +69,7 @@ export default function CourseDetailClient({ course }: { course: Course }) {
   };
 
   const handleAddToCart = () => {
-    if (!isMounted || !user) {
+    if (!isMounted || !user || !firestore) {
       router.push(`/signup?next=/courses/${course.id}`);
       return;
     }
@@ -176,3 +176,5 @@ export default function CourseDetailClient({ course }: { course: Course }) {
     </div>
   );
 }
+
+    

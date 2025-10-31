@@ -1,3 +1,4 @@
+
 'use client';
 import { notFound, useParams } from 'next/navigation';
 import CourseDetailClient from './course-detail-client';
@@ -9,7 +10,7 @@ export default function CourseDetailPage() {
   const { id } = params;
   const firestore = useFirestore();
   
-  const courseRef = useMemoFirebase(() => doc(firestore, 'courses', id as string), [firestore, id]);
+  const courseRef = useMemoFirebase(() => firestore ? doc(firestore, 'courses', id as string) : null, [firestore, id]);
   const { data: course, isLoading } = useDoc(courseRef);
 
   if (isLoading) {
@@ -22,3 +23,5 @@ export default function CourseDetailPage() {
 
   return <CourseDetailClient course={course} />;
 }
+
+    

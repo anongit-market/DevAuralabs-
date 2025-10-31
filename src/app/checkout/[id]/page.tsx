@@ -22,7 +22,7 @@ export default function CheckoutPage() {
   const { id } = params;
   const firestore = useFirestore();
 
-  const courseRef = useMemoFirebase(() => doc(firestore, 'courses', id as string), [firestore, id]);
+  const courseRef = useMemoFirebase(() => firestore ? doc(firestore, 'courses', id as string) : null, [firestore, id]);
   const { data: course, isLoading } = useDoc(courseRef);
 
   if (isLoading) {
@@ -108,3 +108,5 @@ export default function CheckoutPage() {
     </div>
   );
 }
+
+    

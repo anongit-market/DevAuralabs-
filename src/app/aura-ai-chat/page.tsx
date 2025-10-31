@@ -90,7 +90,7 @@ export default function AuraAiChatPage() {
 
 
   const startNewChat = async () => {
-    if (!user) return;
+    if (!user || !firestore) return;
     const newChatSessionData = {
         title: 'New Chat',
         timestamp: serverTimestamp(),
@@ -386,3 +386,5 @@ export default function AuraAiChatPage() {
     </div>
   );
 }
+
+    

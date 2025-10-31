@@ -12,6 +12,7 @@ import { Separator } from '@/components/ui/separator';
 import { RippleEffect } from '@/components/ui/ripple-effect';
 import { useCollection, useFirestore, useUser, useMemoFirebase } from '@/firebase';
 import { collection, query, where } from 'firebase/firestore';
+import { useMemo } from 'react';
 
 const getPlaceholderImage = (id: string) => {
   return PlaceHolderImages.find((img) => img.id === id);
@@ -22,17 +23,17 @@ export default function MyLearningPage() {
   const firestore = useFirestore();
 
   const enrollmentsQuery = useMemoFirebase(() => 
-    user ? collection(firestore, 'users', user.uid, 'enrollments') : null,
+    user && firestore ? collection(firestore, 'users', user.uid, 'enrollments') : null,
     [firestore, user]
   );
   const { data: enrollments } = useCollection(enrollmentsQuery);
 
-  const courseIds = useMemoFirebase(() => 
+  const courseIds = useMemo(() => 
     enrollments?.filter(e => e.type === 'course').map(e => e.courseId) || [],
     [enrollments]
   );
 
-  const skillIds = useMemoFirebase(() => 
+  const skillIds = useMemo(() => 
     enrollments?.filter(e => e.type === 'skill').map(e => e.skillId) || [],
     [enrollments]
   );
@@ -197,3 +198,5 @@ export default function MyLearningPage() {
     </div>
   );
 }
+
+    
