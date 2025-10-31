@@ -33,16 +33,25 @@ const useCircularEffect = (api: EmblaCarouselType | undefined) => {
 
     const engine = api.internalEngine();
     const scrollProgress = api.scrollProgress();
-
+    
     const newTransforms = api.scrollSnapList().map((scrollSnap, index) => {
-      if (!api.slidesInView().includes(index)) return { opacity: 0, scale: 0.8, rotateY: 0 };
-      
       let diffToTarget = scrollSnap - scrollProgress;
-      const factor = diffToTarget * CIRCULAR_EFFECT_FACTOR;
 
+      // Handle looping to create a seamless circular effect
+      if (engine.options.loop) {
+        if (Math.abs(diffToTarget) > 0.5) {
+          const sign = Math.sign(diffToTarget);
+          if (sign === -1) {
+            diffToTarget = 1 + diffToTarget;
+          } else {
+            diffToTarget = diffToTarget - 1;
+          }
+        }
+      }
+      
       const opacity = 1 - Math.abs(diffToTarget);
       const scale = 1 - Math.abs(diffToTarget) * 0.15;
-      const rotateY = factor * -5;
+      const rotateY = diffToTarget * CIRCULAR_EFFECT_FACTOR * -5;
 
       return { opacity, scale, rotateY };
     });
@@ -83,7 +92,7 @@ const ShowcaseCard = ({
       )}
     >
         <h3 className="text-xl font-bold text-center mb-4 text-primary">{title}</h3>
-      <div className="relative flex flex-row items-center justify-center gap-2 w-full h-full aspect-video">
+      <div className="relative flex flex-row items-center justify-center gap-2 w-full h-full aspect-[16/10]">
         <Image
           className="object-contain"
           fill
