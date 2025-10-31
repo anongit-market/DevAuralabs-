@@ -94,7 +94,7 @@ const ShowcaseCard = ({
       )}
     >
         <h3 className="text-xl font-bold text-center mb-4 text-primary">{title}</h3>
-      <div className="relative flex flex-row items-center justify-center gap-2 w-full h-full aspect-[16/9]">
+      <div className="relative flex flex-row items-center justify-center gap-2 w-full h-full aspect-square">
         <Image
           className="object-contain"
           fill
@@ -121,7 +121,7 @@ export default function ShowcaseSection() {
 
     return (
       <section id="showcase" className="py-12 md:py-16">
-        <div className="px-4" style={{perspective: '1000px'}}>
+        <div className="container mx-auto px-4" style={{perspective: '1000px'}}>
            <Carousel
                 setApi={setApi}
                 opts={{
@@ -135,7 +135,7 @@ export default function ShowcaseSection() {
             >
                 <CarouselContent style={{ transformStyle: 'preserve-3d' }}>
                     {showcaseImages.map((image, index) => (
-                        <CarouselItem key={index} className="lg:basis-1/1 flex justify-center">
+                        <CarouselItem key={index} className="sm:basis-1/2 md:basis-1/2 lg:basis-1/4 flex justify-center">
                             <div className="p-1 h-full w-full max-w-md"
                               style={{
                                 ...(isMounted && transforms.length && {
@@ -150,7 +150,7 @@ export default function ShowcaseSection() {
                     ))}
                 </CarouselContent>
                 <CarouselPrevious className='-left-4 hidden' />
-                <CarouselNext className='-right-4 glass-icon-btn h-12 w-12 hover:bg-primary/20 hover:text-primary' />
+                <CarouselNext className='-right-4 glass-icon-btn h-12 w-12 hover:bg-primary/20 hover:text-primary transform transition-transform hover:scale-110 active:scale-90' />
             </Carousel>
         </div>
       </section>
