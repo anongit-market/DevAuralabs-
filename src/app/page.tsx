@@ -5,6 +5,7 @@ import ServicesSection from '@/components/sections/services-section';
 import AiRecommendationSection from '@/components/sections/ai-recommendation-section';
 import { Separator } from '@/components/ui/separator';
 import FloatingAiButton from '@/components/floating-ai-button';
+import Footer from '@/components/layout/footer';
 
 export default function Home() {
   return (
@@ -20,6 +21,7 @@ export default function Home() {
         <AiRecommendationSection />
       </div>
       <FloatingAiButton />
+      <Footer />
     </div>
   );
 }
