@@ -7,14 +7,6 @@ import { useAdmin } from '@/context/admin-context';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Loader2, UserCog, LogOut, PlusCircle } from 'lucide-react';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import AddSkillForm from '@/components/add-skill-form';
 import Link from 'next/link';
 
 export default function AdminPage() {
@@ -78,19 +70,11 @@ export default function AdminPage() {
                 </Button>
             </Link>
 
-             <Dialog>
-                <DialogTrigger asChild>
-                    <Button variant="outline" className="w-full">
-                        <PlusCircle className="mr-2 h-4 w-4" /> Add New Skill
-                    </Button>
-                </DialogTrigger>
-                <DialogContent className="sm:max-w-[425px] glass-card">
-                    <DialogHeader>
-                    <DialogTitle>Add New Skill</DialogTitle>
-                    </DialogHeader>
-                    <AddSkillForm />
-                </DialogContent>
-            </Dialog>
+            <Link href="/admin/add-skill">
+                <Button variant="outline" className="w-full">
+                    <PlusCircle className="mr-2 h-4 w-4" /> Add New Skill
+                </Button>
+            </Link>
           </CardContent>
         </Card>
       </div>

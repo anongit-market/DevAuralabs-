@@ -4,14 +4,6 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Plus, BookPlus, Award, LayoutDashboard } from 'lucide-react';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import AddSkillForm from './add-skill-form';
 import Link from 'next/link';
 
 export default function AdminFAB() {
@@ -29,20 +21,12 @@ export default function AdminFAB() {
                 </Button>
              </Link>
 
-             <Dialog>
-                <DialogTrigger asChild>
-                    <Button variant="outline" className="w-full flex justify-start items-center gap-2 pr-8">
-                        <Award className="h-5 w-5" />
-                        <span>Add Skill</span>
-                    </Button>
-                </DialogTrigger>
-                <DialogContent className="sm:max-w-[425px] glass-card">
-                    <DialogHeader>
-                    <DialogTitle>Add New Skill</DialogTitle>
-                    </DialogHeader>
-                    <AddSkillForm />
-                </DialogContent>
-            </Dialog>
+            <Link href="/admin/add-skill">
+                <Button variant="outline" className="w-full flex justify-start items-center gap-2 pr-8">
+                    <Award className="h-5 w-5" />
+                    <span>Add Skill</span>
+                </Button>
+            </Link>
 
             <Link href="/admin">
                 <Button variant="outline" className="w-full flex justify-start items-center gap-2 pr-8">
