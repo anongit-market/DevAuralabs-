@@ -14,11 +14,17 @@ const getPlaceholderImage = (id: string) => {
   return PlaceHolderImages.find((img) => img.id === id);
 };
 
-// Simulate purchased courses
-const purchasedCourses = [
-  { ...courses[0], progress: 75, lastAccessed: '2 days ago' },
-  { ...courses[1], progress: 30, lastAccessed: '1 week ago' },
-];
+// In a real app, this would be fetched from user data
+const purchasedCourseIds = ['c1', 'c2']; 
+
+const purchasedCourses = courses
+  .filter(course => purchasedCourseIds.includes(course.id))
+  .map(course => ({
+      ...course,
+      progress: course.id === 'c1' ? 75 : 30, // Example progress
+      lastAccessed: course.id === 'c1' ? '2 days ago' : '1 week ago' // Example access time
+  }));
+
 
 export default function MyCoursesPage() {
   return (
