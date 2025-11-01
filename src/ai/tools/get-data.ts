@@ -8,7 +8,7 @@
 
 import { ai } from '@/ai/genkit';
 import { z } from 'zod';
-import { initializeFirebase } from '@/firebase';
+import { initializeFirebase } from '@/firebase/server';
 import { collection, getDocs } from 'firebase/firestore';
 
 async function getCollectionData(collectionName: string) {

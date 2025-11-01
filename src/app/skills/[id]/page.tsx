@@ -1,7 +1,7 @@
 
 import { notFound } from 'next/navigation';
 import SkillDetailClient from './skill-detail-client';
-import { initializeFirebase } from '@/firebase';
+import { initializeFirebase } from '@/firebase/server';
 import { doc, getDoc } from 'firebase/firestore';
 
 

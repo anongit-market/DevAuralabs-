@@ -1,7 +1,7 @@
 
 import { notFound } from 'next/navigation';
 import CourseDetailClient from './course-detail-client';
-import { initializeFirebase } from '@/firebase';
+import { initializeFirebase } from '@/firebase/server';
 import { doc, getDoc } from 'firebase/firestore';
 
 async function getCourse(id: string) {
