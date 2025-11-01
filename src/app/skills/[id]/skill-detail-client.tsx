@@ -16,6 +16,7 @@ type Skill = {
   id: string;
   title: string;
   description: string;
+  whatYoullLearn: string;
   posterUrl: string;
   price?: number;
 };
@@ -39,6 +40,8 @@ export default function SkillDetailClient({ skill }: { skill: Skill }) {
   }, []);
 
   const isPurchased = isMounted && user && !enrollmentsLoading && enrollments?.some(e => e.skillId === skill.id);
+
+  const learningPoints = skill.whatYoullLearn?.split('\n').filter(point => point.trim() !== '') || [];
   
   const handleEnrollNow = () => {
     if (!isMounted || !firestore) return;
@@ -69,15 +72,16 @@ export default function SkillDetailClient({ skill }: { skill: Skill }) {
           <h1 className="text-4xl font-bold mb-4">{skill.title}</h1>
           <p className="text-lg text-muted-foreground mb-8">{skill.description}</p>
           
-          <div className="space-y-4">
-            <h2 className="text-2xl font-bold">What you&apos;ll learn</h2>
-            <ul className="space-y-2 text-muted-foreground">
-                <li className="flex items-center gap-2"><CheckCircle className="h-5 w-5 text-primary" /> Industry-relevant development practices.</li>
-                <li className="flex items-center gap-2"><CheckCircle className="h-5 w-5 text-primary" /> Hands-on experience with modern frameworks.</li>
-                <li className="flex items-center gap-2"><CheckCircle className="h-5 w-5 text-primary" /> How to build and deploy applications.</li>
-                <li className="flex items-center gap-2"><CheckCircle className="h-5 w-5 text-primary" /> Portfolio-worthy project development.</li>
-            </ul>
-          </div>
+          {learningPoints.length > 0 && (
+            <div className="space-y-4">
+                <h2 className="text-2xl font-bold">What you&apos;ll learn</h2>
+                <ul className="space-y-2 text-muted-foreground">
+                    {learningPoints.map((point, index) => (
+                        <li key={index} className="flex items-center gap-2"><CheckCircle className="h-5 w-5 text-primary" /> {point}</li>
+                    ))}
+                </ul>
+            </div>
+          )}
         </div>
         <div className="lg:col-span-2">
             <div className="glass-card p-8 sticky top-24">

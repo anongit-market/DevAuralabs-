@@ -37,6 +37,7 @@ const formSchema = z.object({
   title: z.string().min(2, { message: 'Title must be at least 2 characters.' }),
   level: z.string().min(1, { message: 'Level is required.' }),
   description: z.string().min(80, { message: 'Description must be at least 80 characters.' }).max(400, { message: 'Description cannot exceed 400 characters.'}),
+  whatYoullLearn: z.string().min(10, { message: 'Please provide at least one learning point.' }),
   price: z.preprocess(
     (a) => parseFloat(z.string().parse(a)),
     z.number().positive({ message: 'Price must be a positive number.' })
@@ -62,6 +63,7 @@ export default function AddCoursePageForm() {
       title: '',
       level: '',
       description: '',
+      whatYoullLearn: '',
       price: '' as any,
       currency: 'INR',
       posterUrl: '',
@@ -276,8 +278,25 @@ export default function AddCoursePageForm() {
             <FormItem>
               <FormLabel>Full Course Description</FormLabel>
               <FormControl>
-                <Textarea placeholder="Provide a detailed description of the course content, what students will learn, and any prerequisites." {...field} className="bg-background/50 min-h-[200px]" rows={10}/>
+                <Textarea placeholder="Provide a detailed description of the course content, what students will learn, and any prerequisites." {...field} className="bg-background/50 min-h-[150px]" rows={6}/>
               </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="whatYoullLearn"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>What You'll Learn</FormLabel>
+              <FormControl>
+                <Textarea placeholder="List the key takeaways and skills students will gain." {...field} className="bg-background/50 min-h-[150px]" rows={6}/>
+              </FormControl>
+               <FormDescription>
+                    Enter one learning point per line.
+                </FormDescription>
               <FormMessage />
             </FormItem>
           )}

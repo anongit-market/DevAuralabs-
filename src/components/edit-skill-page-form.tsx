@@ -7,6 +7,7 @@ import { useForm } from 'react-hook-form';
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -32,6 +33,7 @@ import Link from 'next/link';
 const formSchema = z.object({
   title: z.string().min(2, { message: 'Title must be at least 2 characters.' }),
   description: z.string().min(10, { message: 'Description must be at least 10 characters.' }),
+  whatYoullLearn: z.string().min(10, { message: 'Please provide at least one learning point.' }),
   price: z.preprocess(
     (a) => parseFloat(z.string().parse(a)),
     z.number().positive({ message: 'Price must be a positive number.' })
@@ -103,6 +105,23 @@ export default function EditSkillPageForm({ skill }: { skill: z.infer<typeof for
               <FormControl>
                 <Textarea placeholder="Describe the skill program..." {...field} className="bg-background/50 min-h-[150px]"/>
               </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        
+        <FormField
+          control={form.control}
+          name="whatYoullLearn"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>What You'll Learn</FormLabel>
+              <FormControl>
+                <Textarea placeholder="List the key takeaways and skills students will gain." {...field} className="bg-background/50 min-h-[150px]" rows={6}/>
+              </FormControl>
+               <FormDescription>
+                    Enter one learning point per line.
+                </FormDescription>
               <FormMessage />
             </FormItem>
           )}
