@@ -4,9 +4,9 @@ import Logo from '@/components/logo';
 import SocialIcon from '@/components/social-icon';
 
 const quickLinks = [
-  { href: '#', label: 'Terms' },
-  { href: '#', label: 'Privacy' },
-  { href: '#', label: 'Contact' },
+  { href: '/terms', label: 'Terms' },
+  { href: '/privacy', label: 'Privacy' },
+  { href: '/contact-us', label: 'Contact' },
 ];
 
 const socialLinks = [

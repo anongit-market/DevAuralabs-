@@ -17,34 +17,36 @@ export default function GeneralSettingsPage() {
   const [heroTitle, setHeroTitle] = useState('Your Gateway to Digital Mastery.');
   const [heroSubtitle, setHeroSubtitle] = useState('Unlock your potential with expert-led courses in Cybersecurity, cutting-edge Skill Development programs, and professional Website Creation services to elevate your digital presence.');
   
-  // Footer Links State
-  const [termsUrl, setTermsUrl] = useState('#');
-  const [privacyUrl, setPrivacyUrl] = useState('#');
-  const [contactUrl, setContactUrl] = useState('#');
-  
+  // Page Content State
+  const [termsContent, setTermsContent] = useState('Enter your Terms of Service content here...');
+  const [privacyContent, setPrivacyContent] = useState('Enter your Privacy Policy content here...');
+  const [contactInfo, setContactInfo] = useState({
+    email: 'support@devaura.labs',
+    phone: '+1 (555) 123-4567',
+    address: '123 Tech Avenue, Silicon Valley, CA 94043'
+  });
+
   // Social Links State
   const [twitterUrl, setTwitterUrl] = useState('#');
   const [instagramUrl, setInstagramUrl] = useState('#');
   const [whatsappUrl, setWhatsappUrl] = useState('#');
 
-
   const handleSaveContent = () => {
     // In a real app, you'd save these values to your database.
-    console.log({ websiteName, heroTitle, heroSubtitle });
+    console.log({ websiteName, heroTitle, heroSubtitle, termsContent, privacyContent, contactInfo });
     toast({
       title: 'Content Saved!',
       description: 'Your website content has been updated.',
     });
   };
 
-  const handleSaveLinks = () => {
-    console.log({ termsUrl, privacyUrl, contactUrl, twitterUrl, instagramUrl, whatsappUrl });
+  const handleSaveSocialLinks = () => {
+    console.log({ twitterUrl, instagramUrl, whatsappUrl });
     toast({
         title: 'Links Saved!',
-        description: 'Your footer and social links have been updated.',
+        description: 'Your social links have been updated.',
     });
   };
-
 
   return (
     <div className="space-y-8">
@@ -52,9 +54,9 @@ export default function GeneralSettingsPage() {
       
       <Card className="glass-card">
         <CardHeader>
-            <CardTitle>Content Customization</CardTitle>
+            <CardTitle>Website Content</CardTitle>
             <CardDescription>
-                Edit the main text content displayed on your website.
+                Edit the main text content displayed across your website.
             </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
@@ -85,49 +87,76 @@ export default function GeneralSettingsPage() {
                     className="bg-background/50 min-h-[120px]"
                 />
             </div>
-            <Button onClick={handleSaveContent}>Save Content</Button>
+            <Button onClick={handleSaveContent}>Save Website Content</Button>
         </CardContent>
       </Card>
 
       <Card className="glass-card">
         <CardHeader>
-            <CardTitle>Footer Links</CardTitle>
+            <CardTitle>Page Content</CardTitle>
             <CardDescription>
-                Edit the URLs for the quick links in your website footer.
+                Edit the content for your static pages like Terms of Service and Privacy Policy.
             </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
             <div className="space-y-2">
-                <Label htmlFor="terms-url">Terms URL</Label>
-                <Input 
-                    id="terms-url"
-                    value={termsUrl}
-                    onChange={(e) => setTermsUrl(e.target.value)}
-                    className="bg-background/50"
-                    placeholder="e.g., /terms-of-service"
+                <Label htmlFor="terms-content">Terms of Service</Label>
+                <Textarea 
+                    id="terms-content"
+                    value={termsContent}
+                    onChange={(e) => setTermsContent(e.target.value)}
+                    className="bg-background/50 min-h-[200px]"
                 />
             </div>
             <div className="space-y-2">
-                <Label htmlFor="privacy-url">Privacy URL</Label>
+                <Label htmlFor="privacy-content">Privacy Policy</Label>
+                <Textarea 
+                    id="privacy-content"
+                    value={privacyContent}
+                    onChange={(e) => setPrivacyContent(e.target.value)}
+                    className="bg-background/50 min-h-[200px]"
+                />
+            </div>
+            <Button onClick={handleSaveContent}>Save Page Content</Button>
+        </CardContent>
+      </Card>
+      
+      <Card className="glass-card">
+        <CardHeader>
+            <CardTitle>Contact Page Settings</CardTitle>
+            <CardDescription>
+                Update the contact information displayed on the "Contact Us" page.
+            </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-6">
+            <div className="space-y-2">
+                <Label htmlFor="contact-email">Contact Email</Label>
                 <Input 
-                    id="privacy-url"
-                    value={privacyUrl}
-                    onChange={(e) => setPrivacyUrl(e.target.value)}
+                    id="contact-email"
+                    value={contactInfo.email}
+                    onChange={(e) => setContactInfo(prev => ({...prev, email: e.target.value}))}
                     className="bg-background/50"
-                    placeholder="e.g., /privacy-policy"
                 />
             </div>
              <div className="space-y-2">
-                <Label htmlFor="contact-url">Contact URL</Label>
+                <Label htmlFor="contact-phone">Contact Phone</Label>
                 <Input 
-                    id="contact-url"
-                    value={contactUrl}
-                    onChange={(e) => setContactUrl(e.target.value)}
+                    id="contact-phone"
+                    value={contactInfo.phone}
+                    onChange={(e) => setContactInfo(prev => ({...prev, phone: e.target.value}))}
                     className="bg-background/50"
-                    placeholder="e.g., /contact-us"
                 />
             </div>
-            <Button onClick={handleSaveLinks}>Save Footer Links</Button>
+             <div className="space-y-2">
+                <Label htmlFor="contact-address">Address</Label>
+                <Textarea 
+                    id="contact-address"
+                    value={contactInfo.address}
+                    onChange={(e) => setContactInfo(prev => ({...prev, address: e.target.value}))}
+                    className="bg-background/50"
+                />
+            </div>
+            <Button onClick={handleSaveContent}>Save Contact Info</Button>
         </CardContent>
       </Card>
 
@@ -169,7 +198,7 @@ export default function GeneralSettingsPage() {
                     placeholder="https://wa.me/yournumber"
                 />
             </div>
-            <Button onClick={handleSaveLinks}>Save Social Links</Button>
+            <Button onClick={handleSaveSocialLinks}>Save Social Links</Button>
         </CardContent>
       </Card>
 
