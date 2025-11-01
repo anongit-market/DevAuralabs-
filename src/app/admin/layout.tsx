@@ -2,7 +2,7 @@
 
 import { useAdmin } from '@/context/admin-context';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Loader2 } from 'lucide-react';
 import AdminSidebar from '@/components/layout/admin-sidebar';
 
@@ -13,19 +13,14 @@ export default function AdminLayout({
 }) {
   const { isAdmin, isLoading } = useAdmin();
   const router = useRouter();
-  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  useEffect(() => {
-    if (isMounted && !isLoading && !isAdmin) {
+    if (!isLoading && !isAdmin) {
       router.push('/login?view=admin');
     }
-  }, [isAdmin, isLoading, router, isMounted]);
+  }, [isAdmin, isLoading, router]);
 
-  if (!isMounted || isLoading) {
+  if (isLoading) {
     return (
       <div className="flex h-screen items-center justify-center bg-background">
         <Loader2 className="h-12 w-12 animate-spin text-primary" />
@@ -34,7 +29,7 @@ export default function AdminLayout({
   }
 
   if (!isAdmin) {
-    return null; // or a loader while redirecting
+    return null; // Return null while redirecting
   }
 
   return (

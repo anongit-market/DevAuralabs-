@@ -4,7 +4,7 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { PlusCircle, UserCog } from 'lucide-react';
+import { PlusCircle, UserCog, Settings } from 'lucide-react';
 
 export default function AdminPage() {
   
@@ -43,6 +43,20 @@ export default function AdminPage() {
                 </Button>
             </Link>
           </CardContent>
+        </Card>
+      </div>
+
+      <div className="grid gap-8">
+        <Card className="glass-card">
+            <CardHeader>
+                <CardTitle className="flex items-center gap-2"><Settings /> General Settings</CardTitle>
+                <CardDescription>Manage general website settings like theme and appearance.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <Link href="/admin/settings">
+                    <Button variant="outline">Go to Settings</Button>
+                </Link>
+            </CardContent>
         </Card>
       </div>
     </div>
