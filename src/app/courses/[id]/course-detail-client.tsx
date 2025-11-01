@@ -25,6 +25,8 @@ type Course = {
   description: string;
   image: string;
   compareAtPrice?: number;
+  startDate?: string;
+  endDate?: string;
 };
 
 export default function CourseDetailClient({ course }: { course: Course }) {

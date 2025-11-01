@@ -2,10 +2,9 @@
 import { notFound } from 'next/navigation';
 import CourseDetailClient from './course-detail-client';
 import { initializeFirebase } from '@/firebase/server';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, Timestamp } from 'firebase/firestore';
 
 async function getCourse(id: string) {
-    // We need to initialize firebase on the server for this to work
     const { firestore } = initializeFirebase();
     const courseRef = doc(firestore, 'courses', id);
     const courseSnap = await getDoc(courseRef);
@@ -14,7 +13,18 @@ async function getCourse(id: string) {
         return null;
     }
     
-    return { ...courseSnap.data(), id: courseSnap.id };
+    const courseData = courseSnap.data();
+
+    // Serialize Timestamp objects to strings
+    const plainObject = { ...courseData, id: courseSnap.id };
+    if (plainObject.startDate && plainObject.startDate instanceof Timestamp) {
+        plainObject.startDate = plainObject.startDate.toDate().toISOString();
+    }
+    if (plainObject.endDate && plainObject.endDate instanceof Timestamp) {
+        plainObject.endDate = plainObject.endDate.toDate().toISOString();
+    }
+
+    return plainObject;
 }
 
 
