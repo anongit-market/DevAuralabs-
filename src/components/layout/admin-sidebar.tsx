@@ -1,8 +1,9 @@
+
 'use client';
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Home, Settings, LogOut, BookCopy, Award } from 'lucide-react';
+import { Home, Settings, LogOut, BookCopy, Award, List } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useAdmin } from '@/context/admin-context';
@@ -10,6 +11,7 @@ import Logo from '../logo';
 
 const navLinks = [
   { href: '/admin', label: 'Dashboard', icon: Home },
+  { href: '/admin/content', label: 'Content', icon: List },
   { href: '/admin/add-course', label: 'Add Course', icon: BookCopy },
   { href: '/admin/add-skill', label: 'Add Skill', icon: Award },
   { href: '/admin/settings', label: 'General', icon: Settings },
@@ -37,7 +39,7 @@ export default function AdminSidebar() {
               variant="ghost"
               className={cn(
                 'w-full justify-start text-base gap-3 h-12',
-                pathname === link.href
+                pathname.startsWith(link.href) && (link.href !== '/admin' || pathname === '/admin')
                   ? 'bg-primary/20 text-primary'
                   : 'text-muted-foreground'
               )}
