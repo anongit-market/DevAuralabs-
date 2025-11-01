@@ -29,6 +29,8 @@ export default function ContentListPage() {
   const { toast } = useToast();
 
   const [itemToDelete, setItemToDelete] = useState<{ collection: string; id: string; title: string } | null>(null);
+  const [showSuccessDialog, setShowSuccessDialog] = useState(false);
+  const [deletedItemTitle, setDeletedItemTitle] = useState('');
 
   const coursesQuery = useMemoFirebase(() => firestore ? collection(firestore, 'courses') : null, [firestore]);
   const { data: courses, isLoading: coursesLoading } = useCollection(coursesQuery);
@@ -41,10 +43,8 @@ export default function ContentListPage() {
 
     try {
       await deleteDoc(doc(firestore, itemToDelete.collection, itemToDelete.id));
-      toast({
-        title: 'Success',
-        description: `"${itemToDelete.title}" has been deleted.`,
-      });
+      setDeletedItemTitle(itemToDelete.title);
+      setShowSuccessDialog(true);
     } catch (error) {
       console.error(`Error deleting document:`, error);
       toast({
@@ -179,6 +179,22 @@ export default function ContentListPage() {
             <AlertDialogCancel onClick={() => setItemToDelete(null)}>Cancel</AlertDialogCancel>
             <AlertDialogAction onClick={handleDelete} className="bg-destructive hover:bg-destructive/90">
               Continue
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog open={showSuccessDialog} onOpenChange={setShowSuccessDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Success!</AlertDialogTitle>
+            <AlertDialogDescription>
+              The item "{deletedItemTitle}" has been successfully deleted.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogAction onClick={() => setShowSuccessDialog(false)}>
+              OK
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
