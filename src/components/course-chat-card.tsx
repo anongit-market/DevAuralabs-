@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import type { AIPoweredCourseRecommendationsOutput } from '@/ai/flows/ai-powered-course-recommendations';
+import { useCurrency } from '@/context/currency-context';
 
 type Course = Exclude<AIPoweredCourseRecommendationsOutput['courses'], undefined>[0];
 
@@ -15,6 +16,7 @@ const getPlaceholderImage = (id: string) => {
 
 export default function CourseChatCard({ course }: { course: Course }) {
   const placeholder = getPlaceholderImage(course.image);
+  const { getConvertedPrice } = useCurrency();
 
   return (
     <div className="aura-glass-card p-3 max-w-sm">
@@ -36,7 +38,7 @@ export default function CourseChatCard({ course }: { course: Course }) {
             <p className="text-xs text-zinc-400">{course.level}</p>
           </div>
           <div className="flex justify-between items-end mt-1">
-            <p className="text-sm font-bold text-primary">${course.price}</p>
+            <p className="text-sm font-bold text-primary">{getConvertedPrice(course.price)}</p>
             <Link href={`/courses/${course.id}`} passHref>
               <Button size="sm" className="h-7 px-2 text-xs">View</Button>
             </Link>

@@ -12,6 +12,7 @@ import { useEffect, useState } from 'react';
 import { useUser, useFirestore, useMemoFirebase, addDocumentNonBlocking, useCollection } from '@/firebase';
 import { RippleEffect } from '@/components/ui/ripple-effect';
 import { collection, doc, serverTimestamp } from 'firebase/firestore';
+import { useCurrency } from '@/context/currency-context';
 
 const getPlaceholderImage = (id: string) => {
   return PlaceHolderImages.find((img) => img.id === id);
@@ -35,6 +36,7 @@ export default function CourseDetailClient({ course }: { course: Course }) {
   const [isMounted, setIsMounted] = useState(false);
   const { user } = useUser();
   const firestore = useFirestore();
+  const { getConvertedPrice } = useCurrency();
 
   const enrollmentsQuery = useMemoFirebase(
     () => (user && firestore ? collection(firestore, 'users', user.uid, 'enrollments') : null),
@@ -151,9 +153,9 @@ export default function CourseDetailClient({ course }: { course: Course }) {
                 ) : !enrollmentsLoading && (
                   <>
                     <div className="flex items-baseline gap-2 mb-6">
-                        <p className="text-3xl font-bold text-primary">${course.price}</p>
+                        <p className="text-3xl font-bold text-primary">{getConvertedPrice(course.price)}</p>
                         {course.compareAtPrice && (
-                            <p className="text-xl text-muted-foreground line-through">${course.compareAtPrice}</p>
+                            <p className="text-xl text-muted-foreground line-through">{getConvertedPrice(course.compareAtPrice)}</p>
                         )}
                     </div>
                     <p className="text-sm text-muted-foreground mb-6">Get lifetime access to this course and all future updates.</p>

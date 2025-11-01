@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
 import { icons } from '@/lib/data';
+import { useCurrency } from '@/context/currency-context';
 
 type Course = {
   id: string;
@@ -29,6 +30,7 @@ export default function CourseCard({ course }: CourseCardProps) {
   const { title, icon, level, price, compareAtPrice, image, id } = course;
   const placeholder = getPlaceholderImage(image);
   const Icon = icons[icon];
+  const { getConvertedPrice } = useCurrency();
 
   return (
     <div className="glass-card flex flex-col h-full">
@@ -58,9 +60,9 @@ export default function CourseCard({ course }: CourseCardProps) {
         
         <div className="flex items-baseline gap-1 mb-1 justify-center">
             {compareAtPrice && (
-                <p className="text-[10px] text-muted-foreground line-through">${compareAtPrice}</p>
+                <p className="text-[10px] text-muted-foreground line-through">{getConvertedPrice(compareAtPrice)}</p>
             )}
-            <p className="text-xs font-bold text-green">${price}</p>
+            <p className="text-xs font-bold text-green">{getConvertedPrice(price)}</p>
         </div>
 
         <div className="flex flex-col w-full gap-2 mt-auto">

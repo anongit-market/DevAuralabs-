@@ -12,6 +12,7 @@ import { useState, useEffect } from 'react';
 import { RippleEffect } from '@/components/ui/ripple-effect';
 import { useCollection, useFirestore, useUser, useMemoFirebase } from '@/firebase';
 import { collection } from 'firebase/firestore';
+import { useCurrency } from '@/context/currency-context';
 
 const getPlaceholderImage = (id: string) => {
   return PlaceHolderImages.find((img) => img.id === id);
@@ -20,6 +21,7 @@ const getPlaceholderImage = (id: string) => {
 export default function CartPage() {
   const { user } = useUser();
   const firestore = useFirestore();
+  const { getConvertedPrice } = useCurrency();
 
   // In a real app, you would fetch the cart from a subcollection on the user
   const cartQuery = useMemoFirebase(() => user ? collection(firestore, `users/${user.uid}/cart`) : null, [firestore, user]);
@@ -75,7 +77,7 @@ export default function CartPage() {
                         <h3 className="text-lg font-bold">{item.title}</h3>
                         <p className="text-sm text-muted-foreground">{item.level}</p>
                       </div>
-                      <p className="text-lg font-bold text-primary">${item.price}</p>
+                      <p className="text-lg font-bold text-primary">{getConvertedPrice(item.price)}</p>
                     </div>
                     <div className="flex items-center justify-between mt-4">
                       <p className="text-sm">Qty: {item.quantity || 1}</p>
@@ -97,16 +99,16 @@ export default function CartPage() {
               <CardContent className="space-y-4">
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Subtotal</span>
-                  <span>${subtotal.toFixed(2)}</span>
+                  <span>{getConvertedPrice(subtotal)}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Tax</span>
-                  <span>${tax.toFixed(2)}</span>
+                  <span>{getConvertedPrice(tax)}</span>
                 </div>
                 <Separator className="my-2 bg-white/10" />
                 <div className="flex justify-between font-bold text-lg">
                   <span>Total</span>
-                  <span>${total.toFixed(2)}</span>
+                  <span>{getConvertedPrice(total)}</span>
                 </div>
               </CardContent>
               <CardFooter>
@@ -138,5 +140,3 @@ export default function CartPage() {
     </div>
   );
 }
-
-    

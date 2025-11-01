@@ -11,6 +11,7 @@ import { useEffect, useState } from 'react';
 import { useUser, useFirestore, useMemoFirebase, addDocumentNonBlocking, useCollection } from '@/firebase';
 import { RippleEffect } from '@/components/ui/ripple-effect';
 import { collection, serverTimestamp } from 'firebase/firestore';
+import { useCurrency } from '@/context/currency-context';
 
 const getPlaceholderImage = (id: string) => {
   return PlaceHolderImages.find((img) => img.id === id);
@@ -30,6 +31,7 @@ export default function SkillDetailClient({ skill }: { skill: Skill }) {
   const [isMounted, setIsMounted] = useState(false);
   const { user } = useUser();
   const firestore = useFirestore();
+  const { getConvertedPrice } = useCurrency();
 
   const enrollmentsQuery = useMemoFirebase(
     () => (user && firestore ? collection(firestore, 'users', user.uid, 'enrollments') : null),
@@ -53,6 +55,8 @@ export default function SkillDetailClient({ skill }: { skill: Skill }) {
   };
 
   const placeholder = getPlaceholderImage(skill.image);
+  const price = skill.price || 499.99;
+  const compareAtPrice = 599.99;
 
   return (
     <div className="container mx-auto py-12 px-4">
@@ -105,8 +109,8 @@ export default function SkillDetailClient({ skill }: { skill: Skill }) {
                 ) : !enrollmentsLoading && (
                     <>
                         <div className="flex items-baseline gap-2 mb-6">
-                            <p className="text-3xl font-bold text-primary">${skill.price || '499.99'}</p>
-                            <p className="text-xl text-muted-foreground line-through">$599.99</p>
+                            <p className="text-3xl font-bold text-primary">{getConvertedPrice(price)}</p>
+                            <p className="text-xl text-muted-foreground line-through">{getConvertedPrice(compareAtPrice)}</p>
                         </div>
                         <p className="text-sm text-muted-foreground mb-6">Get lifetime access to this program and all future updates.</p>
                         <div className="flex flex-col gap-4">

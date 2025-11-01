@@ -36,7 +36,7 @@ import { RippleEffect } from './ui/ripple-effect';
 const formSchema = z.object({
   title: z.string().min(2, { message: 'Title must be at least 2 characters.' }),
   level: z.string().min(1, { message: 'Level is required.' }),
-  description: z.string().min(80, { message: 'Description must be at least 80 characters.' }),
+  description: z.string().min(80, { message: 'Description must be at least 80 characters.' }).max(400, { message: 'Description cannot exceed 400 characters.'}),
   price: z.preprocess(
     (a) => parseFloat(z.string().parse(a)),
     z.number().positive({ message: 'Price must be a positive number.' })
@@ -62,8 +62,8 @@ export default function AddCoursePageForm() {
       title: '',
       level: '',
       description: '',
-      price: '' as any, // Initialize price to an empty string
-      currency: 'USD',
+      price: '' as any,
+      currency: 'INR',
       posterUrl: '',
       screenshots: '',
       timing: '',

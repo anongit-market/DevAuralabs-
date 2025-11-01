@@ -2,7 +2,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Menu, User, ShoppingCart, LayoutGrid, BookOpen, Briefcase, Info, Sparkles, LogIn } from 'lucide-react';
+import { Menu, User, ShoppingCart, LayoutGrid, BookOpen, Briefcase, Info, Sparkles, LogIn, DollarSign, IndianRupee } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
 import { signOut } from 'firebase/auth';
 
@@ -20,6 +20,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
@@ -33,6 +35,7 @@ import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useAdmin } from '@/context/admin-context';
 import BackButton from './back-button';
+import { useCurrency } from '@/context/currency-context';
 
 
 const AuraAiIcon = () => {
@@ -65,6 +68,7 @@ export default function Navbar() {
   const auth = useAuth();
   const { user, isUserLoading } = useUser();
   const { isAdmin, logout: adminLogout } = useAdmin();
+  const { currency, setCurrency } = useCurrency();
 
 
   useEffect(() => {
@@ -164,7 +168,7 @@ export default function Navbar() {
         {/* Desktop nav */}
         <nav className={cn(
             "hidden md:flex items-center gap-6 text-sm",
-            (pathname === '/login' || pathname === '/signup') && "invisible"
+            pathname !== '/' && (pathname === '/login' || pathname === '/signup') && "invisible"
         )}>
             {navLinks.map(({ href, label }) => (
                 <Link
@@ -182,6 +186,23 @@ export default function Navbar() {
 
         {/* Login/Profile Buttons - Top Right */}
         <div className="flex items-center justify-end gap-2">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="glass-icon-btn text-muted-foreground hover:text-primary h-10 w-10">
+                  {currency === 'USD' ? <DollarSign className="h-5 w-5" /> : <IndianRupee className="h-5 w-5" />}
+                  <span className="sr-only">Change currency</span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-40" align="end">
+                <DropdownMenuLabel>Select Currency</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuRadioGroup value={currency} onValueChange={(value) => setCurrency(value as 'USD' | 'INR')}>
+                  <DropdownMenuRadioItem value="INR">INR (₹)</DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="USD">USD ($)</DropdownMenuRadioItem>
+                </DropdownMenuRadioGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
           {isMounted && !isUserLoading ? (
             isAdmin ? (
                <Button variant="destructive" onClick={handleAdminLogout}>
@@ -195,14 +216,14 @@ export default function Navbar() {
                 </Link>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <div className="glass-icon-btn h-10 w-10">
+                    <Button variant="ghost" className="relative h-10 w-10 rounded-full glass-icon-btn p-0">
                       <Avatar className="h-9 w-9">
                         <AvatarImage src={user.photoURL || "https://i.pravatar.cc/150?u=a042581f4e29026704d"} alt={user.displayName || 'user'} />
                         <AvatarFallback>
                             {user.displayName ? user.displayName.charAt(0) : <User className="h-5 w-5" />}
                         </AvatarFallback>
                       </Avatar>
-                    </div>
+                    </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="w-56" align="end" forceMount>
                     <DropdownMenuLabel className="font-normal">

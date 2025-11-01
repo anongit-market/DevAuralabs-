@@ -12,6 +12,7 @@ import { Separator } from '@/components/ui/separator';
 import { RippleEffect } from '@/components/ui/ripple-effect';
 import { useDoc, useFirestore, useMemoFirebase } from '@/firebase';
 import { doc } from 'firebase/firestore';
+import { useCurrency } from '@/context/currency-context';
 
 const getPlaceholderImage = (id: string) => {
   return PlaceHolderImages.find((img) => img.id === id);
@@ -21,6 +22,7 @@ export default function CheckoutPage() {
   const params = useParams();
   const { id } = params;
   const firestore = useFirestore();
+  const { getConvertedPrice } = useCurrency();
 
   const courseRef = useMemoFirebase(() => firestore ? doc(firestore, 'courses', id as string) : null, [firestore, id]);
   const { data: course, isLoading } = useDoc(courseRef);
@@ -63,7 +65,7 @@ export default function CheckoutPage() {
               <Separator className="my-4 bg-white/10" />
               <div className="flex justify-between items-center font-bold">
                 <span className="text-muted-foreground">Price</span>
-                <span className="text-primary text-xl">${course.price}</span>
+                <span className="text-primary text-xl">{getConvertedPrice(course.price)}</span>
               </div>
             </CardContent>
           </Card>
@@ -98,7 +100,7 @@ export default function CheckoutPage() {
             </CardContent>
             <CardFooter>
               <Button size="lg" className="w-full gradient-btn gradient-btn-1 relative">
-                Pay ${course.price}
+                Pay {getConvertedPrice(course.price)}
                 <RippleEffect />
               </Button>
             </CardFooter>
@@ -108,5 +110,3 @@ export default function CheckoutPage() {
     </div>
   );
 }
-
-    
