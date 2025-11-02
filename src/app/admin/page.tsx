@@ -4,7 +4,7 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { PlusCircle, UserCog, Settings, List } from 'lucide-react';
+import { PlusCircle, UserCog, Settings, List, Users } from 'lucide-react';
 
 export default function AdminPage() {
   
@@ -46,7 +46,7 @@ export default function AdminPage() {
         </Card>
       </div>
 
-      <div className="grid gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <Card className="glass-card">
             <CardHeader>
                 <CardTitle className="flex items-center gap-2"><List /> Platform Content</CardTitle>
@@ -55,6 +55,17 @@ export default function AdminPage() {
             <CardContent>
                 <Link href="/admin/content">
                     <Button variant="outline">Manage Content</Button>
+                </Link>
+            </CardContent>
+        </Card>
+        <Card className="glass-card">
+            <CardHeader>
+                <CardTitle className="flex items-center gap-2"><Users /> Manage Users</CardTitle>
+                <CardDescription>View and manage all registered users on the platform.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <Link href="/admin/users">
+                    <Button variant="outline">View Users</Button>
                 </Link>
             </CardContent>
         </Card>

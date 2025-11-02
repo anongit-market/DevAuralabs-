@@ -1,0 +1,104 @@
+
+'use client';
+
+import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
+import { collection, query, orderBy } from 'firebase/firestore';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Loader2, Users, ArrowLeft } from 'lucide-react';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { formatDistanceToNow } from 'date-fns';
+
+const providerColor: { [key: string]: string } = {
+  'google.com': 'bg-red-500/20 text-red-400 border-red-500/50',
+  'facebook.com': 'bg-blue-500/20 text-blue-400 border-blue-500/50',
+  'password': 'bg-gray-500/20 text-gray-400 border-gray-500/50',
+}
+
+export default function UsersPage() {
+    const firestore = useFirestore();
+    
+    // We are fetching from the root 'users' collection
+    const usersQuery = useMemoFirebase(() => 
+        firestore ? query(collection(firestore, 'users'), orderBy('metadata.creationTime', 'desc')) : null, 
+        [firestore]
+    );
+    const { data: users, isLoading } = useCollection(usersQuery);
+
+    const getProviderBadge = (providerId: string) => {
+        return <Badge variant="outline" className={providerColor[providerId] || providerColor['password']}>{providerId.split('.')[0]}</Badge>
+    }
+
+    return (
+        <div className="container mx-auto py-10 px-4">
+            <div className="max-w-5xl mx-auto">
+                <div className="flex items-center gap-4 mb-8">
+                    <Link href="/admin">
+                        <Button variant="outline" size="icon">
+                            <ArrowLeft className="h-4 w-4" />
+                        </Button>
+                    </Link>
+                    <h1 className="text-3xl font-bold flex items-center gap-2"><Users /> All Users ({users?.length || 0})</h1>
+                </div>
+
+                <Card className="glass-card">
+                    <CardHeader>
+                        <CardTitle>Registered Users</CardTitle>
+                        <CardDescription>A list of all users who have created an account.</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <Table>
+                            <TableHeader>
+                                <TableRow>
+                                    <TableHead>User</TableHead>
+                                    <TableHead>Email</TableHead>
+                                    <TableHead>Provider</TableHead>
+                                    <TableHead>Joined</TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                {isLoading ? (
+                                    <TableRow>
+                                        <TableCell colSpan={4} className="text-center h-24">
+                                            <Loader2 className="mx-auto h-8 w-8 animate-spin" />
+                                        </TableCell>
+                                    </TableRow>
+                                ) : users && users.length > 0 ? (
+                                    users.map((user) => (
+                                        <TableRow key={user.uid}>
+                                            <TableCell>
+                                                <div className="flex items-center gap-3">
+                                                    <Avatar>
+                                                        <AvatarImage src={user.photoURL} alt={user.displayName} />
+                                                        <AvatarFallback>{user.displayName?.[0] || 'U'}</AvatarFallback>
+                                                    </Avatar>
+                                                    <span className="font-medium">{user.displayName || 'No Name'}</span>
+                                                </div>
+                                            </TableCell>
+                                            <TableCell>{user.email}</TableCell>
+                                            <TableCell>
+                                                {getProviderBadge(user.providerData?.[0]?.providerId)}
+                                            </TableCell>
+                                            <TableCell className="text-muted-foreground">
+                                                {user.metadata?.creationTime ? formatDistanceToNow(new Date(user.metadata.creationTime), { addSuffix: true }) : 'N/A'}
+                                            </TableCell>
+                                        </TableRow>
+                                    ))
+                                ) : (
+                                    <TableRow>
+                                        <TableCell colSpan={4} className="text-center h-24">
+                                            No users found.
+                                        </TableCell>
+                                    </TableRow>
+                                )}
+                            </TableBody>
+                        </Table>
+                    </CardContent>
+                </Card>
+            </div>
+        </div>
+    );
+}
