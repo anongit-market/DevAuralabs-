@@ -12,6 +12,7 @@ import { RippleEffect } from '@/components/ui/ripple-effect';
 import { collection, serverTimestamp, doc, Timestamp } from 'firebase/firestore';
 import { useCurrency } from '@/context/currency-context';
 import Link from 'next/link';
+import { useDemoUser } from '@/context/demo-user-context';
 
 type Skill = {
   id: string;
@@ -35,6 +36,7 @@ export default function SkillDetailClient({ skill }: { skill: Skill }) {
   const { user } = useUser();
   const firestore = useFirestore();
   const { getConvertedPrice } = useCurrency();
+  const { isDemoMode } = useDemoUser();
 
   const enrollmentsQuery = useMemoFirebase(
     () => (user && firestore ? collection(firestore, 'users', user.uid, 'enrollments') : null),
@@ -52,7 +54,7 @@ export default function SkillDetailClient({ skill }: { skill: Skill }) {
     setIsMounted(true);
   }, []);
 
-  const isPurchased = isMounted && user && !enrollmentsLoading && enrollments?.some(e => e.skillId === skill.id);
+  const isPurchased = isMounted && (isDemoMode || (user && !enrollmentsLoading && enrollments?.some(e => e.skillId === skill.id)));
 
   const learningPoints = skill.whatYoullLearn?.split('\n').filter(point => point.trim() !== '') || [];
   

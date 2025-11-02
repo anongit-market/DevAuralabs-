@@ -7,6 +7,8 @@ import Navbar from '@/components/layout/navbar';
 import { FirebaseClientProvider } from '@/firebase';
 import { AdminProvider } from '@/context/admin-context';
 import { CurrencyProvider } from '@/context/currency-context';
+import { DemoUserProvider } from '@/context/demo-user-context';
+import DemoUserFAB from '@/components/demo-user-fab';
 
 export default function RootLayout({
   children,
@@ -24,13 +26,16 @@ export default function RootLayout({
       <body className="antialiased bg-background text-foreground">
         <FirebaseClientProvider>
           <AdminProvider>
-            <CurrencyProvider>
-              <div className="relative z-10 flex min-h-screen flex-col">
-                <Navbar />
-                <main className="flex-1">{children}</main>
-              </div>
-              <Toaster />
-            </CurrencyProvider>
+            <DemoUserProvider>
+              <CurrencyProvider>
+                <div className="relative z-10 flex min-h-screen flex-col">
+                  <Navbar />
+                  <main className="flex-1">{children}</main>
+                </div>
+                <DemoUserFAB />
+                <Toaster />
+              </CurrencyProvider>
+            </DemoUserProvider>
           </AdminProvider>
         </FirebaseClientProvider>
       </body>

@@ -36,6 +36,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useAdmin } from '@/context/admin-context';
 import BackButton from './back-button';
 import { useCurrency } from '@/context/currency-context';
+import { useDemoUser } from '@/context/demo-user-context';
 
 
 const AuraAiIcon = () => {
@@ -70,6 +71,7 @@ export default function Navbar() {
   const { user, isUserLoading } = useUser();
   const { isAdmin, logout: adminLogout } = useAdmin();
   const { currency, setCurrency } = useCurrency();
+  const { isDemoMode, endDemoMode } = useDemoUser();
 
 
   useEffect(() => {
@@ -95,11 +97,30 @@ export default function Navbar() {
     router.push('/');
   }
 
+  const handleDemoLogout = () => {
+    endDemoMode();
+    router.push('/admin');
+  }
+
   const showBackButton = isMounted && pathname !== '/' && pathname !== '/login' && pathname !== '/signup';
 
-  if (pathname === '/aura-ai-chat' || (isAdmin && pathname.startsWith('/admin'))) {
-    return null; // Don't render the navbar on the chat page or admin pages
+  if (pathname === '/aura-ai-chat' || (isAdmin && !isDemoMode && pathname.startsWith('/admin'))) {
+    return null; // Don't render the navbar on the chat page or admin pages (unless in demo mode)
   }
+
+  const getActiveUser = () => {
+    if (isDemoMode) {
+      return {
+        isDemo: true,
+        displayName: 'Demo User',
+        email: 'demo@devaura.labs',
+        photoURL: 'https://i.pravatar.cc/150?u=demo-user'
+      }
+    }
+    return user;
+  }
+
+  const activeUser = getActiveUser();
 
   return (
     <header className={headerClass}>
@@ -149,7 +170,7 @@ export default function Navbar() {
                             ))}
                         </div>
                         {isMounted && (
-                        !user && !isUserLoading && !isAdmin ? (
+                        !activeUser && !isUserLoading ? (
                             <Link href="/login" onClick={() => setIsOpen(false)}>
                                 <div className="glass-icon-btn login-btn text-foreground w-full">Login</div>
                             </Link>
@@ -205,11 +226,38 @@ export default function Navbar() {
             </DropdownMenu>
 
           {isMounted && !isUserLoading ? (
-            isAdmin ? (
+            isDemoMode ? (
+                 <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className="relative h-10 w-10 rounded-full glass-icon-btn p-0">
+                      <Avatar className="h-9 w-9">
+                        <AvatarImage src={activeUser.photoURL} alt={activeUser.displayName} />
+                        <AvatarFallback>
+                            {activeUser.displayName ? activeUser.displayName.charAt(0) : <User className="h-5 w-5" />}
+                        </AvatarFallback>
+                      </Avatar>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-56" align="end" forceMount>
+                    <DropdownMenuLabel className="font-normal">
+                      <div className="flex flex-col space-y-1">
+                        <p className="text-sm font-medium leading-none">{activeUser.displayName}</p>
+                        <p className="text-xs leading-none text-muted-foreground">
+                          {activeUser.email}
+                        </p>
+                      </div>
+                    </DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={handleDemoLogout} className="text-destructive focus:text-destructive">
+                      Exit Demo Mode
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+            ) : isAdmin ? (
                <Button variant="destructive" onClick={handleAdminLogout}>
                   Admin Logout
                 </Button>
-            ) : user ? (
+            ) : activeUser ? (
               <>
                 <Link href="/cart" className="glass-icon-btn">
                     <ShoppingCart className="h-5 w-5" />
@@ -219,9 +267,9 @@ export default function Navbar() {
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" className="relative h-10 w-10 rounded-full glass-icon-btn p-0">
                       <Avatar className="h-9 w-9">
-                        <AvatarImage src={user.photoURL || "https://i.pravatar.cc/150?u=a042581f4e29026704d"} alt={user.displayName || 'user'} />
+                        <AvatarImage src={activeUser.photoURL || "https://i.pravatar.cc/150?u=a042581f4e29026704d"} alt={activeUser.displayName || 'user'} />
                         <AvatarFallback>
-                            {user.displayName ? user.displayName.charAt(0) : <User className="h-5 w-5" />}
+                            {activeUser.displayName ? activeUser.displayName.charAt(0) : <User className="h-5 w-5" />}
                         </AvatarFallback>
                       </Avatar>
                     </Button>
@@ -229,9 +277,9 @@ export default function Navbar() {
                   <DropdownMenuContent className="w-56" align="end" forceMount>
                     <DropdownMenuLabel className="font-normal">
                       <div className="flex flex-col space-y-1">
-                        <p className="text-sm font-medium leading-none">{user.displayName || 'User'}</p>
+                        <p className="text-sm font-medium leading-none">{activeUser.displayName || 'User'}</p>
                         <p className="text-xs leading-none text-muted-foreground">
-                          {user.email}
+                          {activeUser.email}
                         </p>
                       </div>
                     </DropdownMenuLabel>

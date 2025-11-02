@@ -13,6 +13,7 @@ import { RippleEffect } from '@/components/ui/ripple-effect';
 import { collection, doc, serverTimestamp, Timestamp } from 'firebase/firestore';
 import { useCurrency } from '@/context/currency-context';
 import Link from 'next/link';
+import { useDemoUser } from '@/context/demo-user-context';
 
 type Course = {
   id: string;
@@ -40,6 +41,7 @@ export default function CourseDetailClient({ course }: { course: Course }) {
   const { user } = useUser();
   const firestore = useFirestore();
   const { getConvertedPrice } = useCurrency();
+  const { isDemoMode } = useDemoUser();
 
   const enrollmentsQuery = useMemoFirebase(
     () => (user && firestore ? collection(firestore, 'users', user.uid, 'enrollments') : null),
@@ -57,7 +59,7 @@ export default function CourseDetailClient({ course }: { course: Course }) {
     setIsMounted(true);
   }, []);
   
-  const isPurchased = isMounted && user && !enrollmentsLoading && enrollments?.some(e => e.courseId === course.id);
+  const isPurchased = isMounted && (isDemoMode || (user && !enrollmentsLoading && enrollments?.some(e => e.courseId === course.id)));
 
   const learningPoints = course.whatYoullLearn?.split('\n').filter(point => point.trim() !== '') || [];
 

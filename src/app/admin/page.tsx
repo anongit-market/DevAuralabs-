@@ -4,9 +4,18 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { PlusCircle, UserCog, Settings, List, Users, Cpu } from 'lucide-react';
+import { PlusCircle, UserCog, Settings, List, Users, Cpu, Eye } from 'lucide-react';
+import { useDemoUser } from '@/context/demo-user-context';
+import { useRouter } from 'next/navigation';
 
 export default function AdminPage() {
+  const { startDemoMode } = useDemoUser();
+  const router = useRouter();
+
+  const handleStartDemo = () => {
+    startDemoMode();
+    router.push('/');
+  };
   
   return (
     <div className="space-y-8">
@@ -76,7 +85,16 @@ export default function AdminPage() {
         </Card>
       </div>
 
-      <div className="grid gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <Card className="glass-card">
+            <CardHeader>
+                <CardTitle className="flex items-center gap-2"><Eye /> Demo User Mode</CardTitle>
+                <CardDescription>Preview the site as a student with full content access.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <Button variant="secondary" onClick={handleStartDemo}>Start Demo</Button>
+            </CardContent>
+        </Card>
         <Card className="glass-card">
             <CardHeader>
                 <CardTitle className="flex items-center gap-2"><Settings /> General Settings</CardTitle>
