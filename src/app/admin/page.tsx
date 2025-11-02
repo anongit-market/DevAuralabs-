@@ -4,7 +4,7 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { PlusCircle, UserCog, Settings, List, Users } from 'lucide-react';
+import { PlusCircle, UserCog, Settings, List, Users, Cpu } from 'lucide-react';
 
 export default function AdminPage() {
   
@@ -30,7 +30,7 @@ export default function AdminPage() {
             <CardTitle>Quick Actions</CardTitle>
             <CardDescription>Manage your platform content.</CardDescription>
           </CardHeader>
-          <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <CardContent className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
              <Link href="/admin/add-course">
                 <Button variant="outline" className="w-full">
                     <PlusCircle className="mr-2 h-4 w-4" /> Add New Course
@@ -40,6 +40,11 @@ export default function AdminPage() {
             <Link href="/admin/add-skill">
                 <Button variant="outline" className="w-full">
                     <PlusCircle className="mr-2 h-4 w-4" /> Add New Skill
+                </Button>
+            </Link>
+            <Link href="/admin/add-hardware">
+                <Button variant="outline" className="w-full">
+                    <Cpu className="mr-2 h-4 w-4" /> Add Hardware
                 </Button>
             </Link>
           </CardContent>

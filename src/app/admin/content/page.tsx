@@ -37,6 +37,9 @@ export default function ContentListPage() {
 
   const skillsQuery = useMemoFirebase(() => firestore ? collection(firestore, 'skills') : null, [firestore]);
   const { data: skills, isLoading: skillsLoading } = useCollection(skillsQuery);
+  
+  const hardwareQuery = useMemoFirebase(() => firestore ? collection(firestore, 'hardware') : null, [firestore]);
+  const { data: hardware, isLoading: hardwareLoading } = useCollection(hardwareQuery);
 
   const handleDelete = async () => {
     if (!itemToDelete || !firestore) return;
@@ -161,6 +164,59 @@ export default function ContentListPage() {
                   ))
                 ) : (
                   <TableRow><TableCell colSpan={3} className="text-center">No skills found.</TableCell></TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
+
+        <Card className="glass-card">
+          <CardHeader>
+            <CardTitle>Hardware Products</CardTitle>
+            <CardDescription>List of all available hardware products in the store.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="w-[40%]">Name</TableHead>
+                  <TableHead>Category</TableHead>
+                  <TableHead>Price</TableHead>
+                  <TableHead>Stock</TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {hardwareLoading ? (
+                  <TableRow><TableCell colSpan={5} className="text-center">Loading hardware...</TableCell></TableRow>
+                ) : hardware && hardware.length > 0 ? (
+                  hardware.map((item) => (
+                    <TableRow key={item.id}>
+                      <TableCell className="font-medium">{item.name}</TableCell>
+                      <TableCell>{item.category}</TableCell>
+                      <TableCell>{getConvertedPrice(item.price)}</TableCell>
+                      <TableCell>{item.stock}</TableCell>
+                      <TableCell className="text-right">
+                        <Link href={`/admin/edit-hardware/${item.id}`}>
+                          <Button variant="ghost" size="icon" className="hover:text-primary">
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                        </Link>
+                        <AlertDialogTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="hover:text-destructive"
+                            onClick={() => setItemToDelete({ collection: 'hardware', id: item.id, title: item.name })}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </AlertDialogTrigger>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow><TableCell colSpan={5} className="text-center">No hardware products found.</TableCell></TableRow>
                 )}
               </TableBody>
             </Table>
