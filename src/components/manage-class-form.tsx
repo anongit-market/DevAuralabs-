@@ -16,7 +16,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { useFirestore } from '@/firebase';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc, Timestamp } from 'firebase/firestore';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { CalendarIcon, PlusCircle, Trash2 } from 'lucide-react';
 import { Calendar } from '@/components/ui/calendar';
@@ -66,9 +66,20 @@ export default function ManageClassForm({ content, collectionName }: ManageClass
       const classDetailsSnap = await getDoc(classDetailsRef);
       if (classDetailsSnap.exists()) {
         const data = classDetailsSnap.data();
+        const liveClassTime = data.liveClassTime;
+        
+        let liveClassDate: Date | undefined = undefined;
+        if (liveClassTime && typeof liveClassTime === 'object' && liveClassTime.seconds) {
+          // It's a Firestore Timestamp from the server
+          liveClassDate = (liveClassTime as Timestamp).toDate();
+        } else if (liveClassTime) {
+          // It might already be a Date object or string from previous state
+          liveClassDate = new Date(liveClassTime);
+        }
+
         form.reset({
           liveClassUrl: data.liveClassUrl || '',
-          liveClassTime: data.liveClassTime?.toDate(),
+          liveClassTime: liveClassDate,
           recordedVideos: data.recordedVideos && data.recordedVideos.length > 0 ? data.recordedVideos : [{ title: '', url: '' }],
         });
       }

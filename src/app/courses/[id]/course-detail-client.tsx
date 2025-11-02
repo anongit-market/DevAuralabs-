@@ -29,7 +29,7 @@ type Course = {
 
 type ClassDetails = {
     liveClassUrl?: string;
-    liveClassTime?: Timestamp;
+    liveClassTime?: string; // Changed from Timestamp
     recordedVideos?: { title: string; url: string }[];
 }
 
@@ -99,7 +99,7 @@ export default function CourseDetailClient({ course }: { course: Course }) {
     let showLiveButton = false;
 
     if (classDetails?.liveClassTime) {
-        const liveTime = classDetails.liveClassTime.toDate();
+        const liveTime = new Date(classDetails.liveClassTime);
         const startTime = new Date(liveTime.getTime() - 30 * 60 * 1000); // 30 mins before
         const endTime = new Date(liveTime.getTime() + 2 * 60 * 60 * 1000); // 2 hours after
         if (now >= startTime && now <= endTime) {

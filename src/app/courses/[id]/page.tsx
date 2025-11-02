@@ -17,12 +17,11 @@ async function getCourse(id: string) {
 
     // Serialize Timestamp objects to strings
     const plainObject = { ...courseData, id: courseSnap.id };
-    if (plainObject.startDate && plainObject.startDate instanceof Timestamp) {
-        plainObject.startDate = plainObject.startDate.toDate().toISOString();
-    }
-    if (plainObject.endDate && plainObject.endDate instanceof Timestamp) {
-        plainObject.endDate = plainObject.endDate.toDate().toISOString();
-    }
+    Object.keys(plainObject).forEach(key => {
+        if (plainObject[key] instanceof Timestamp) {
+            plainObject[key] = plainObject[key].toDate().toISOString();
+        }
+    });
 
     return plainObject;
 }
