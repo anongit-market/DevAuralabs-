@@ -18,8 +18,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        body: ['Silkscreen', 'sans-serif'],
-        headline: ['Silkscreen', 'sans-serif'],
+        body: ['Goldman', 'sans-serif'],
+        headline: ['Goldman', 'sans-serif'],
         code: ['monospace'],
       },
       colors: {
