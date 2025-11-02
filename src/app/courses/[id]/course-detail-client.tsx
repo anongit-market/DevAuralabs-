@@ -12,6 +12,7 @@ import { useUser, useFirestore, useMemoFirebase, addDocumentNonBlocking, useColl
 import { RippleEffect } from '@/components/ui/ripple-effect';
 import { collection, doc, serverTimestamp } from 'firebase/firestore';
 import { useCurrency } from '@/context/currency-context';
+import Link from 'next/link';
 
 type Course = {
   id: string;
@@ -24,6 +25,8 @@ type Course = {
   compareAtPrice?: number;
   startDate?: string;
   endDate?: string;
+  liveClassUrl?: string;
+  recordedClassUrl?: string;
 };
 
 export default function CourseDetailClient({ course }: { course: Course }) {
@@ -94,6 +97,23 @@ export default function CourseDetailClient({ course }: { course: Course }) {
       ),
     });
   };
+  
+  const renderContentAccessButtons = () => (
+    <div className="space-y-4">
+      <Button asChild size="lg" className="w-full justify-start" disabled={!course.liveClassUrl}>
+        <Link href={course.liveClassUrl || '#'} target="_blank" rel="noopener noreferrer">
+          <Clapperboard className="mr-2 h-5 w-5" />
+          Join Live Class
+        </Link>
+      </Button>
+      <Button asChild size="lg" variant="outline" className="w-full justify-start" disabled={!course.recordedClassUrl}>
+        <Link href={course.recordedClassUrl || '#'} target="_blank" rel="noopener noreferrer">
+          <Video className="mr-2 h-5 w-5" />
+          Watch Recordings
+        </Link>
+      </Button>
+    </div>
+  );
 
   return (
     <div className="container mx-auto py-12 px-4">
@@ -132,16 +152,7 @@ export default function CourseDetailClient({ course }: { course: Course }) {
                 {!enrollmentsLoading && isPurchased ? (
                   <div>
                     <h2 className="text-2xl font-bold text-primary mb-6">Course Content</h2>
-                    <div className="space-y-4">
-                      <Button size="lg" className="w-full justify-start">
-                        <Clapperboard className="mr-2 h-5 w-5" />
-                        Join Live Class
-                      </Button>
-                      <Button size="lg" variant="outline" className="w-full justify-start">
-                         <Video className="mr-2 h-5 w-5" />
-                        Watch Recordings
-                      </Button>
-                    </div>
+                    {renderContentAccessButtons()}
                      <div className="mt-8 text-xs text-center text-muted-foreground">
                         You have lifetime access to this course.
                     </div>

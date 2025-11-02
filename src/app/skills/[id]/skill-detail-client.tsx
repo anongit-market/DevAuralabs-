@@ -11,6 +11,7 @@ import { useUser, useFirestore, useMemoFirebase, addDocumentNonBlocking, useColl
 import { RippleEffect } from '@/components/ui/ripple-effect';
 import { collection, serverTimestamp } from 'firebase/firestore';
 import { useCurrency } from '@/context/currency-context';
+import Link from 'next/link';
 
 type Skill = {
   id: string;
@@ -19,6 +20,8 @@ type Skill = {
   whatYoullLearn: string;
   posterUrl: string;
   price?: number;
+  liveClassUrl?: string;
+  recordedClassUrl?: string;
 };
 
 export default function SkillDetailClient({ skill }: { skill: Skill }) {
@@ -54,6 +57,23 @@ export default function SkillDetailClient({ skill }: { skill: Skill }) {
 
   const price = skill.price || 499.99;
   const compareAtPrice = 599.99;
+  
+  const renderContentAccessButtons = () => (
+    <div className="space-y-4">
+      <Button asChild size="lg" className="w-full justify-start" disabled={!skill.liveClassUrl}>
+         <Link href={skill.liveClassUrl || '#'} target="_blank" rel="noopener noreferrer">
+            <Clapperboard className="mr-2 h-5 w-5" />
+            Join Live Mentorship
+        </Link>
+      </Button>
+      <Button asChild size="lg" variant="outline" className="w-full justify-start" disabled={!skill.recordedClassUrl}>
+         <Link href={skill.recordedClassUrl || '#'} target="_blank" rel="noopener noreferrer">
+            <Video className="mr-2 h-5 w-5" />
+            Access Project Files
+         </Link>
+      </Button>
+    </div>
+  );
 
   return (
     <div className="container mx-auto py-12 px-4">
@@ -89,16 +109,7 @@ export default function SkillDetailClient({ skill }: { skill: Skill }) {
                 {!enrollmentsLoading && isPurchased ? (
                      <div>
                         <h2 className="text-2xl font-bold text-primary mb-6">Program Content</h2>
-                        <div className="space-y-4">
-                        <Button size="lg" className="w-full justify-start">
-                            <Clapperboard className="mr-2 h-5 w-5" />
-                            Join Live Mentorship
-                        </Button>
-                        <Button size="lg" variant="outline" className="w-full justify-start">
-                            <Video className="mr-2 h-5 w-5" />
-                            Access Project Files
-                        </Button>
-                        </div>
+                        {renderContentAccessButtons()}
                         <div className="mt-8 text-xs text-center text-muted-foreground">
                             You have lifetime access to this program.
                         </div>
