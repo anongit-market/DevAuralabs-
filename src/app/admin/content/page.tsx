@@ -19,7 +19,6 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { useToast } from '@/hooks/use-toast';
 
@@ -174,7 +173,9 @@ export default function ContentListPage() {
             </CardHeader>
             <CardContent>
                 <p className="text-muted-foreground mb-4">This section will allow you to add and update class links for your content.</p>
-                <Button variant="outline">Manage Class URLs</Button>
+                <Link href="/admin/manage-classes">
+                    <Button variant="outline">Manage Class URLs</Button>
+                </Link>
             </CardContent>
         </Card>
 
