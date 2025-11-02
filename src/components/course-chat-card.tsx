@@ -10,12 +10,17 @@ import { useCurrency } from '@/context/currency-context';
 
 type Course = Exclude<AIPoweredCourseRecommendationsOutput['courses'], undefined>[0];
 
-const getPlaceholderImage = (id: string) => {
-  return PlaceHolderImages.find((img) => img.id === id);
+const getPlaceholderImage = (url: string) => {
+  // This is a simple fallback. In a real app you might have a more robust system.
+  const knownImage = PlaceHolderImages.find((img) => img.imageUrl === url);
+  if (knownImage) return knownImage;
+
+  // Fallback to a generic placeholder if the URL isn't in our list
+  return PlaceHolderImages.find((img) => img.id === 'course-1');
 };
 
 export default function CourseChatCard({ course }: { course: Course }) {
-  const placeholder = getPlaceholderImage(course.image);
+  const placeholder = getPlaceholderImage(course.posterUrl);
   const { getConvertedPrice } = useCurrency();
 
   return (
@@ -24,7 +29,7 @@ export default function CourseChatCard({ course }: { course: Course }) {
         <div className="relative w-20 h-20 flex-shrink-0">
           {placeholder && (
             <Image
-              src={placeholder.imageUrl}
+              src={course.posterUrl}
               alt={course.title}
               data-ai-hint={placeholder.imageHint}
               fill

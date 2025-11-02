@@ -1,3 +1,4 @@
+
 'use server';
 /**
  * @fileOverview Genkit tools for retrieving data from the database.
@@ -30,14 +31,14 @@ export const getCourses = ai.defineTool(
                 level: z.string(),
                 price: z.number(),
                 description: z.string(),
-                image: z.string(),
+                posterUrl: z.string(),
                 icon: z.string(),
             })
         ),
     },
     async () => {
         const courses = await getCollectionData('courses');
-        return courses.map(({ id, title, level, price, description, image, icon }: any) => ({ id, title, level, price, description, image, icon }));
+        return courses.map(({ id, title, level, price, description, posterUrl, icon }: any) => ({ id, title, level, price, description, posterUrl, icon }));
     }
 );
 
@@ -52,13 +53,13 @@ export const getSkills = ai.defineTool(
                 title: z.string(),
                 progress: z.number(),
                 description: z.string(),
-                image: z.string(),
+                posterUrl: z.string(),
                 icon: z.string(),
             })
         ),
     },
     async () => {
         const skills = await getCollectionData('skills');
-        return skills.map(({ id, title, progress, description, image, icon }: any) => ({ id, title, progress, description, image, icon }));
+        return skills.map(({ id, title, progress, description, posterUrl, icon }: any) => ({ id, title, progress, description, posterUrl, icon }));
     }
 );

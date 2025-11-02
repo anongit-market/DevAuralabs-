@@ -77,7 +77,7 @@ export default function AddCoursePageForm() {
       whatYoullLearn: '',
       price: '' as any,
       currency: 'INR',
-      posterUrl: '',
+      posterUrl: 'https://i.ibb.co/3p3j2fK/course-placeholder.jpg',
       duration: '',
     },
   });
