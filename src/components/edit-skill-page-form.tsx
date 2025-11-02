@@ -51,8 +51,6 @@ const formSchema = z.object({
   ),
   icon: z.string().min(1, { message: 'Icon is required.' }),
   posterUrl: z.string().url({ message: 'Please enter a valid URL.' }),
-  liveClassUrl: z.string().url({ message: 'Please enter a valid URL.' }).optional().or(z.literal('')),
-  recordedClassUrl: z.string().url({ message: 'Please enter a valid URL.' }).optional().or(z.literal('')),
 });
 
 export default function EditSkillPageForm({ skill }: { skill: z.infer<typeof formSchema> & { id: string }}) {
@@ -186,36 +184,6 @@ export default function EditSkillPageForm({ skill }: { skill: z.infer<typeof for
                 <FormControl>
                   <Input placeholder="https://example.com/image.png" {...field} className="bg-background/50"/>
                 </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="liveClassUrl"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Live Mentorship URL (Optional)</FormLabel>
-                <FormControl>
-                  <Input type="url" placeholder="https://meet.google.com/your-code" {...field} className="bg-background/50"/>
-                </FormControl>
-                <FormDescription>The URL for joining the live session.</FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          
-          <FormField
-            control={form.control}
-            name="recordedClassUrl"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Project Files URL (Optional)</FormLabel>
-                <FormControl>
-                  <Input type="url" placeholder="https://github.com/repo" {...field} className="bg-background/50"/>
-                </FormControl>
-                 <FormDescription>The URL to the project files or recorded sessions.</FormDescription>
                 <FormMessage />
               </FormItem>
             )}

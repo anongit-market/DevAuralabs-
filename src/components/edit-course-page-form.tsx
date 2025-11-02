@@ -59,8 +59,6 @@ const formSchema = z.object({
   startDate: z.date({ required_error: 'Start date is required.' }),
   endDate: z.date({ required_error: 'End date is required.' }),
   duration: z.string().min(1, { message: 'Course duration is required.' }),
-  liveClassUrl: z.string().url({ message: 'Please enter a valid URL.' }).optional().or(z.literal('')),
-  recordedClassUrl: z.string().url({ message: 'Please enter a valid URL.' }).optional().or(z.literal('')),
 }).refine(data => data.endDate > data.startDate, {
   message: "End date must be after start date.",
   path: ['endDate'],
@@ -316,36 +314,6 @@ export default function EditCoursePageForm({ course }: { course: z.infer<typeof 
                 <FormControl>
                   <Input placeholder="https://example.com/image.png" {...field} className="bg-background/50"/>
                 </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="liveClassUrl"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Live Class URL (Optional)</FormLabel>
-                <FormControl>
-                  <Input type="url" placeholder="https://meet.google.com/your-code" {...field} className="bg-background/50"/>
-                </FormControl>
-                <FormDescription>The URL for joining the live class session.</FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          
-          <FormField
-            control={form.control}
-            name="recordedClassUrl"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Recorded Class URL (Optional)</FormLabel>
-                <FormControl>
-                  <Input type="url" placeholder="https://youtube.com/playlist?list=..." {...field} className="bg-background/50"/>
-                </FormControl>
-                 <FormDescription>The URL to the playlist or folder of recorded sessions.</FormDescription>
                 <FormMessage />
               </FormItem>
             )}

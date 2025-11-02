@@ -25,8 +25,6 @@ type Course = {
   compareAtPrice?: number;
   startDate?: string;
   endDate?: string;
-  liveClassUrl?: string;
-  recordedClassUrl?: string;
 };
 
 export default function CourseDetailClient({ course }: { course: Course }) {
@@ -87,14 +85,14 @@ export default function CourseDetailClient({ course }: { course: Course }) {
   
   const renderContentAccessButtons = () => (
     <div className="space-y-4">
-      <Button asChild size="lg" className="w-full justify-start" disabled={!course.liveClassUrl}>
-        <Link href={course.liveClassUrl || '#'} target="_blank" rel="noopener noreferrer">
+      <Button asChild size="lg" className="w-full justify-start">
+        <Link href={'#'} target="_blank" rel="noopener noreferrer">
           <Clapperboard className="mr-2 h-5 w-5" />
           Join Live Class
         </Link>
       </Button>
-      <Button asChild size="lg" variant="outline" className="w-full justify-start" disabled={!course.recordedClassUrl}>
-        <Link href={course.recordedClassUrl || '#'} target="_blank" rel="noopener noreferrer">
+      <Button asChild size="lg" variant="outline" className="w-full justify-start">
+        <Link href={'#'} target="_blank" rel="noopener noreferrer">
           <Video className="mr-2 h-5 w-5" />
           Watch Recordings
         </Link>
