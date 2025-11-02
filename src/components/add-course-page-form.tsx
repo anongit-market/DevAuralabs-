@@ -46,7 +46,7 @@ import {
 const formSchema = z.object({
   title: z.string().min(2, { message: 'Title must be at least 2 characters.' }),
   level: z.string().min(1, { message: 'Level is required.' }),
-  description: z.string().min(80, { message: 'Description must be at least 80 characters.' }).max(400, { message: 'Description cannot exceed 400 characters.'}),
+  description: z.string().min(10, { message: 'Description must be at least 10 characters.' }),
   whatYoullLearn: z.string().min(10, { message: 'Please provide at least one learning point.' }),
   price: z.preprocess(
     (a) => parseFloat(z.string().parse(a)),
@@ -54,10 +54,9 @@ const formSchema = z.object({
   ),
   currency: z.enum(['USD', 'INR']),
   posterUrl: z.string().url({ message: 'Please enter a valid URL.' }),
-  screenshots: z.string().optional(),
   startDate: z.date({ required_error: 'Start date is required.' }),
   endDate: z.date({ required_error: 'End date is required.' }),
-  timing: z.string().min(1, { message: 'Course timing is required.' }),
+  duration: z.string().min(1, { message: 'Course duration is required.' }),
   liveClassUrl: z.string().url({ message: 'Please enter a valid URL.' }).optional().or(z.literal('')),
   recordedClassUrl: z.string().url({ message: 'Please enter a valid URL.' }).optional().or(z.literal('')),
 }).refine(data => data.endDate > data.startDate, {
@@ -81,8 +80,7 @@ export default function AddCoursePageForm() {
       price: '' as any,
       currency: 'INR',
       posterUrl: '',
-      screenshots: '',
-      timing: '',
+      duration: '',
       liveClassUrl: '',
       recordedClassUrl: '',
     },
@@ -264,15 +262,15 @@ export default function AddCoursePageForm() {
 
           <FormField
               control={form.control}
-              name="timing"
+              name="duration"
               render={({ field }) => (
                   <FormItem>
-                  <FormLabel>Overall Course Timing</FormLabel>
+                  <FormLabel>Overall Course Duration</FormLabel>
                   <FormControl>
-                      <Input placeholder="e.g., 40 Hours, 3 Months, Self-Paced" {...field} className="bg-background/50"/>
+                      <Input placeholder="e.g., '40 hours'" {...field} className="bg-background/50"/>
                   </FormControl>
                   <FormDescription>
-                      Enter the total duration or pace of the course.
+                      Enter the total duration of the course.
                   </FormDescription>
                   <FormMessage />
                   </FormItem>
@@ -319,23 +317,6 @@ export default function AddCoursePageForm() {
                 <FormControl>
                   <Input placeholder="https://example.com/image.png" {...field} className="bg-background/50"/>
                 </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="screenshots"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Course Screenshots (Optional)</FormLabel>
-                <FormControl>
-                  <Textarea placeholder="Enter comma-separated image URLs..." {...field} className="bg-background/50"/>
-                </FormControl>
-                 <FormDescription>
-                      Provide comma-separated URLs for additional course images.
-                  </FormDescription>
                 <FormMessage />
               </FormItem>
             )}

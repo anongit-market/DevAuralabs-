@@ -49,10 +49,6 @@ const formSchema = z.object({
   ),
   icon: z.string().min(1, { message: 'Icon is required.' }),
   posterUrl: z.string().url({ message: 'Please enter a valid URL.' }),
-  progress: z.preprocess(
-    (a) => parseInt(z.string().parse(a), 10),
-    z.number().min(0).max(100).default(0)
-  ),
   liveClassUrl: z.string().url({ message: 'Please enter a valid URL.' }).optional().or(z.literal('')),
   recordedClassUrl: z.string().url({ message: 'Please enter a valid URL.' }).optional().or(z.literal('')),
 });
@@ -72,7 +68,6 @@ export default function AddSkillPageForm() {
       price: undefined,
       icon: '',
       posterUrl: '',
-      progress: 0,
       liveClassUrl: '',
       recordedClassUrl: '',
     },
@@ -82,7 +77,7 @@ export default function AddSkillPageForm() {
     if (!firestore) return;
     const skillsCol = collection(firestore, 'skills');
     try {
-      await addDocumentNonBlocking(skillsCol, values);
+      await addDocumentNonBlocking(skillsCol, { ...values, progress: 0 }); // Adding progress
       setAddedItemTitle(values.title);
       setShowSuccessDialog(true);
       form.reset();
@@ -146,34 +141,19 @@ export default function AddSkillPageForm() {
             )}
           />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <FormField
-              control={form.control}
-              name="price"
-              render={({ field }) => (
-                  <FormItem>
-                  <FormLabel>Price</FormLabel>
-                  <FormControl>
-                      <Input type="number" placeholder="499.99" {...field} className="bg-background/50"/>
-                  </FormControl>
-                  <FormMessage />
-                  </FormItem>
-              )}
-              />
-              <FormField
-              control={form.control}
-              name="progress"
-              render={({ field }) => (
-                  <FormItem>
-                  <FormLabel>Initial Progress</FormLabel>
-                  <FormControl>
-                      <Input type="number" min="0" max="100" placeholder="0" {...field} className="bg-background/50"/>
-                  </FormControl>
-                  <FormMessage />
-                  </FormItem>
-              )}
-              />
-          </div>
+          <FormField
+            control={form.control}
+            name="price"
+            render={({ field }) => (
+                <FormItem>
+                <FormLabel>Price</FormLabel>
+                <FormControl>
+                    <Input type="number" placeholder="499.99" {...field} className="bg-background/50"/>
+                </FormControl>
+                <FormMessage />
+                </FormItem>
+            )}
+          />
 
           <FormField
               control={form.control}

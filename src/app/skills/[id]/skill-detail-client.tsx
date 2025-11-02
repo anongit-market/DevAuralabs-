@@ -56,7 +56,7 @@ export default function SkillDetailClient({ skill }: { skill: Skill }) {
   };
 
   const price = skill.price || 499.99;
-  const compareAtPrice = 599.99;
+  const compareAtPrice = price * 1.2;
   
   const renderContentAccessButtons = () => (
     <div className="space-y-4">

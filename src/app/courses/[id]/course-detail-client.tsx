@@ -56,20 +56,7 @@ export default function CourseDetailClient({ course }: { course: Course }) {
     if (!user) {
       router.push(`/signup?next=/checkout/${course.id}`);
     } else {
-      // In a real app, this would be part of a checkout flow.
-      // For now, we'll just enroll the user directly.
-      const enrollmentRef = collection(firestore, 'users', user.uid, 'enrollments');
-      addDocumentNonBlocking(enrollmentRef, {
-        courseId: course.id,
-        type: 'course',
-        enrollmentDate: serverTimestamp(),
-        progress: 0,
-        lastAccessed: serverTimestamp(),
-      });
-      toast({
-        title: 'Enrollment Successful!',
-        description: `You are now enrolled in ${course.title}.`,
-      });
+      router.push(`/checkout/${course.id}`);
     }
   };
 
