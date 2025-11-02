@@ -66,6 +66,7 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const [headerClass, setHeaderClass] = useState("w-full z-50");
+  const defaultAvatar = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQhU1f1x2Jn2LPIdLjfUCzHuqChIWFoTaByxJYw4ZrXCCkAYYuOlYiFdEl4Z7BujUvLrhk&usqp=CAU';
   
   const auth = useAuth();
   const { user, isUserLoading } = useUser();
@@ -267,7 +268,7 @@ export default function Navbar() {
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" className="relative h-10 w-10 rounded-full glass-icon-btn p-0">
                       <Avatar className="h-9 w-9">
-                        <AvatarImage src={activeUser.photoURL || "https://i.pravatar.cc/150?u=a042581f4e29026704d"} alt={activeUser.displayName || 'user'} />
+                        <AvatarImage src={activeUser.photoURL || defaultAvatar} alt={activeUser.displayName || 'user'} />
                         <AvatarFallback>
                             {activeUser.displayName ? activeUser.displayName.charAt(0) : <User className="h-5 w-5" />}
                         </AvatarFallback>

@@ -53,6 +53,7 @@ export default function AuraAiChatPage() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const logoImage = PlaceHolderImages.find(p => p.id === 'ai-logo');
   const router = useRouter();
+  const defaultAvatar = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQhU1f1x2Jn2LPIdLjfUCzHuqChIWFoTaByxJYw4ZrXCCkAYYuOlYiFdEl4Z7BujUvLrhk&usqp=CAU';
 
   const { user: regularUser, isUserLoading } = useUser();
   const { isAdmin, isLoading: isAdminLoading } = useAdmin();
@@ -240,7 +241,7 @@ export default function AuraAiChatPage() {
           </DropdownMenu>
           <h2 className="text-xl font-bold">{chatHistory?.find(c => c.id === currentChatId)?.title || 'New Chat'}</h2>
           <Avatar className="h-9 w-9">
-            <AvatarImage src={user.photoURL || "https://i.pravatar.cc/150?u=a042581f4e29026704d"} />
+            <AvatarImage src={user.photoURL || defaultAvatar} />
             <AvatarFallback>{user.displayName?.charAt(0) || 'U'}</AvatarFallback>
           </Avatar>
         </header>
@@ -281,7 +282,7 @@ export default function AuraAiChatPage() {
               </div>
                {message.sender === 'user' && (
                  <Avatar className="h-8 w-8">
-                    <AvatarImage src={user.photoURL || "https://i.pravatar.cc/150?u=a042581f4e29026704d"} />
+                    <AvatarImage src={user.photoURL || defaultAvatar} />
                     <AvatarFallback>{user.displayName?.charAt(0) || 'U'}</AvatarFallback>
                 </Avatar>
               )}

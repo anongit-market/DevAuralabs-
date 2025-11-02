@@ -22,6 +22,7 @@ const providerColor: { [key: string]: string } = {
 export default function UsersPage() {
     const firestore = useFirestore();
     const router = useRouter();
+    const defaultAvatar = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQhU1f1x2Jn2LPIdLjfUCzHuqChIWFoTaByxJYw4ZrXCCkAYYuOlYiFdEl4Z7BujUvLrhk&usqp=CAU';
     
     const usersQuery = useMemoFirebase(() => 
         firestore ? query(collection(firestore, 'users'), orderBy('metadata.creationTime', 'desc')) : null, 
@@ -78,7 +79,7 @@ export default function UsersPage() {
                                             <TableCell>
                                                 <div className="flex items-center gap-3">
                                                     <Avatar>
-                                                        <AvatarImage src={user.photoURL} alt={user.displayName} />
+                                                        <AvatarImage src={user.photoURL || defaultAvatar} alt={user.displayName} />
                                                         <AvatarFallback>{user.displayName?.[0] || 'U'}</AvatarFallback>
                                                     </Avatar>
                                                     <span className="font-medium">{user.displayName || 'No Name'}</span>
