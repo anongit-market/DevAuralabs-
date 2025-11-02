@@ -92,13 +92,7 @@ export default function AddCoursePageForm() {
     if (!firestore) return;
     const coursesCol = collection(firestore, 'courses');
     try {
-      const courseData = {
-          ...values,
-          image: 'course-1', 
-          icon: 'ShieldCheck', 
-      };
-
-      await addDocumentNonBlocking(coursesCol, courseData);
+      await addDocumentNonBlocking(coursesCol, values);
       setAddedItemTitle(values.title);
       setShowSuccessDialog(true);
       form.reset();
