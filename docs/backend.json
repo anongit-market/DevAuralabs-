@@ -141,6 +141,58 @@
         "price"
       ]
     },
+    "Hardware": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Hardware",
+      "type": "object",
+      "description": "Represents a hardware product sold by DevAura Labs.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Hardware entity."
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the hardware product."
+        },
+        "description": {
+          "type": "string",
+          "description": "Detailed description of the hardware product."
+        },
+        "price": {
+          "type": "number",
+          "description": "Price of the hardware product."
+        },
+        "currency": {
+          "type": "string",
+          "description": "The currency of the price (e.g., USD, INR).",
+          "enum": ["USD", "INR"]
+        },
+        "stock": {
+          "type": "integer",
+          "description": "Number of items in stock."
+        },
+        "imageUrl": {
+          "type": "string",
+          "format": "uri",
+          "description": "URL of an image of the hardware product."
+        },
+        "category": {
+          "type": "string",
+          "description": "Category of the hardware (e.g., Custom PC, Component, Peripheral)."
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "description",
+        "price",
+        "currency",
+        "stock",
+        "imageUrl",
+        "category"
+      ]
+    },
     "Enrollment": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "title": "Enrollment",
@@ -358,6 +410,22 @@
           "description": "Singleton document containing class details for a specific skill.",
           "params": [
             { "name": "skillId", "description": "The unique identifier for the skill." }
+          ]
+        }
+      },
+      {
+        "path": "/hardware/{hardwareId}",
+        "definition": {
+          "entityName": "Hardware",
+          "schema": {
+            "$ref": "#/backend/entities/Hardware"
+          },
+          "description": "Collection of hardware products sold by DevAura Labs.",
+          "params": [
+            {
+              "name": "hardwareId",
+              "description": "The unique identifier for the hardware product."
+            }
           ]
         }
       },

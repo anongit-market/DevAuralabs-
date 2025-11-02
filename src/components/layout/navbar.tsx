@@ -2,7 +2,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Menu, User, ShoppingCart, LayoutGrid, BookOpen, Briefcase, Info, Sparkles, LogIn, DollarSign, IndianRupee } from 'lucide-react';
+import { Menu, User, ShoppingCart, LayoutGrid, BookOpen, Briefcase, Info, Sparkles, LogIn, DollarSign, IndianRupee, Cpu } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
 import { signOut } from 'firebase/auth';
 
@@ -48,6 +48,7 @@ const navLinks: { href: string; label: string; icon: LucideIcon | React.Componen
   { href: '/', label: 'Menu', icon: LayoutGrid },
   { href: '/courses', label: 'Courses', icon: BookOpen },
   { href: '/services', label: 'Services', icon: Briefcase },
+  { href: '/hardware', label: 'Hardware', icon: Cpu },
   { href: '/aura-ai-chat', label: 'Aura AI', icon: AuraAiIcon },
   { href: '/about', label: 'About', icon: Info },
 ];
