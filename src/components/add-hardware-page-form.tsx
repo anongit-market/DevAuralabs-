@@ -3,10 +3,11 @@
 
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
+import { useForm, useFieldArray } from 'react-hook-form';
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -36,6 +37,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
+import { PlusCircle, Trash2 } from 'lucide-react';
+import { Separator } from './ui/separator';
 
 const formSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
@@ -49,7 +52,8 @@ const formSchema = z.object({
     (a) => parseInt(z.string().parse(a), 10),
     z.number().int().nonnegative({ message: 'Stock must be a non-negative number.' })
   ),
-  imageUrl: z.string().url({ message: 'Please enter a valid URL.' }),
+  imageUrls: z.array(z.object({ value: z.string().url({ message: 'Please enter a valid URL.' }) })).min(1, 'At least one image URL is required.'),
+  videoUrl: z.string().url({ message: 'Please enter a valid URL.' }).optional().or(z.literal('')),
   category: z.string().min(1, { message: 'Category is required.' }),
 });
 
@@ -67,19 +71,31 @@ export default function AddHardwarePageForm() {
       price: '' as any,
       currency: 'INR',
       stock: '' as any,
-      imageUrl: '',
+      imageUrls: [{ value: '' }],
+      videoUrl: '',
       category: '',
     },
+  });
+
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: "imageUrls"
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     if (!firestore) return;
     const hardwareCol = collection(firestore, 'hardware');
     try {
-      await addDocumentNonBlocking(hardwareCol, values);
+      const dataToSave = {
+        ...values,
+        imageUrls: values.imageUrls.map(item => item.value),
+      };
+      await addDocumentNonBlocking(hardwareCol, dataToSave);
       setAddedItemTitle(values.name);
       setShowSuccessDialog(true);
       form.reset();
+      // @ts-ignore
+      form.setValue('imageUrls', [{ value: '' }]);
     } catch (error: any) {
       toast({
         variant: 'destructive',
@@ -187,15 +203,51 @@ export default function AddHardwarePageForm() {
             )}
           />
 
+          <div>
+              <FormLabel>Product Image URLs</FormLabel>
+              <FormDescription className="mb-4">Add one or more URLs for product images.</FormDescription>
+              <div className="space-y-4">
+                  {fields.map((field, index) => (
+                      <FormField
+                          key={field.id}
+                          control={form.control}
+                          name={`imageUrls.${index}.value`}
+                          render={({ field }) => (
+                              <FormItem>
+                                  <div className="flex items-center gap-2">
+                                      <FormControl>
+                                          <Input placeholder="https://example.com/image.png" {...field} className="bg-background/50" />
+                                      </FormControl>
+                                      {fields.length > 1 && (
+                                          <Button type="button" variant="destructive" size="icon" onClick={() => remove(index)}>
+                                              <Trash2 className="h-4 w-4" />
+                                          </Button>
+                                      )}
+                                  </div>
+                                  <FormMessage />
+                              </FormItem>
+                          )}
+                      />
+                  ))}
+              </div>
+              <Button type="button" variant="ghost" size="sm" className="mt-2 text-primary" onClick={() => append({ value: '' })}>
+                  <PlusCircle className="mr-2 h-4 w-4" />
+                  Add Another Image
+              </Button>
+          </div>
+
+          <Separator className="my-6 bg-white/10" />
+
           <FormField
             control={form.control}
-            name="imageUrl"
+            name="videoUrl"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Product Image URL</FormLabel>
+                <FormLabel>Product Review Video URL (Optional)</FormLabel>
                 <FormControl>
-                  <Input placeholder="https://example.com/image.png" {...field} className="bg-background/50"/>
+                  <Input placeholder="https://youtube.com/watch?v=..." {...field} className="bg-background/50"/>
                 </FormControl>
+                <FormDescription>Provide a link to a YouTube, Vimeo, or other video review.</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -225,3 +277,5 @@ export default function AddHardwarePageForm() {
     </>
   );
 }
+
+    

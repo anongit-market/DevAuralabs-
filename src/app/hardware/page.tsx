@@ -49,12 +49,18 @@ export default function HardwarePage() {
               <Card className="glass-card h-full flex flex-col">
                 <CardHeader>
                   <div className="relative aspect-video w-full overflow-hidden rounded-lg">
-                    <Image
-                      src={item.imageUrl}
-                      alt={item.name}
-                      fill
-                      className="object-cover"
-                    />
+                    {item.imageUrls && item.imageUrls.length > 0 ? (
+                      <Image
+                        src={item.imageUrls[0]}
+                        alt={item.name}
+                        fill
+                        className="object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-muted flex items-center justify-center">
+                        <Cpu className="w-12 h-12 text-muted-foreground" />
+                      </div>
+                    )}
                   </div>
                   <CardTitle className="pt-4">{item.name}</CardTitle>
                 </CardHeader>
@@ -79,3 +85,5 @@ export default function HardwarePage() {
     </div>
   );
 }
+
+    

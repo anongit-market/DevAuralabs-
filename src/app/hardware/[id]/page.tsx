@@ -1,4 +1,5 @@
 
+
 import { notFound } from 'next/navigation';
 import HardwareDetailClient from './hardware-detail-client';
 import { initializeFirebase } from '@/firebase/server';
@@ -14,6 +15,15 @@ async function getHardware(id: string) {
     }
     
     const hardwareData = hardwareSnap.data();
+    
+    // Ensure imageUrls is an array, handle legacy single imageUrl
+    if (hardwareData.imageUrl && !hardwareData.imageUrls) {
+        hardwareData.imageUrls = [hardwareData.imageUrl];
+        delete hardwareData.imageUrl;
+    } else if (!hardwareData.imageUrls) {
+        hardwareData.imageUrls = [];
+    }
+
     return { ...hardwareData, id: hardwareSnap.id };
 }
 
@@ -27,3 +37,5 @@ export default async function HardwareDetailPage({ params }: { params: { id: str
   // @ts-ignore
   return <HardwareDetailClient hardware={hardware} />;
 }
+
+    

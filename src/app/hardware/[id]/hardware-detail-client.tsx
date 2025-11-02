@@ -4,23 +4,45 @@
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { CheckCircle, ShoppingCart } from 'lucide-react';
+import { ShoppingCart } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useEffect, useState } from 'react';
-import { useUser, useFirestore, useMemoFirebase, addDocumentNonBlocking } from '@/firebase';
+import { useUser, useFirestore, addDocumentNonBlocking } from '@/firebase';
 import { RippleEffect } from '@/components/ui/ripple-effect';
 import { collection, serverTimestamp } from 'firebase/firestore';
 import { useCurrency } from '@/context/currency-context';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from '@/components/ui/carousel';
+import { Separator } from '@/components/ui/separator';
 
 type Hardware = {
   id: string;
   name: string;
   description: string;
   price: number;
-  imageUrl: string;
+  imageUrls: string[];
+  videoUrl?: string;
   category: string;
   stock: number;
 };
+
+// Helper to convert YouTube URL to embeddable URL
+const getYouTubeEmbedUrl = (url: string) => {
+    if (!url) return null;
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+    const match = url.match(regExp);
+
+    if (match && match[2].length == 11) {
+        return `https://www.youtube.com/embed/${match[2]}`;
+    }
+    return null;
+}
 
 export default function HardwareDetailClient({ hardware }: { hardware: Hardware }) {
   const router = useRouter();
@@ -67,22 +89,56 @@ export default function HardwareDetailClient({ hardware }: { hardware: Hardware 
     });
   };
 
+  const videoEmbedUrl = hardware.videoUrl ? getYouTubeEmbedUrl(hardware.videoUrl) : null;
+
   return (
     <div className="container mx-auto py-12 px-4">
       <div className="grid lg:grid-cols-5 gap-12">
         <div className="lg:col-span-3">
-          <div className="relative aspect-video rounded-2xl overflow-hidden glass-card mb-8">
-            {hardware.imageUrl && (
-              <Image
-                src={hardware.imageUrl}
-                alt={hardware.name}
-                fill
-                className="object-cover"
-              />
-            )}
-          </div>
+          <Carousel className="rounded-2xl overflow-hidden glass-card mb-8">
+            <CarouselContent>
+              {hardware.imageUrls?.map((url, index) => (
+                <CarouselItem key={index}>
+                  <div className="relative aspect-video">
+                    <Image
+                      src={url}
+                      alt={`${hardware.name} image ${index + 1}`}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious className="absolute left-4" />
+            <CarouselNext className="absolute right-4" />
+          </Carousel>
+          
           <h1 className="text-4xl font-bold mb-4">{hardware.name}</h1>
           <p className="text-lg text-muted-foreground mb-8">{hardware.description}</p>
+          
+          {videoEmbedUrl && (
+              <div className="mt-12">
+                <h2 className="text-2xl font-bold mb-4">Product Video</h2>
+                <Card className="glass-card">
+                    <CardContent className="p-2">
+                        <div className="aspect-video">
+                            <iframe
+                                width="100%"
+                                height="100%"
+                                src={videoEmbedUrl}
+                                title="YouTube video player"
+                                frameBorder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowFullScreen
+                                className="rounded-lg"
+                            ></iframe>
+                        </div>
+                    </CardContent>
+                </Card>
+              </div>
+          )}
+
         </div>
         <div className="lg:col-span-2">
             <div className="glass-card p-8 sticky top-24">
@@ -111,3 +167,5 @@ export default function HardwareDetailClient({ hardware }: { hardware: Hardware 
     </div>
   );
 }
+
+    
