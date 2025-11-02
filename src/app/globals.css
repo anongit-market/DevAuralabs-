@@ -1,5 +1,5 @@
 
-@import url('https://fonts.googleapis.com/css2?family=Oxanium:wght@200;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -38,8 +38,8 @@
   }
   body {
     @apply bg-background text-foreground;
-    font-family: 'Oxanium', sans-serif;
-    font-weight: 200;
+    font-family: 'Silkscreen', sans-serif;
+    font-weight: 400;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -179,7 +179,7 @@
 
   .aura-glass-input::placeholder {
     color: hsl(var(--muted-foreground) / 0.5);
-    font-weight: 200;
+    font-weight: 400;
   }
 
   @supports (backdrop-filter: blur(12px)) or (-webkit-backdrop-filter: blur(12px)) {

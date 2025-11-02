@@ -18,8 +18,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        body: ['Oxanium', 'sans-serif'],
-        headline: ['Oxanium', 'sans-serif'],
+        body: ['Silkscreen', 'sans-serif'],
+        headline: ['Silkscreen', 'sans-serif'],
         code: ['monospace'],
       },
       colors: {
