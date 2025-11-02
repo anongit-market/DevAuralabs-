@@ -32,8 +32,7 @@ type Message = {
   text: string;
   sender: 'user' | 'aura';
   timestamp: any;
-  // @ts-ignore
-  courses?: AIPoweredCourseRecommendationsOutput['courses'];
+  courses?: AIPoweredCourseRecommendationsOutput['courseRecommendations'][];
 };
 
 type ChatSession = {
@@ -170,10 +169,14 @@ export default function AuraAiChatPage() {
         aiResponse = {
             text: result.data.courseRecommendations,
             sender: 'aura',
-            // @ts-ignore
-            courses: result.data.courses,
             timestamp: serverTimestamp(),
         };
+
+        if (result.data.courseRecommendations) {
+          // @ts-ignore
+          aiResponse.courses = result.data.courses;
+        }
+
     } else {
         aiResponse = {
             text: result.error || "I'm having trouble connecting right now. Please try again later.",
@@ -409,3 +412,5 @@ export default function AuraAiChatPage() {
     </div>
   );
 }
+
+    
