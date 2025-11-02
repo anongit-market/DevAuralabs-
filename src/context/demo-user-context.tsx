@@ -6,6 +6,7 @@ import { useAdmin } from './admin-context';
 
 interface DemoUserContextType {
   isDemoMode: boolean;
+  isLoading: boolean; // Add isLoading state
   startDemoMode: () => void;
   endDemoMode: () => void;
 }
@@ -16,23 +17,29 @@ const DEMO_USER_SESSION_KEY = 'dev-aura-demo-user-session';
 
 export function DemoUserProvider({ children }: { children: ReactNode }) {
   const [isDemoMode, setIsDemoMode] = useState(false);
+  const [isLoading, setIsLoading] = useState(true); // Start with loading true
   const { isAdmin, isLoading: isAdminLoading } = useAdmin();
 
   useEffect(() => {
-    if (isAdminLoading) return; // Wait for admin state to be confirmed
-    
+    // Only check sessionStorage once admin state is resolved
+    if (isAdminLoading) return; 
+
+    setIsLoading(true);
     try {
       const sessionValue = sessionStorage.getItem(DEMO_USER_SESSION_KEY);
       // Only enable demo mode if the user is an admin
       if (sessionValue === 'true' && isAdmin) {
         setIsDemoMode(true);
       } else {
-        // Clean up if not an admin
+        // Clean up if not an admin or session not set
         sessionStorage.removeItem(DEMO_USER_SESSION_KEY);
         setIsDemoMode(false);
       }
     } catch (error) {
       console.warn('Could not read demo user session from sessionStorage:', error);
+      setIsDemoMode(false);
+    } finally {
+      setIsLoading(false);
     }
   }, [isAdmin, isAdminLoading]);
 
@@ -55,7 +62,7 @@ export function DemoUserProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const value = { isDemoMode, startDemoMode, endDemoMode };
+  const value = { isDemoMode, isLoading, startDemoMode, endDemoMode };
 
   return (
     <DemoUserContext.Provider value={value}>

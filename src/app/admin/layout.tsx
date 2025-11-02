@@ -5,20 +5,27 @@ import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { Loader2 } from 'lucide-react';
 import AdminSidebar from '@/components/layout/admin-sidebar';
+import { useDemoUser } from '@/context/demo-user-context';
 
 export default function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const { isAdmin, isLoading } = useAdmin();
+  const { isAdmin, isLoading: isAdminLoading } = useAdmin();
+  const { isDemoMode, isLoading: isDemoLoading } = useDemoUser();
   const router = useRouter();
 
+  const isLoading = isAdminLoading || isDemoLoading;
+
   useEffect(() => {
-    if (!isLoading && !isAdmin) {
-      router.push('/login?view=admin');
+    if (!isLoading) {
+      // If in demo mode OR not an admin, redirect away from admin pages.
+      if (isDemoMode || !isAdmin) {
+        router.push('/login?view=admin&error=demo_active');
+      }
     }
-  }, [isAdmin, isLoading, router]);
+  }, [isAdmin, isDemoMode, isLoading, router]);
 
   if (isLoading) {
     return (
@@ -28,7 +35,8 @@ export default function AdminLayout({
     );
   }
 
-  if (!isAdmin) {
+  // If the logic above is running, it will redirect, so this state is temporary.
+  if (isDemoMode || !isAdmin) {
     return null; // Return null while redirecting
   }
 
