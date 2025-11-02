@@ -22,7 +22,7 @@ export default function Home() {
       <HeroSection />
       <div className="relative z-20 -mt-24 md:-mt-32">
         <div className="md:flex md:justify-center">
-          <div className="md:w-auto">
+          <div className="md:w-auto md:pl-20">
              <ShowcaseSection />
           </div>
         </div>
