@@ -115,7 +115,6 @@ const ShowcaseCard = ({
             fill
             alt={title}
             src={img}
-            unoptimized
             />
         </div>
       </div>

@@ -41,7 +41,7 @@ import { useDemoUser } from '@/context/demo-user-context';
 
 const AuraAiIcon = () => {
   const logoImage = PlaceHolderImages.find(p => p.id === 'ai-logo');
-  return logoImage ? <Image src={logoImage.imageUrl} alt="Aura AI" width={24} height={24} className="h-6 w-6" unoptimized/> : <Sparkles />;
+  return logoImage ? <Image src={logoImage.imageUrl} alt="Aura AI" width={24} height={24} className="h-6 w-6" /> : <Sparkles />;
 }
 
 

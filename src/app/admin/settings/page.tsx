@@ -127,7 +127,7 @@ export default function GeneralSettingsPage() {
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 {showcaseItems?.map(item => (
                   <div key={item.id} className="relative group">
-                    <Image src={item.url} alt={item.alt} width={150} height={150} className="rounded-md object-cover aspect-square" unoptimized/>
+                    <Image src={item.url} alt={item.alt} width={150} height={150} className="rounded-md object-cover aspect-square" />
                     <div className="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                       <Button variant="destructive" size="icon" onClick={() => handleDeleteShowcaseItem(item.id)}>
                         <Trash2 className="h-4 w-4" />

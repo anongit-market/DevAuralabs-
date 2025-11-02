@@ -3,7 +3,7 @@
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Plus, BookPlus, Award, LayoutDashboard } from 'lucide-react';
+import { Plus, BookPlus, Award, LayoutDashboard, Cpu } from 'lucide-react';
 import Link from 'next/link';
 
 export default function AdminFAB() {
@@ -25,6 +25,13 @@ export default function AdminFAB() {
                 <Button variant="outline" className="w-full flex justify-start items-center gap-2 pr-8">
                     <Award className="h-5 w-5" />
                     <span>Add Skill</span>
+                </Button>
+            </Link>
+            
+            <Link href="/admin/add-hardware">
+                <Button variant="outline" className="w-full flex justify-start items-center gap-2 pr-8">
+                    <Cpu className="h-5 w-5" />
+                    <span>Add Hardware</span>
                 </Button>
             </Link>
 
