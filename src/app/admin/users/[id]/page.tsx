@@ -4,7 +4,7 @@
 import { notFound, useParams } from 'next/navigation';
 import { useDoc, useCollection, useFirestore, useMemoFirebase, addDocumentNonBlocking } from '@/firebase';
 import { doc, collection, query, where, serverTimestamp } from 'firebase/firestore';
-import { Loader2, User as UserIcon, Mail, Smartphone, Shield, BookOpen, Award, ArrowLeft } from 'lucide-react';
+import { Loader2, User as UserIcon, Mail, Smartphone, Shield, BookOpen, Award, ArrowLeft, Calendar } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -148,10 +148,17 @@ export default function UserDetailPage() {
                     </div>
                 </div>
                 <div className="flex items-center gap-4">
+                    <Calendar className="h-5 w-5 text-primary" />
+                    <div>
+                        <p className="text-sm text-muted-foreground">Age</p>
+                        <p className="font-semibold">{user.age || 'Not provided'}</p>
+                    </div>
+                </div>
+                <div className="flex items-center gap-4">
                     <Shield className="h-5 w-5 text-primary" />
                     <div>
                         <p className="text-sm text-muted-foreground">Role</p>
-                        <p className="font-semibold">{'Student'}</p>
+                        <p className="font-semibold">{user.role || 'Student'}</p>
                     </div>
                 </div>
             </CardContent>
@@ -218,4 +225,3 @@ export default function UserDetailPage() {
     </div>
   );
 }
-
