@@ -110,7 +110,7 @@ const ShowcaseCard = ({
       <div className="relative flex-grow p-4 bg-black/20">
         <div className="relative w-full h-full aspect-square">
             <Image
-            className="object-contain"
+            className="object-cover"
             fill
             alt={title}
             src={img}
