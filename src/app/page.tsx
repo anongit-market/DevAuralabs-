@@ -1,3 +1,4 @@
+
 'use client';
 
 import HeroSection from '@/components/sections/hero';
@@ -19,9 +20,11 @@ export default function Home() {
   return (
     <div className="flex flex-col">
       <HeroSection />
-      <div className="relative z-20 -mt-24 md:-mt-40">
-        <div className="md:pr-8">
-          <ShowcaseSection />
+      <div className="relative z-20 -mt-24 md:-mt-32">
+        <div className="md:flex md:justify-end">
+          <div className="md:w-auto">
+             <ShowcaseSection />
+          </div>
         </div>
       </div>
       <div className="container mx-auto px-4">
