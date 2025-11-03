@@ -119,15 +119,6 @@ export default function LoginPage() {
               <FacebookIcon className="mr-2 h-5 w-5"/> Continue with Facebook
           </Button>
       </div>
-
-      <Separator className="my-4 bg-white/10" />
-
-       <div className="text-center text-xs text-muted-foreground">
-        <button onClick={() => setView('admin')} className="font-semibold text-primary hover:underline flex items-center justify-center mx-auto gap-2">
-            <KeyRound className="h-4 w-4" />
-            Admin Login
-        </button>
-      </div>
     </>
   );
 
