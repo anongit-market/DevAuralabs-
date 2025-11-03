@@ -16,7 +16,7 @@ import { Separator } from '@/components/ui/separator';
 import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useAdmin } from '@/context/admin-context';
-import { User, KeyRound } from 'lucide-react';
+import { User, Eye, EyeOff } from 'lucide-react';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 
 
@@ -48,7 +48,9 @@ export default function LoginPage() {
   const auth = useAuth();
   const { user } = useUser();
   const [view, setView] = useState('user'); 
-  const { login: adminLogin, isAdmin } = useAdmin();
+  const { isAdmin } = useAdmin();
+  const [showPassword, setShowPassword] = useState(false);
+
 
   useEffect(() => {
     if (searchParams.get('view') === 'admin') {
@@ -89,8 +91,6 @@ export default function LoginPage() {
     
     try {
         await signInWithEmailAndPassword(auth, values.email, values.password);
-        // The useEffect will handle the redirection after the user state updates.
-        // The useAdmin context will automatically grant admin status based on the email.
     } catch (error) {
         toast({
             variant: 'destructive',
@@ -150,9 +150,14 @@ export default function LoginPage() {
               render={({ field }) => (
                   <FormItem>
                   <FormLabel>Password</FormLabel>
-                  <FormControl>
-                      <Input type="password" placeholder="••••••••" {...field} className="bg-background/50"/>
-                  </FormControl>
+                   <FormControl>
+                        <div className="relative">
+                          <Input type={showPassword ? 'text' : 'password'} placeholder="••••••••" {...field} className="bg-background/50 pr-10"/>
+                          <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute inset-y-0 right-0 flex items-center pr-3 text-muted-foreground">
+                            {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                          </button>
+                        </div>
+                      </FormControl>
                   <FormMessage />
                   </FormItem>
               )}
