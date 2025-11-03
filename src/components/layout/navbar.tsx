@@ -2,7 +2,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Menu, User, ShoppingCart, LayoutGrid, BookOpen, Briefcase, Info, Sparkles, LogIn, DollarSign, IndianRupee, Cpu, ChevronDown } from 'lucide-react';
+import { Menu, User, ShoppingCart, LayoutGrid, BookOpen, Briefcase, Info, Sparkles, LogIn, DollarSign, IndianRupee, Cpu, ChevronDown, GitPullRequest } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
 import { signOut } from 'firebase/auth';
 
@@ -336,6 +336,9 @@ export default function Navbar() {
                           <Link href="/profile/my-courses">My Learning</Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem asChild>
+                           <Link href="/profile/my-requests">My Requests</Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
                           <Link href="/profile/settings">Settings</Link>
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
@@ -362,5 +365,3 @@ export default function Navbar() {
     </header>
   );
 }
-
-    
