@@ -52,7 +52,7 @@ const navLinks: { href?: string; label: string; icon: LucideIcon | React.Compone
     icon: BookOpen,
     subLinks: [
       { href: '/profile/my-courses', label: 'My Courses', forLoggedIn: true },
-      { href: '/courses', label: 'Explore Courses' }
+      { href: '/courses', label: 'Buy Course' }
     ]
   },
   { href: '/services', label: 'Services', icon: Briefcase },
@@ -249,7 +249,7 @@ export default function Navbar() {
                         </DropdownMenuItem>
                       )}
                       <DropdownMenuItem asChild>
-                        <Link href="/courses">Explore Courses</Link>
+                        <Link href="/courses">Buy Course</Link>
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
