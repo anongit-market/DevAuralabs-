@@ -4,7 +4,7 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { PlusCircle, UserCog, Settings, List, Users, Cpu, Eye } from 'lucide-react';
+import { PlusCircle, UserCog, Settings, List, Users, Cpu, Eye, TicketPercent } from 'lucide-react';
 import { useDemoUser } from '@/context/demo-user-context';
 import { useRouter } from 'next/navigation';
 
@@ -57,6 +57,20 @@ export default function AdminPage() {
                 </Button>
             </Link>
           </CardContent>
+        </Card>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <Card className="glass-card">
+            <CardHeader>
+                <CardTitle className="flex items-center gap-2"><TicketPercent /> Promo Codes</CardTitle>
+                <CardDescription>Create and manage discount codes for your platform.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <Link href="/admin/promo-codes">
+                    <Button variant="outline">Manage Promo Codes</Button>
+                </Link>
+            </CardContent>
         </Card>
       </div>
 
