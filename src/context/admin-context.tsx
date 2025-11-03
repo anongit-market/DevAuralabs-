@@ -12,7 +12,7 @@ interface AdminContextType {
 
 const AdminContext = createContext<AdminContextType | undefined>(undefined);
 
-const ADMIN_SESSION_KEY = 'dev-aura-admin-session';
+const ADMIN_STORAGE_KEY = 'dev-aura-admin-session';
 
 export function AdminProvider({ children }: { children: ReactNode }) {
   const [isAdmin, setIsAdmin] = useState(false);
@@ -20,12 +20,12 @@ export function AdminProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     try {
-      const sessionValue = sessionStorage.getItem(ADMIN_SESSION_KEY);
-      if (sessionValue === 'true') {
+      const storedValue = localStorage.getItem(ADMIN_STORAGE_KEY);
+      if (storedValue === 'true') {
         setIsAdmin(true);
       }
     } catch (error) {
-      console.warn('Could not read admin session from sessionStorage:', error);
+      console.warn('Could not read admin session from localStorage:', error);
     } finally {
       setIsLoading(false);
     }
@@ -33,19 +33,19 @@ export function AdminProvider({ children }: { children: ReactNode }) {
 
   const login = () => {
     try {
-      sessionStorage.setItem(ADMIN_SESSION_KEY, 'true');
+      localStorage.setItem(ADMIN_STORAGE_KEY, 'true');
       setIsAdmin(true);
     } catch (error) {
-      console.error('Could not save admin session to sessionStorage:', error);
+      console.error('Could not save admin session to localStorage:', error);
     }
   };
 
   const logout = () => {
     try {
-      sessionStorage.removeItem(ADMIN_SESSION_KEY);
+      localStorage.removeItem(ADMIN_STORAGE_KEY);
       setIsAdmin(false);
     } catch (error) {
-      console.error('Could not remove admin session from sessionStorage:', error);
+      console.error('Could not remove admin session from localStorage:', error);
     }
   };
 
