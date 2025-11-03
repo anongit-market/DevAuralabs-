@@ -5,7 +5,7 @@ import { aiPoweredCourseRecommendations, AIPoweredCourseRecommendationsInput } f
 import Razorpay from 'razorpay';
 import { randomBytes } from 'crypto';
 import { initializeFirebase } from '@/firebase/server';
-import { collection, query, where, getDocs, doc, getDoc, runTransaction } from 'firebase/firestore';
+import { collection, query, where, getDocs, doc, getDoc, runTransaction, serverTimestamp, addDoc } from 'firebase/firestore';
 
 export async function getCourseRecommendations(input: AIPoweredCourseRecommendationsInput) {
     try {
@@ -113,5 +113,30 @@ export async function recordPromoCodeRedemption(promoCodeId: string, userId: str
     } catch (error) {
         console.error('Failed to record promo code redemption:', error);
         return { success: false, message: 'An error occurred while recording the redemption.' };
+    }
+}
+
+export async function enrollUserInContent(userId: string, contentId: string, contentType: 'course' | 'skill') {
+    if (!userId || !contentId || !contentType) {
+        return { success: false, message: 'Missing required information for enrollment.' };
+    }
+
+    const { firestore } = initializeFirebase();
+    const enrollmentRef = collection(firestore, `users/${userId}/enrollments`);
+
+    const newEnrollment = {
+        userId: userId,
+        [`${contentType}Id`]: contentId,
+        type: contentType,
+        enrollmentDate: serverTimestamp(),
+        progress: 0,
+    };
+
+    try {
+        await addDoc(enrollmentRef, newEnrollment);
+        return { success: true, message: 'Enrollment successful.' };
+    } catch (error) {
+        console.error('Error creating enrollment:', error);
+        return { success: false, message: 'Failed to enroll user.' };
     }
 }

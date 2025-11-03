@@ -13,7 +13,7 @@ import { useDoc, useFirestore, useMemoFirebase, useUser } from '@/firebase';
 import { doc } from 'firebase/firestore';
 import { useCurrency } from '@/context/currency-context';
 import { Loader2 } from 'lucide-react';
-import { createRazorpayOrder, applyPromoCode, recordPromoCodeRedemption } from '@/app/actions';
+import { createRazorpayOrder, applyPromoCode, recordPromoCodeRedemption, enrollUserInContent } from '@/app/actions';
 import { useToast } from '@/hooks/use-toast';
 import { useState } from 'react';
 
@@ -99,10 +99,11 @@ export default function CheckoutSkillPage() {
       image: 'https://i.ibb.co/20tFWD4P/IMG-20251019-191415-1.png',
       order_id: order.id,
       handler: async function (response: any) {
-        toast({ title: 'Payment Successful!', description: `Payment ID: ${response.razorpay_payment_id}` });
+        await enrollUserInContent(user.uid, skill.id, 'skill');
         if (appliedPromo) {
            await recordPromoCodeRedemption(appliedPromo.codeId, user.uid);
         }
+        toast({ title: 'Payment Successful!', description: `You are now enrolled in ${skill.title}. Payment ID: ${response.razorpay_payment_id}` });
         setIsPaying(false);
       },
       prefill: {

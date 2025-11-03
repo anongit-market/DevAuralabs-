@@ -98,10 +98,11 @@ export default function CheckoutHardwarePage() {
       image: 'https://i.ibb.co/20tFWD4P/IMG-20251019-191415-1.png',
       order_id: order.id,
       handler: async function (response: any) {
-        toast({ title: 'Payment Successful!', description: `Payment ID: ${response.razorpay_payment_id}` });
-         if (appliedPromo) {
+        // Hardware purchases don't create enrollments, just record the promo if used.
+        if (appliedPromo) {
            await recordPromoCodeRedemption(appliedPromo.codeId, user.uid);
         }
+        toast({ title: 'Payment Successful!', description: `Your order for ${hardware.name} is confirmed. Payment ID: ${response.razorpay_payment_id}` });
         setIsPaying(false);
       },
       prefill: {
