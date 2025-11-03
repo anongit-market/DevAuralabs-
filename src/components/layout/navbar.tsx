@@ -2,7 +2,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Menu, User, ShoppingCart, LayoutGrid, BookOpen, Briefcase, Info, Sparkles, LogIn, DollarSign, IndianRupee, Cpu } from 'lucide-react';
+import { Menu, User, ShoppingCart, LayoutGrid, BookOpen, Briefcase, Info, Sparkles, LogIn, DollarSign, IndianRupee, Cpu, ChevronDown } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
 import { signOut } from 'firebase/auth';
 
@@ -45,9 +45,16 @@ const AuraAiIcon = () => {
 }
 
 
-const navLinks: { href: string; label: string; icon: LucideIcon | React.ComponentType }[] = [
+const navLinks: { href?: string; label: string; icon: LucideIcon | React.ComponentType, subLinks?: { href: string; label: string, forLoggedIn?: boolean }[] }[] = [
   { href: '/', label: 'Menu', icon: LayoutGrid },
-  { href: '/courses', label: 'Courses', icon: BookOpen },
+  { 
+    label: 'Courses', 
+    icon: BookOpen,
+    subLinks: [
+      { href: '/profile/my-courses', label: 'My Courses', forLoggedIn: true },
+      { href: '/courses', label: 'Explore Courses' }
+    ]
+  },
   { href: '/services', label: 'Services', icon: Briefcase },
   { href: '/hardware', label: 'Hardware', icon: Cpu },
   { href: '/aura-ai-chat', label: 'Aura AI', icon: AuraAiIcon },
@@ -147,10 +154,38 @@ export default function Navbar() {
                         </div>
                     </SheetTitle>
                     <nav className="flex flex-col gap-2 text-lg font-medium mt-10">
-                        {navLinks.map(({ href, label, icon: Icon }) => (
+                        {navLinks.map(({ href, label, icon: Icon, subLinks }) => {
+                          if (subLinks) {
+                            return (
+                              <div key={label}>
+                                <p className="flex items-center gap-4 rounded-lg px-4 py-3 text-xl text-muted-foreground">
+                                  <Icon className="h-6 w-6" />
+                                  <span>{label}</span>
+                                </p>
+                                <div className="flex flex-col pl-10">
+                                  {subLinks.map(subLink => (
+                                    (!subLink.forLoggedIn || (subLink.forLoggedIn && activeUser)) && (
+                                      <Link
+                                        key={subLink.href}
+                                        href={subLink.href}
+                                        onClick={() => setIsOpen(false)}
+                                        className={cn(
+                                          'flex items-center gap-4 rounded-lg px-4 py-2 text-lg transition-colors hover:text-primary',
+                                          pathname === subLink.href ? 'text-primary' : 'text-muted-foreground'
+                                        )}
+                                      >
+                                        {subLink.label}
+                                      </Link>
+                                    )
+                                  ))}
+                                </div>
+                              </div>
+                            )
+                          }
+                          return (
                             <Link
                             key={href}
-                            href={href}
+                            href={href!}
                             onClick={() => setIsOpen(false)}
                             className={cn(
                                 'flex items-center gap-4 rounded-lg px-4 py-3 text-xl transition-colors hover:text-primary',
@@ -160,7 +195,8 @@ export default function Navbar() {
                             <Icon className="h-6 w-6" />
                             <span>{label}</span>
                             </Link>
-                        ))}
+                          );
+                        })}
                     </nav>
                     <div className="mt-auto">
                         <div className="flex items-center justify-center gap-4 my-4">
@@ -193,18 +229,45 @@ export default function Navbar() {
             "hidden md:flex items-center gap-6 text-sm",
             pathname !== '/' && (pathname === '/login' || pathname === '/signup') && "invisible"
         )}>
-            {navLinks.map(({ href, label }) => (
+            {navLinks.map(({ href, label, subLinks }) => {
+              if (subLinks) {
+                return (
+                   <DropdownMenu key={label}>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" className={cn(
+                        'flex items-center gap-1 transition-colors hover:text-primary focus-visible:ring-0 focus-visible:ring-offset-0 p-0',
+                        pathname.startsWith('/courses') || pathname.startsWith('/profile/my-courses') ? 'text-primary font-semibold' : 'text-muted-foreground'
+                      )}>
+                        {label}
+                        <ChevronDown className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                      {activeUser && (
+                        <DropdownMenuItem asChild>
+                          <Link href="/profile/my-courses">My Courses</Link>
+                        </DropdownMenuItem>
+                      )}
+                      <DropdownMenuItem asChild>
+                        <Link href="/courses">Explore Courses</Link>
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                )
+              }
+              return (
                 <Link
-                key={href}
-                href={href}
-                className={cn(
-                    'transition-colors hover:text-primary',
-                    pathname === href ? 'text-primary font-semibold' : 'text-muted-foreground'
-                )}
-                >
-                {label}
+                  key={href}
+                  href={href!}
+                  className={cn(
+                      'transition-colors hover:text-primary',
+                      pathname === href ? 'text-primary font-semibold' : 'text-muted-foreground'
+                  )}
+                  >
+                  {label}
                 </Link>
-            ))}
+              );
+            })}
         </nav>
 
         {/* Login/Profile Buttons - Top Right */}
