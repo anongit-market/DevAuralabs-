@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { Card, CardContent } from '@/components/ui/card';
 import Link from 'next/link';
 import { Progress } from '@/components/ui/progress';
-import { BookOpen, Award } from 'lucide-react';
+import { BookOpen, Award, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { RippleEffect } from '@/components/ui/ripple-effect';
@@ -21,7 +21,7 @@ export default function MyLearningPage() {
     user && firestore ? collection(firestore, 'users', user.uid, 'enrollments') : null,
     [firestore, user]
   );
-  const { data: enrollments } = useCollection(enrollmentsQuery);
+  const { data: enrollments, isLoading: enrollmentsLoading } = useCollection(enrollmentsQuery);
 
   const courseIds = useMemo(() => 
     enrollments?.filter(e => e.type === 'course').map(e => e.courseId) || [],
@@ -37,13 +37,13 @@ export default function MyLearningPage() {
     firestore && courseIds.length > 0 ? query(collection(firestore, 'courses'), where('__name__', 'in', courseIds)) : null,
     [firestore, courseIds]
   );
-  const { data: purchasedCourses } = useCollection(coursesQuery);
+  const { data: purchasedCourses, isLoading: coursesLoading } = useCollection(coursesQuery);
   
   const skillsQuery = useMemoFirebase(() =>
     firestore && skillIds.length > 0 ? query(collection(firestore, 'skills'), where('__name__', 'in', skillIds)) : null,
     [firestore, skillIds]
   );
-  const { data: purchasedSkills } = useCollection(skillsQuery);
+  const { data: purchasedSkills, isLoading: skillsLoading } = useCollection(skillsQuery);
   
   const getProgress = (id: string) => {
       return enrollments?.find(e => e.courseId === id || e.skillId === id)?.progress || 0;
@@ -56,9 +56,10 @@ export default function MyLearningPage() {
     return new Date(enrollment.lastAccessed.seconds * 1000).toLocaleDateString();
   }
 
-
-  if (isUserLoading) {
-    return <div>Loading...</div>
+  const isLoading = isUserLoading || enrollmentsLoading || coursesLoading || skillsLoading;
+  
+  if (isLoading) {
+    return <div className="flex h-screen items-center justify-center"><Loader2 className="h-12 w-12 animate-spin text-primary" /></div>
   }
 
 
@@ -69,7 +70,7 @@ export default function MyLearningPage() {
         <p className="text-lg text-muted-foreground mt-2">Continue your learning journey.</p>
       </div>
 
-      {!purchasedCourses && !purchasedSkills ? (
+      {(!purchasedCourses || purchasedCourses.length === 0) && (!purchasedSkills || purchasedSkills.length === 0) ? (
         <div className="text-center py-16 glass-card rounded-2xl">
           <BookOpen className="mx-auto h-24 w-24 text-muted-foreground" />
           <h2 className="mt-6 text-2xl font-bold">No Content Yet</h2>
