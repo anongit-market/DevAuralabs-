@@ -15,7 +15,7 @@ import { useCurrency } from '@/context/currency-context';
 import { Loader2 } from 'lucide-react';
 import { createRazorpayOrder, applyPromoCode, recordPromoCodeRedemption, enrollUserInContent } from '@/app/actions';
 import { useToast } from '@/hooks/use-toast';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useDemoUser } from '@/context/demo-user-context';
 import type { User } from 'firebase/auth';
 
@@ -49,16 +49,28 @@ export default function CheckoutSkillPage() {
   const { toast } = useToast();
   const { isDemoMode, isLoading: isDemoLoading } = useDemoUser();
 
-  const user = isDemoMode ? getDemoUser() : realUser;
+  const [user, setUser] = useState<User | null>(null);
 
   const [isPaying, setIsPaying] = useState(false);
   const [promoCode, setPromoCode] = useState('');
   const [discount, setDiscount] = useState(0);
   const [appliedPromo, setAppliedPromo] = useState<{ codeId: string; discount: number } | null>(null);
   const [isApplyingCode, setIsApplyingCode] = useState(false);
+  const [authChecked, setAuthChecked] = useState(false);
 
   const skillRef = useMemoFirebase(() => firestore && id ? doc(firestore, 'skills', id as string) : null, [firestore, id]);
   const { data: skill, isLoading: isSkillLoading } = useDoc(skillRef);
+
+  useEffect(() => {
+    if (isDemoLoading) return;
+    if (isDemoMode) {
+      setUser(getDemoUser());
+      setAuthChecked(true);
+    } else if (!isUserLoading) {
+      setUser(realUser);
+      setAuthChecked(true);
+    }
+  }, [isDemoMode, isDemoLoading, realUser, isUserLoading]);
 
   const getPriceInSelectedCurrency = (price: number) => {
     return currency === 'INR' ? price * CONVERSION_RATE_USD_TO_INR : price;
@@ -136,9 +148,7 @@ export default function CheckoutSkillPage() {
         if (appliedPromo) {
            await recordPromoCodeRedemption(appliedPromo.codeId, user.uid);
         }
-        if (!isDemoMode) {
-          await enrollUserInContent(user.uid, skill.id, 'skill');
-        }
+        await enrollUserInContent(user.uid, skill.id, 'skill');
         toast({ title: 'Payment Successful!', description: `You are now enrolled in ${skill.title}. Payment ID: ${response.razorpay_payment_id}` });
         setIsPaying(false);
       },
@@ -167,7 +177,7 @@ export default function CheckoutSkillPage() {
     rzp.open();
   };
 
-  const isLoading = isSkillLoading || isUserLoading || isDemoLoading;
+  const isLoading = isSkillLoading || !authChecked;
 
   if (isLoading) {
     return <div className="flex h-screen items-center justify-center"><Loader2 className="h-12 w-12 animate-spin" /></div>;

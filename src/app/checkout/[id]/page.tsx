@@ -49,17 +49,29 @@ export default function CheckoutPage() {
   const { toast } = useToast();
   const { isDemoMode, isLoading: isDemoLoading } = useDemoUser();
   
-  const user = isDemoMode ? getDemoUser() : realUser;
+  const [user, setUser] = useState<User | null>(null);
   
   const [isPaying, setIsPaying] = useState(false);
   const [promoCode, setPromoCode] = useState('');
   const [discount, setDiscount] = useState(0);
   const [appliedPromo, setAppliedPromo] = useState<{ codeId: string; discount: number } | null>(null);
   const [isApplyingCode, setIsApplyingCode] = useState(false);
+  const [authChecked, setAuthChecked] = useState(false);
 
 
   const courseRef = useMemoFirebase(() => firestore && id ? doc(firestore, 'courses', id as string) : null, [firestore, id]);
   const { data: course, isLoading: isCourseLoading } = useDoc(courseRef);
+
+  useEffect(() => {
+    if (isDemoLoading) return;
+    if (isDemoMode) {
+      setUser(getDemoUser());
+      setAuthChecked(true);
+    } else if (!isUserLoading) {
+      setUser(realUser);
+      setAuthChecked(true);
+    }
+  }, [isDemoMode, isDemoLoading, realUser, isUserLoading]);
 
   const getPriceInSelectedCurrency = (price: number) => {
     return currency === 'INR' ? price * CONVERSION_RATE_USD_TO_INR : price;
@@ -136,10 +148,7 @@ export default function CheckoutPage() {
         if (appliedPromo) {
            await recordPromoCodeRedemption(appliedPromo.codeId, user.uid);
         }
-        // In demo mode, we don't record enrollment.
-        if (!isDemoMode) {
-          await enrollUserInContent(user.uid, course.id, 'course');
-        }
+        await enrollUserInContent(user.uid, course.id, 'course');
         toast({ title: 'Payment Successful!', description: `You are now enrolled in ${course.title}. Payment ID: ${response.razorpay_payment_id}` });
         setIsPaying(false);
       },
@@ -168,7 +177,7 @@ export default function CheckoutPage() {
     rzp.open();
   };
 
-  const isLoading = isCourseLoading || isUserLoading || isDemoLoading;
+  const isLoading = isCourseLoading || !authChecked;
 
   if (isLoading) {
     return <div className="flex h-screen items-center justify-center"><Loader2 className="h-12 w-12 animate-spin" /></div>;
