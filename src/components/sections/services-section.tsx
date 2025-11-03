@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { z } from 'zod';
@@ -17,6 +18,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '../ui/button';
 import { RippleEffect } from '../ui/ripple-effect';
+import { useUser, useFirestore, addDocumentNonBlocking } from '@/firebase';
+import { collection, serverTimestamp } from 'firebase/firestore';
 
 const formSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
@@ -26,22 +29,49 @@ const formSchema = z.object({
 
 export default function ServicesSection() {
   const { toast } = useToast();
+  const { user } = useUser();
+  const firestore = useFirestore();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: '',
-      email: '',
+      name: user?.displayName || '',
+      email: user?.email || '',
       projectDetails: '',
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-    toast({
-      title: 'Request Sent!',
-      description: "We've received your request and will get back to you shortly.",
-    });
-    form.reset();
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    if (!firestore) {
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: 'Could not connect to the database. Please try again later.',
+      });
+      return;
+    }
+
+    const requestData = {
+      ...values,
+      userId: user?.uid || null,
+      requestDate: serverTimestamp(),
+      status: 'pending',
+    };
+
+    try {
+      await addDocumentNonBlocking(collection(firestore, 'website_requests'), requestData);
+      toast({
+        title: 'Request Sent!',
+        description: "We've received your request and will get back to you shortly.",
+      });
+      form.reset({ name: '', email: '', projectDetails: ''});
+    } catch (error) {
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: 'Failed to send request. Please try again.',
+      });
+    }
   }
 
   return (
@@ -100,7 +130,7 @@ export default function ServicesSection() {
                   </FormItem>
                 )}
               />
-              <Button type="submit" className="w-full gradient-btn gradient-btn-1 relative">
+              <Button type="submit" className="w-full gradient-btn gradient-btn-1 relative" disabled={form.formState.isSubmitting}>
                 Submit Request
                 <RippleEffect />
               </Button>
@@ -111,3 +141,5 @@ export default function ServicesSection() {
     </section>
   );
 }
+
+    

@@ -1,10 +1,11 @@
 
+
 'use client';
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { PlusCircle, UserCog, Settings, List, Users, Cpu, Eye, TicketPercent } from 'lucide-react';
+import { PlusCircle, UserCog, Settings, List, Users, Cpu, Eye, TicketPercent, Mail } from 'lucide-react';
 import { useDemoUser } from '@/context/demo-user-context';
 import { useRouter } from 'next/navigation';
 
@@ -60,21 +61,7 @@ export default function AdminPage() {
         </Card>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <Card className="glass-card">
-            <CardHeader>
-                <CardTitle className="flex items-center gap-2"><TicketPercent /> Promo Codes</CardTitle>
-                <CardDescription>Create and manage discount codes for your platform.</CardDescription>
-            </CardHeader>
-            <CardContent>
-                <Link href="/admin/promo-codes">
-                    <Button variant="outline">Manage Promo Codes</Button>
-                </Link>
-            </CardContent>
-        </Card>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         <Card className="glass-card">
             <CardHeader>
                 <CardTitle className="flex items-center gap-2"><List /> Platform Content</CardTitle>
@@ -97,9 +84,31 @@ export default function AdminPage() {
                 </Link>
             </CardContent>
         </Card>
+        <Card className="glass-card">
+            <CardHeader>
+                <CardTitle className="flex items-center gap-2"><Mail /> Website Requests</CardTitle>
+                <CardDescription>View and manage custom website requests from users.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <Link href="/admin/website-requests">
+                    <Button variant="outline">View Requests</Button>
+                </Link>
+            </CardContent>
+        </Card>
       </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <Card className="glass-card">
+            <CardHeader>
+                <CardTitle className="flex items-center gap-2"><TicketPercent /> Promo Codes</CardTitle>
+                <CardDescription>Create and manage discount codes for your platform.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <Link href="/admin/promo-codes">
+                    <Button variant="outline">Manage Promo Codes</Button>
+                </Link>
+            </CardContent>
+        </Card>
         <Card className="glass-card">
             <CardHeader>
                 <CardTitle className="flex items-center gap-2"><Eye /> Demo User Mode</CardTitle>
@@ -124,3 +133,5 @@ export default function AdminPage() {
     </div>
   );
 }
+
+    
