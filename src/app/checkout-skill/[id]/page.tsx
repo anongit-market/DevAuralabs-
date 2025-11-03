@@ -62,12 +62,12 @@ export default function CheckoutSkillPage() {
   const { data: skill, isLoading: isSkillLoading } = useDoc(skillRef);
 
   useEffect(() => {
-    if (isDemoLoading) return;
-    if (isDemoMode) {
-      setUser(getDemoUser());
-      setAuthChecked(true);
-    } else if (!isUserLoading) {
-      setUser(realUser);
+    if (!isDemoLoading && !isUserLoading) {
+      if (isDemoMode) {
+          setUser(getDemoUser());
+      } else {
+          setUser(realUser);
+      }
       setAuthChecked(true);
     }
   }, [isDemoMode, isDemoLoading, realUser, isUserLoading]);

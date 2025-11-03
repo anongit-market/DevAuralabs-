@@ -63,13 +63,13 @@ export default function CheckoutPage() {
   const { data: course, isLoading: isCourseLoading } = useDoc(courseRef);
 
   useEffect(() => {
-    if (isDemoLoading) return;
-    if (isDemoMode) {
-      setUser(getDemoUser());
-      setAuthChecked(true);
-    } else if (!isUserLoading) {
-      setUser(realUser);
-      setAuthChecked(true);
+    if (!isDemoLoading && !isUserLoading) {
+        if (isDemoMode) {
+            setUser(getDemoUser());
+        } else {
+            setUser(realUser);
+        }
+        setAuthChecked(true);
     }
   }, [isDemoMode, isDemoLoading, realUser, isUserLoading]);
 
