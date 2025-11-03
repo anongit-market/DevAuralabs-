@@ -62,14 +62,14 @@ export default function CheckoutHardwarePage() {
   const { data: hardware, isLoading: isHardwareLoading } = useDoc(hardwareRef);
 
   useEffect(() => {
-    if (!isDemoLoading && !isUserLoading) {
-      if (isDemoMode) {
-          setUser(getDemoUser());
-      } else {
-          setUser(realUser);
-      }
-      setAuthChecked(true);
+    if (isDemoLoading || isUserLoading) return;
+    
+    if (isDemoMode) {
+      setUser(getDemoUser());
+    } else {
+      setUser(realUser);
     }
+    setAuthChecked(true);
   }, [isDemoMode, isDemoLoading, realUser, isUserLoading]);
 
   const getPriceInSelectedCurrency = (price: number) => {
@@ -147,7 +147,7 @@ export default function CheckoutHardwarePage() {
         if (appliedPromo) {
            await recordPromoCodeRedemption(appliedPromo.codeId, user.uid);
         }
-        toast({ title: 'Payment Successful!', description: `Your order for ${hardware.name} is confirmed. Payment ID: ${response.razorpay_payment_id}` });
+        toast({ title: 'Payment Successful!', description: `Your order for ${hardware.name} is confirmed.` });
         setIsPaying(false);
       },
       prefill: {
@@ -181,8 +181,12 @@ export default function CheckoutHardwarePage() {
     return <div className="flex h-screen items-center justify-center"><Loader2 className="h-12 w-12 animate-spin" /></div>;
   }
 
-  if (!hardware || !user) {
+  if (!user) {
     notFound();
+  }
+  
+  if (!hardware) {
+    return <div className="flex h-screen items-center justify-center"><p>Hardware not found.</p></div>
   }
 
   return (

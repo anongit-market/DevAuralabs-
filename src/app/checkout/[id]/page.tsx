@@ -63,14 +63,14 @@ export default function CheckoutPage() {
   const { data: course, isLoading: isCourseLoading } = useDoc(courseRef);
 
   useEffect(() => {
-    if (!isDemoLoading && !isUserLoading) {
-        if (isDemoMode) {
-            setUser(getDemoUser());
-        } else {
-            setUser(realUser);
-        }
-        setAuthChecked(true);
+    if (isDemoLoading || isUserLoading) return;
+    
+    if (isDemoMode) {
+        setUser(getDemoUser());
+    } else {
+        setUser(realUser);
     }
+    setAuthChecked(true);
   }, [isDemoMode, isDemoLoading, realUser, isUserLoading]);
 
   const getPriceInSelectedCurrency = (price: number) => {
@@ -149,7 +149,7 @@ export default function CheckoutPage() {
            await recordPromoCodeRedemption(appliedPromo.codeId, user.uid);
         }
         await enrollUserInContent(user.uid, course.id, 'course');
-        toast({ title: 'Payment Successful!', description: `You are now enrolled in ${course.title}. Payment ID: ${response.razorpay_payment_id}` });
+        toast({ title: 'Payment Successful!', description: `You are now enrolled in ${course.title}.` });
         setIsPaying(false);
       },
       prefill: {
@@ -183,9 +183,14 @@ export default function CheckoutPage() {
     return <div className="flex h-screen items-center justify-center"><Loader2 className="h-12 w-12 animate-spin" /></div>;
   }
   
-  if (!course || !user) {
-    notFound();
+  if (!user) {
+     notFound();
   }
+
+  if (!course) {
+     return <div className="flex h-screen items-center justify-center"><p>Course not found.</p></div>
+  }
+
 
   return (
     <>
