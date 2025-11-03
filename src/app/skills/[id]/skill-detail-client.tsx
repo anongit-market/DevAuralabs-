@@ -144,9 +144,9 @@ export default function SkillDetailClient({ skill }: { skill: Skill }) {
                      <div>
                         <h2 className="text-2xl font-bold text-primary mb-6">Program Content</h2>
                         {renderContentAccessButtons()}
-                        <div className="mt-8 text-xs text-center text-muted-foreground">
+                        {!isDemoMode && <div className="mt-8 text-xs text-center text-muted-foreground">
                             You have lifetime access to this program.
-                        </div>
+                        </div>}
                   </div>
                 ) : !(enrollmentsLoading || classDetailsLoading) && (
                     <>
@@ -172,5 +172,3 @@ export default function SkillDetailClient({ skill }: { skill: Skill }) {
     </div>
   );
 }
-
-    
