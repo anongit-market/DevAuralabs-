@@ -13,7 +13,7 @@ interface AdminContextType {
 
 const AdminContext = createContext<AdminContextType | undefined>(undefined);
 
-const ADMIN_EMAIL = 'admin9961@gmail.com';
+const ADMIN_EMAIL = 'admindevaura22@gmail.com';
 
 export function AdminProvider({ children }: { children: ReactNode }) {
   const { user, isUserLoading } = useUser();

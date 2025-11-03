@@ -78,7 +78,7 @@ export default function LoginPage() {
   }, [user, isAdmin, next, router, toast]);
 
   async function onAdminSubmit(values: z.infer<typeof adminFormSchema>) {
-    if (values.email !== 'admin9961@gmail.com') {
+    if (values.email !== 'admindevaura22@gmail.com') {
          toast({
             variant: 'destructive',
             title: 'Login Failed',
