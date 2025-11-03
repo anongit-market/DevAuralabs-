@@ -17,6 +17,7 @@ import { Loader2 } from 'lucide-react';
 import { createRazorpayOrder, applyPromoCode, recordPromoCodeRedemption, enrollUserInContent } from '@/app/actions';
 import { useToast } from '@/hooks/use-toast';
 import { useState } from 'react';
+import { useDemoUser } from '@/context/demo-user-context';
 
 const CONVERSION_RATE_USD_TO_INR = 83.5;
 
@@ -27,6 +28,7 @@ export default function CheckoutPage() {
   const { currency } = useCurrency();
   const { user } = useUser();
   const { toast } = useToast();
+  const { isDemoMode } = useDemoUser();
   
   const [isPaying, setIsPaying] = useState(false);
   const [promoCode, setPromoCode] = useState('');
@@ -81,7 +83,7 @@ export default function CheckoutPage() {
 
     setIsPaying(true);
 
-    const result = await createRazorpayOrder(finalPrice, currency);
+    const result = await createRazorpayOrder(finalPrice, currency, isDemoMode);
 
     if (!result.success || !result.order) {
         toast({ variant: 'destructive', title: 'Payment Error', description: result.error });
@@ -91,8 +93,18 @@ export default function CheckoutPage() {
 
     const order = result.order;
 
+    const razorpayKeyId = isDemoMode 
+        ? process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID_TEST 
+        : process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID_LIVE;
+
+    if (!razorpayKeyId) {
+        toast({ variant: 'destructive', title: 'Configuration Error', description: 'Razorpay Key ID is not set for the current mode.' });
+        setIsPaying(false);
+        return;
+    }
+
     const options = {
-      key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || 'rzp_live_RaqA9IeXeTgp3S',
+      key: razorpayKeyId,
       amount: order.amount,
       currency: order.currency,
       name: 'DevAura Labs',
