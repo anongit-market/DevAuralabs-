@@ -14,7 +14,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Textarea } from '@/components/ui/textarea';
-import { Mic, ChevronRight, Loader2, MessageSquare } from 'lucide-react';
+import { Mic, ChevronRight, Loader2, MessageSquare, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import VantaFogBackground from '@/components/vanta-fog-background';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
@@ -25,7 +25,7 @@ import CourseChatCard from '@/components/course-chat-card';
 import { useUser, useFirestore, useCollection, useMemoFirebase, addDocumentNonBlocking } from '@/firebase';
 import { collection, serverTimestamp, query, orderBy, addDoc, doc, setDoc } from 'firebase/firestore';
 import { useAdmin } from '@/context/admin-context';
-import type { User } from 'firebase/auth';
+import type { User as FirebaseUser } from 'firebase/auth';
 
 type Message = {
   id: string;
@@ -52,13 +52,12 @@ export default function AuraAiChatPage() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const logoImage = PlaceHolderImages.find(p => p.id === 'ai-logo');
   const router = useRouter();
-  const defaultAvatar = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQhU1f1x2Jn2LPIdLjfUCzHuqChIWFoTaByxJYw4ZrXCCkAYYuOlYiFdEl4Z7BujUvLrhk&usqp=CAU';
 
   const { user: regularUser, isUserLoading } = useUser();
   const { isAdmin, isLoading: isAdminLoading } = useAdmin();
   const firestore = useFirestore();
 
-  const [activeUser, setActiveUser] = useState<User | null>(null);
+  const [activeUser, setActiveUser] = useState<FirebaseUser | null>(null);
   const [authChecked, setAuthChecked] = useState(false);
 
   // This effect determines the active user or redirects.
@@ -73,7 +72,7 @@ export default function AuraAiChatPage() {
           displayName: 'Administrator',
           email: 'admin@devaura.labs',
           photoURL: "https://i.pravatar.cc/150?u=admin",
-      } as User);
+      } as FirebaseUser);
     } else if (regularUser) {
       setActiveUser(regularUser);
     } else {
@@ -244,8 +243,8 @@ export default function AuraAiChatPage() {
           </DropdownMenu>
           <h2 className="text-xl font-bold">{chatHistory?.find(c => c.id === currentChatId)?.title || 'New Chat'}</h2>
           <Avatar className="h-9 w-9">
-            <AvatarImage src={user.photoURL || defaultAvatar} />
-            <AvatarFallback>{user.displayName?.charAt(0) || 'U'}</AvatarFallback>
+            <AvatarImage src={user.photoURL || undefined} />
+            <AvatarFallback>{user.displayName?.charAt(0) || <User className="h-5 w-5" />}</AvatarFallback>
           </Avatar>
         </header>
 
@@ -285,8 +284,8 @@ export default function AuraAiChatPage() {
               </div>
                {message.sender === 'user' && (
                  <Avatar className="h-8 w-8">
-                    <AvatarImage src={user.photoURL || defaultAvatar} />
-                    <AvatarFallback>{user.displayName?.charAt(0) || 'U'}</AvatarFallback>
+                    <AvatarImage src={user.photoURL || undefined} />
+                    <AvatarFallback>{isAdmin ? 'AD' : user.displayName?.charAt(0) || <User className="h-5 w-5" />}</AvatarFallback>
                 </Avatar>
               )}
             </div>

@@ -73,7 +73,6 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const [headerClass, setHeaderClass] = useState("w-full z-50");
-  const defaultAvatar = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQhU1f1x2Jn2LPIdLjfUCzHuqChIWFoTaByxJYw4ZrXCCkAYYuOlYiFdEl4Z7BujUvLrhk&usqp=CAU';
   
   const auth = useAuth();
   const { user, isUserLoading } = useUser();
@@ -122,8 +121,16 @@ export default function Navbar() {
         isDemo: true,
         displayName: 'Demo User',
         email: 'demo@devaura.labs',
-        photoURL: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQhU1f1x2Jn2LPIdLjfUCzHuqChIWFoTaByxJYw4ZrXCCkAYYuOlYiFdEl4Z7BujUvLrhk&usqp=CAU'
+        photoURL: undefined
       }
+    }
+    if (isAdmin) {
+        return {
+            isAdmin: true,
+            displayName: 'Administrator',
+            email: 'admin@devaura.labs',
+            photoURL: undefined
+        }
     }
     return user;
   }
@@ -290,50 +297,14 @@ export default function Navbar() {
             </DropdownMenu>
 
           {isMounted && !isUserLoading ? (
-            isDemoMode ? (
+            activeUser ? (
                  <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" className="relative h-10 w-10 rounded-full glass-icon-btn p-0">
                       <Avatar className="h-9 w-9">
-                        <AvatarImage src={activeUser.photoURL} alt={activeUser.displayName} />
+                        <AvatarImage src={activeUser.photoURL || undefined} alt={activeUser.displayName || 'user'} />
                         <AvatarFallback>
-                            {activeUser.displayName ? activeUser.displayName.charAt(0) : <User className="h-5 w-5" />}
-                        </AvatarFallback>
-                      </Avatar>
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent className="w-56" align="end" forceMount>
-                    <DropdownMenuLabel className="font-normal">
-                      <div className="flex flex-col space-y-1">
-                        <p className="text-sm font-medium leading-none">{activeUser.displayName}</p>
-                        <p className="text-xs leading-none text-muted-foreground">
-                          {activeUser.email}
-                        </p>
-                      </div>
-                    </DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={handleDemoLogout} className="text-destructive focus:text-destructive">
-                      Exit Demo Mode
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-            ) : isAdmin ? (
-               <Button variant="destructive" onClick={handleAdminLogout}>
-                  Admin Logout
-                </Button>
-            ) : activeUser ? (
-              <>
-                <Link href="/cart" className="glass-icon-btn">
-                    <ShoppingCart className="h-5 w-5" />
-                    <span className="sr-only">Cart</span>
-                </Link>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="relative h-10 w-10 rounded-full glass-icon-btn p-0">
-                      <Avatar className="h-9 w-9">
-                        <AvatarImage src={activeUser.photoURL || defaultAvatar} alt={activeUser.displayName || 'user'} />
-                        <AvatarFallback>
-                            {activeUser.displayName ? activeUser.displayName.charAt(0) : <User className="h-5 w-5" />}
+                            {(activeUser as any).isAdmin ? 'AD' : (activeUser.displayName ? activeUser.displayName.charAt(0) : <User className="h-5 w-5" />)}
                         </AvatarFallback>
                       </Avatar>
                     </Button>
@@ -348,22 +319,33 @@ export default function Navbar() {
                       </div>
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem asChild>
-                      <Link href="/profile">Profile</Link>
-                    </DropdownMenuItem>
-                     <DropdownMenuItem asChild>
-                      <Link href="/profile/my-courses">My Learning</Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link href="/profile/settings">Settings</Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={handleUserLogout}>
-                      Log out
-                    </DropdownMenuItem>
+                    {(activeUser as any).isDemo ? (
+                      <DropdownMenuItem onClick={handleDemoLogout} className="text-destructive focus:text-destructive">
+                        Exit Demo Mode
+                      </DropdownMenuItem>
+                    ) : (activeUser as any).isAdmin ? (
+                       <DropdownMenuItem onClick={handleAdminLogout} className="text-destructive focus:text-destructive">
+                        Logout
+                      </DropdownMenuItem>
+                    ) : (
+                      <>
+                        <DropdownMenuItem asChild>
+                          <Link href="/profile">Profile</Link>
+                        </DropdownMenuItem>
+                         <DropdownMenuItem asChild>
+                          <Link href="/profile/my-courses">My Learning</Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                          <Link href="/profile/settings">Settings</Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem onClick={handleUserLogout}>
+                          Log out
+                        </DropdownMenuItem>
+                      </>
+                    )}
                   </DropdownMenuContent>
                 </DropdownMenu>
-              </>
             ) : (
                 <Link href="/login">
                   <div className="glass-icon-btn login-btn text-foreground">
@@ -380,3 +362,5 @@ export default function Navbar() {
     </header>
   );
 }
+
+    

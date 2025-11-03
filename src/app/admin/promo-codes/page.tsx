@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { ArrowLeft, TicketPercent, Copy, Trash2, Users, Loader2 } from 'lucide-react';
+import { ArrowLeft, TicketPercent, Copy, Trash2, Users, Loader2, User } from 'lucide-react';
 import Link from 'next/link';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Switch } from '@/components/ui/switch';
@@ -200,7 +200,7 @@ export default function PromoCodesPage() {
       await setDoc(userRef, {
         displayName: mockUserDisplayName,
         email: mockUserEmail,
-        photoURL: `https://api.pravatar.cc/150?u=${mockUserId}`
+        photoURL: undefined
       });
 
       await setDoc(redemptionRef, {

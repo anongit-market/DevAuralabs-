@@ -5,7 +5,7 @@ import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
 import { collection, query, orderBy } from 'firebase/firestore';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Loader2, Users, ArrowLeft, ChevronRight } from 'lucide-react';
+import { Loader2, Users, ArrowLeft, ChevronRight, User } from 'lucide-react';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
@@ -22,7 +22,6 @@ const providerColor: { [key: string]: string } = {
 export default function UsersPage() {
     const firestore = useFirestore();
     const router = useRouter();
-    const defaultAvatar = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQhU1f1x2Jn2LPIdLjfUCzHuqChIWFoTaByxJYw4ZrXCCkAYYuOlYiFdEl4Z7BujUvLrhk&usqp=CAU';
     
     const usersQuery = useMemoFirebase(() => 
         firestore ? query(collection(firestore, 'users'), orderBy('metadata.creationTime', 'desc')) : null, 
@@ -79,8 +78,8 @@ export default function UsersPage() {
                                             <TableCell>
                                                 <div className="flex items-center gap-3">
                                                     <Avatar>
-                                                        <AvatarImage src={user.photoURL || defaultAvatar} alt={user.displayName} />
-                                                        <AvatarFallback>{user.displayName?.[0] || 'U'}</AvatarFallback>
+                                                        <AvatarImage src={user.photoURL || undefined} alt={user.displayName} />
+                                                        <AvatarFallback>{user.displayName?.[0] || <User className="h-5 w-5" />}</AvatarFallback>
                                                     </Avatar>
                                                     <span className="font-medium">{user.displayName || 'No Name'}</span>
                                                 </div>
@@ -112,3 +111,5 @@ export default function UsersPage() {
         </div>
     );
 }
+
+    
