@@ -82,6 +82,7 @@ User's interests: {{{interests}}}
 User's goals: {{{goals}}}
 
 Your response:`,
+  model: 'gemini-pro',
 });
 
 const aiPoweredCourseRecommendationsFlow = ai.defineFlow(
@@ -95,5 +96,3 @@ const aiPoweredCourseRecommendationsFlow = ai.defineFlow(
     return output!;
   }
 );
-
-    

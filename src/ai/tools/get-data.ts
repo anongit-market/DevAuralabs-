@@ -38,6 +38,7 @@ export const getCourses = ai.defineTool(
     },
     async () => {
         const courses = await getCollectionData('courses');
+        // @ts-ignore
         return courses.map(({ id, title, level, price, description, posterUrl, icon }: any) => ({ id, title, level, price, description, posterUrl, icon }));
     }
 );
@@ -59,6 +60,7 @@ export const getSkills = ai.defineTool(
     },
     async () => {
         const skills = await getCollectionData('skills');
+        // @ts-ignore
         return skills.map(({ id, title, description, posterUrl, icon }: any) => ({ id, title, description, posterUrl, icon }));
     }
 );
