@@ -51,7 +51,6 @@ export const getSkills = ai.defineTool(
             z.object({
                 id: z.string(),
                 title: z.string(),
-                progress: z.number(),
                 description: z.string(),
                 posterUrl: z.string(),
                 icon: z.string(),
@@ -60,6 +59,6 @@ export const getSkills = ai.defineTool(
     },
     async () => {
         const skills = await getCollectionData('skills');
-        return skills.map(({ id, title, progress, description, posterUrl, icon }: any) => ({ id, title, progress, description, posterUrl, icon }));
+        return skills.map(({ id, title, description, posterUrl, icon }: any) => ({ id, title, description, posterUrl, icon }));
     }
 );
