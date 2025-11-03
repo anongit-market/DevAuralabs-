@@ -48,7 +48,7 @@ export default function LoginPage() {
   const auth = useAuth();
   const { user } = useUser();
   const [view, setView] = useState('user'); 
-  const { isAdmin } = useAdmin();
+  const { isAdmin, login: adminLogin } = useAdmin();
   const [showPassword, setShowPassword] = useState(false);
 
 
@@ -74,24 +74,16 @@ export default function LoginPage() {
       } else {
         router.push('/');
       }
-    } else if (user && isAdmin) {
+    } else if (isAdmin) {
       router.push('/admin');
     }
   }, [user, isAdmin, next, router, toast]);
 
   async function onAdminSubmit(values: z.infer<typeof adminFormSchema>) {
-    if (values.email !== 'admindevaura22@gmail.com') {
-         toast({
-            variant: 'destructive',
-            title: 'Login Failed',
-            description: 'This email is not authorized for admin access.',
-        });
-        return;
-    }
-    
-    try {
-        await signInWithEmailAndPassword(auth, values.email, values.password);
-    } catch (error) {
+    if (values.email === 'admindevaura22@gmail.com' && values.password === 'devaura7790@') {
+        adminLogin();
+        router.push('/admin');
+    } else {
         toast({
             variant: 'destructive',
             title: 'Login Failed',

@@ -8,12 +8,14 @@ import { signOut, getAuth } from 'firebase/auth';
 interface AdminContextType {
   isAdmin: boolean;
   isLoading: boolean;
+  login: () => void;
   logout: () => void;
 }
 
 const AdminContext = createContext<AdminContextType | undefined>(undefined);
 
 const ADMIN_EMAIL = 'admindevaura22@gmail.com';
+const ADMIN_SESSION_KEY = 'devaura-admin-session';
 
 export function AdminProvider({ children }: { children: ReactNode }) {
   const { user, isUserLoading } = useUser();
@@ -21,25 +23,35 @@ export function AdminProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // We are loading if the user auth state is still loading.
     setIsLoading(isUserLoading);
     if (!isUserLoading) {
-      // Once user auth state is resolved, determine admin status.
-      if (user && user.email === ADMIN_EMAIL) {
+      const sessionIsAdmin = sessionStorage.getItem(ADMIN_SESSION_KEY) === 'true';
+      if (sessionIsAdmin || (user && user.email === ADMIN_EMAIL)) {
         setIsAdmin(true);
+        sessionStorage.setItem(ADMIN_SESSION_KEY, 'true');
       } else {
         setIsAdmin(false);
+        sessionStorage.removeItem(ADMIN_SESSION_KEY);
       }
     }
   }, [user, isUserLoading]);
 
+  const login = () => {
+    sessionStorage.setItem(ADMIN_SESSION_KEY, 'true');
+    setIsAdmin(true);
+  };
+  
   const logout = () => {
     const auth = getAuth();
-    signOut(auth);
+    // Also sign out firebase user if logged in as admin
+    if (user && user.email === ADMIN_EMAIL) {
+        signOut(auth);
+    }
+    sessionStorage.removeItem(ADMIN_SESSION_KEY);
     setIsAdmin(false);
   };
 
-  const value = { isAdmin, isLoading, login: () => {}, logout };
+  const value = { isAdmin, isLoading, login, logout };
 
   return (
     <AdminContext.Provider value={value}>
