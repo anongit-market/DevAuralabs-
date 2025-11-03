@@ -10,7 +10,7 @@ import { useState } from 'react';
 import { Textarea } from '@/components/ui/textarea';
 import Link from 'next/link';
 import { ArrowLeft, PlusCircle, Trash2 } from 'lucide-react';
-import { useCollection, useFirestore, addDocumentNonBlocking } from '@/firebase';
+import { useCollection, useFirestore, addDocumentNonBlocking, useMemoFirebase } from '@/firebase';
 import { collection, deleteDoc, doc } from 'firebase/firestore';
 import Image from 'next/image';
 
@@ -38,7 +38,8 @@ export default function GeneralSettingsPage() {
   const [whatsappUrl, setWhatsappUrl] = useState('#');
 
   // Showcase state
-  const { data: showcaseItems, isLoading: showcaseLoading } = useCollection(firestore ? collection(firestore, 'showcase') : null);
+  const showcaseQuery = useMemoFirebase(() => firestore ? collection(firestore, 'showcase') : null, [firestore]);
+  const { data: showcaseItems, isLoading: showcaseLoading } = useCollection(showcaseQuery);
   const [newShowcaseUrl, setNewShowcaseUrl] = useState('');
   const [newShowcaseAlt, setNewShowcaseAlt] = useState('');
 
