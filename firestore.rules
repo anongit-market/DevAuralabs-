@@ -11,7 +11,7 @@ service cloud.firestore {
     // Public collections that anyone can read
     match /showcase/{showcaseId} {
       allow read: if true;
-      allow write: if false; // Nobody can write to showcase from the client
+      allow write: if isAdmin(request.auth.uid);
     }
     match /courses/{courseId} {
       allow read: if true;
@@ -22,6 +22,10 @@ service cloud.firestore {
       allow write: if isAdmin(request.auth.uid);
     }
     match /hardware/{hardwareId} {
+      allow read: if true;
+      allow write: if isAdmin(request.auth.uid);
+    }
+    match /settings/{docId} {
       allow read: if true;
       allow write: if isAdmin(request.auth.uid);
     }
