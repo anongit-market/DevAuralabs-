@@ -1,3 +1,4 @@
+
 'use client';
 
 import Image from 'next/image';
@@ -43,16 +44,15 @@ export default function ShowcaseSection() {
                     {isLoading ? (
                       Array.from({ length: 5 }).map((_, index) => (
                         <CarouselItem key={index} className="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5 pl-4">
-                           <div className="p-1">
-                             <Skeleton className="w-full aspect-square rounded-lg bg-muted/50" />
+                           <div className="relative aspect-square w-full h-full overflow-hidden rounded-lg">
+                             <Skeleton className="w-full h-full bg-muted/50" />
                            </div>
                         </CarouselItem>
                       ))
                     ) : showcaseImages && showcaseImages.length > 0 ? (
                       showcaseImages?.map((image) => (
                           <CarouselItem key={image.id} className="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5 pl-4">
-                             <div className="p-1">
-                              <div className="relative aspect-square w-full h-full overflow-hidden rounded-lg">
+                             <div className="relative aspect-square w-full h-full overflow-hidden rounded-lg">
                                 <Image
                                   src={image.url}
                                   alt={image.alt}
@@ -60,7 +60,6 @@ export default function ShowcaseSection() {
                                   className="object-contain"
                                 />
                               </div>
-                            </div>
                           </CarouselItem>
                       ))
                     ) : (
