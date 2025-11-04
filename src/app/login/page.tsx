@@ -35,8 +35,8 @@ const FacebookIcon = (props: React.SVGProps<SVGSVGElement>) => (
 );
 
 const adminFormSchema = z.object({
-  webId: z.string().min(1, { message: 'Web ID is required.' }),
-  secretKey: z.string().min(1, { message: 'Secret Key is required.' }),
+  email: z.string().email({ message: 'A valid email is required.' }),
+  secretKey: z.string().min(1, { message: 'Password is required.' }),
 });
 
 export default function LoginPage() {
@@ -60,7 +60,7 @@ export default function LoginPage() {
   const adminForm = useForm<z.infer<typeof adminFormSchema>>({
     resolver: zodResolver(adminFormSchema),
     defaultValues: {
-      webId: '',
+      email: 'admindevaura22@gmail.com',
       secretKey: '',
     },
   });
@@ -69,7 +69,7 @@ export default function LoginPage() {
     if (isAdmin) {
         toast({ title: 'Admin Login Successful', description: 'Welcome, Administrator.' });
         router.push('/admin');
-    } else if (user) {
+    } else if (user && user.email !== 'admindevaura22@gmail.com') {
         toast({ title: 'Login Successful', description: 'Welcome back!' });
         if (next) {
             router.push(next);
@@ -80,7 +80,7 @@ export default function LoginPage() {
   }, [user, isAdmin, next, router, toast]);
 
   async function onAdminSubmit(values: z.infer<typeof adminFormSchema>) {
-    const success = await adminLogin(values.webId, values.secretKey);
+    const success = await adminLogin(values.email, values.secretKey);
     if (!success) {
         toast({
             variant: 'destructive',
@@ -88,7 +88,6 @@ export default function LoginPage() {
             description: 'Invalid credentials. Please try again.',
         });
     }
-    // The useEffect hook will handle redirection on successful login.
   }
 
 
@@ -124,12 +123,12 @@ export default function LoginPage() {
           <form onSubmit={adminForm.handleSubmit(onAdminSubmit)} className="space-y-4">
               <FormField
               control={adminForm.control}
-              name="webId"
+              name="email"
               render={({ field }) => (
                   <FormItem>
-                  <FormLabel>Web ID</FormLabel>
+                  <FormLabel>Email</FormLabel>
                   <FormControl>
-                      <Input placeholder="Enter your Web ID" {...field} className="bg-background/50"/>
+                      <Input placeholder="Enter your admin email" {...field} className="bg-background/50"/>
                   </FormControl>
                   <FormMessage />
                   </FormItem>
@@ -140,7 +139,7 @@ export default function LoginPage() {
               name="secretKey"
               render={({ field }) => (
                   <FormItem>
-                  <FormLabel>Secret Key</FormLabel>
+                  <FormLabel>Password</FormLabel>
                    <FormControl>
                         <div className="relative">
                           <Input type={showPassword ? 'text' : 'password'} placeholder="••••••••" {...field} className="bg-background/50 pr-10"/>
