@@ -17,7 +17,6 @@ import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useAdmin } from '@/context/admin-context';
 import { User, Eye, EyeOff } from 'lucide-react';
-import { signInWithEmailAndPassword } from 'firebase/auth';
 
 
 const GoogleIcon = (props: React.SVGProps<SVGSVGElement>) => (
@@ -36,8 +35,8 @@ const FacebookIcon = (props: React.SVGProps<SVGSVGElement>) => (
 );
 
 const adminFormSchema = z.object({
-  email: z.string().email({ message: 'Please enter a valid email.' }),
-  password: z.string().min(1, { message: 'Password is required.' }),
+  id: z.string().min(1, { message: 'Admin ID is required.' }),
+  key: z.string().min(1, { message: 'Secret Key is required.' }),
 });
 
 export default function LoginPage() {
@@ -48,7 +47,7 @@ export default function LoginPage() {
   const auth = useAuth();
   const { user } = useUser();
   const [view, setView] = useState('user'); 
-  const { isAdmin } = useAdmin();
+  const { isAdmin, login: adminLogin } = useAdmin();
   const [showPassword, setShowPassword] = useState(false);
 
 
@@ -61,13 +60,13 @@ export default function LoginPage() {
   const adminForm = useForm<z.infer<typeof adminFormSchema>>({
     resolver: zodResolver(adminFormSchema),
     defaultValues: {
-      email: '',
-      password: '',
+      id: '',
+      key: '',
     },
   });
 
   useEffect(() => {
-    if (user) {
+    if (user || isAdmin) {
         if (isAdmin) {
              toast({ title: 'Admin Login Successful', description: 'Welcome, Administrator.' });
             router.push('/admin');
@@ -82,17 +81,16 @@ export default function LoginPage() {
     }
   }, [user, isAdmin, next, router, toast]);
 
-  async function onAdminSubmit(values: z.infer<typeof adminFormSchema>) {
-    try {
-        await signInWithEmailAndPassword(auth, values.email, values.password);
-        // The useEffect hook will handle redirection on successful login.
-    } catch (error) {
+  function onAdminSubmit(values: z.infer<typeof adminFormSchema>) {
+    const success = adminLogin(values.id, values.key);
+    if (!success) {
         toast({
             variant: 'destructive',
             title: 'Login Failed',
             description: 'Invalid credentials. Please try again.',
         });
     }
+    // The useEffect hook will handle redirection on successful login.
   }
 
 
@@ -128,12 +126,12 @@ export default function LoginPage() {
           <form onSubmit={adminForm.handleSubmit(onAdminSubmit)} className="space-y-4">
               <FormField
               control={adminForm.control}
-              name="email"
+              name="id"
               render={({ field }) => (
                   <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel>Admin ID</FormLabel>
                   <FormControl>
-                      <Input type="email" placeholder="admin@example.com" {...field} className="bg-background/50"/>
+                      <Input type="text" placeholder="Enter your Admin ID" {...field} className="bg-background/50"/>
                   </FormControl>
                   <FormMessage />
                   </FormItem>
@@ -141,10 +139,10 @@ export default function LoginPage() {
               />
               <FormField
               control={adminForm.control}
-              name="password"
+              name="key"
               render={({ field }) => (
                   <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel>Secret Key</FormLabel>
                    <FormControl>
                         <div className="relative">
                           <Input type={showPassword ? 'text' : 'password'} placeholder="••••••••" {...field} className="bg-background/50 pr-10"/>

@@ -3,44 +3,63 @@
 
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { useUser } from '@/firebase';
-import { signOut, getAuth } from 'firebase/auth';
 
 interface AdminContextType {
   isAdmin: boolean;
   isLoading: boolean;
+  login: (id: string, key: string) => boolean;
   logout: () => void;
 }
 
 const AdminContext = createContext<AdminContextType | undefined>(undefined);
 
-const ADMIN_EMAIL = 'admindevaura22@gmail.com';
+const ADMIN_ID = 'admin';
+const ADMIN_KEY = 'devaura@7790';
+const ADMIN_SESSION_KEY = 'dev-aura-admin-session';
 
 export function AdminProvider({ children }: { children: ReactNode }) {
-  const { user, isUserLoading } = useUser();
+  const { isUserLoading } = useUser();
   const [isAdmin, setIsAdmin] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // We are loading as long as the user auth state is loading.
-    setIsLoading(isUserLoading);
-    if (!isUserLoading) {
-      // Once user auth state is resolved, check if the logged-in user is the admin.
-      if (user && user.email === ADMIN_EMAIL) {
+    setIsLoading(true);
+    try {
+      const sessionValue = sessionStorage.getItem(ADMIN_SESSION_KEY);
+      if (sessionValue === 'true') {
         setIsAdmin(true);
-      } else {
-        setIsAdmin(false);
+      }
+    } catch (error) {
+      console.warn('Could not read admin session from sessionStorage:', error);
+    } finally {
+        setIsLoading(false);
+    }
+  }, []);
+
+  const login = (id: string, key: string): boolean => {
+    if (id === ADMIN_ID && key === ADMIN_KEY) {
+      try {
+        sessionStorage.setItem(ADMIN_SESSION_KEY, 'true');
+        setIsAdmin(true);
+        return true;
+      } catch (error) {
+        console.error('Could not save admin session to sessionStorage:', error);
+        return false;
       }
     }
-  }, [user, isUserLoading]);
-
-  const logout = () => {
-    const auth = getAuth();
-    signOut(auth).then(() => {
-      setIsAdmin(false);
-    });
+    return false;
   };
 
-  const value = { isAdmin, isLoading, logout };
+  const logout = () => {
+    try {
+      sessionStorage.removeItem(ADMIN_SESSION_KEY);
+      setIsAdmin(false);
+    } catch (error) {
+       console.error('Could not remove admin session from sessionStorage:', error);
+    }
+  };
+
+  const value = { isAdmin, isLoading: isLoading || isUserLoading, login, logout };
 
   return (
     <AdminContext.Provider value={value}>
