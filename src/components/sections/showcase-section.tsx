@@ -7,81 +7,11 @@ import {
   CarouselContent,
   CarouselItem,
 } from '@/components/ui/carousel';
-import { useState, useCallback, useEffect, useRef } from 'react';
-import { EmblaCarouselType } from 'embla-carousel-react';
+import { useRef } from 'react';
 import Autoplay from 'embla-carousel-autoplay';
 import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
 import { collection } from 'firebase/firestore';
-
-const CIRCULAR_EFFECT_FACTOR = 10;
-
-const useCircularEffect = (api: EmblaCarouselType | undefined) => {
-  const [transforms, setTransforms] = useState<{
-    opacity: number,
-    scale: number,
-    rotateY: number,
-  }[]>([]);
-  const [isMounted, setIsMounted] = useState(false);
-  const animationFrame = useRef(0);
-
-  useEffect(() => {
-    setIsMounted(true);
-    return () => {
-      cancelAnimationFrame(animationFrame.current);
-    }
-  }, []);
-
-  const onScroll = useCallback(() => {
-    if (!api || !isMounted) return;
-
-    cancelAnimationFrame(animationFrame.current);
-
-    animationFrame.current = requestAnimationFrame(() => {
-        const engine = api.internalEngine();
-        const scrollProgress = api.scrollProgress();
-        
-        const newTransforms = api.scrollSnapList().map((scrollSnap, index) => {
-        let diffToTarget = scrollSnap - scrollProgress;
-
-        // Handle looping to create a seamless circular effect
-        if (engine.options.loop) {
-            if (Math.abs(diffToTarget) > 0.5) {
-            const sign = Math.sign(diffToTarget);
-            if (sign === -1) {
-                diffToTarget = 1 + diffToTarget;
-            } else {
-                diffToTarget = diffToTarget - 1;
-            }
-            }
-        }
-        
-        const opacity = 1 - Math.abs(diffToTarget);
-        const scale = 1 - Math.abs(diffToTarget) * 0.15;
-        const rotateY = diffToTarget * CIRCULAR_EFFECT_FACTOR * -5;
-
-        return { opacity, scale, rotateY };
-        });
-
-        setTransforms(newTransforms);
-    });
-  }, [api, isMounted]);
-
-
-  useEffect(() => {
-    if (!api || !isMounted) return;
-
-    onScroll();
-    api.on('scroll', onScroll);
-    api.on('reInit', onScroll);
-
-    return () => {
-      api.off('scroll', onScroll);
-    };
-  }, [api, onScroll, isMounted]);
-
-  return transforms;
-};
-
+import { Skeleton } from '@/components/ui/skeleton';
 
 const ShowcaseCard = ({
   img,
@@ -120,27 +50,19 @@ const ShowcaseCard = ({
 };
 
 export default function ShowcaseSection() {
-  const [api, setApi] = useState<EmblaCarouselType | undefined>();
-  const transforms = useCircularEffect(api);
-  const [isMounted, setIsMounted] = useState(false);
   const autoplay = useRef(
     Autoplay({ delay: 3000, stopOnInteraction: true })
   );
   
   const firestore = useFirestore();
   const showcaseQuery = useMemoFirebase(() => firestore ? collection(firestore, 'showcase') : null, [firestore]);
-  const { data: showcaseImages } = useCollection(showcaseQuery);
+  const { data: showcaseImages, isLoading } = useCollection(showcaseQuery);
 
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
 
     return (
       <section id="showcase" className="py-12 md:py-16">
         <div className="container mx-auto px-4">
            <Carousel
-                setApi={setApi}
                 opts={{
                     align: 'center',
                     loop: true,
@@ -149,23 +71,25 @@ export default function ShowcaseSection() {
                 onMouseEnter={autoplay.current.stop}
                 onMouseLeave={autoplay.current.reset}
                 className="w-full relative"
-                style={{ perspective: '1000px' }}
             >
-                <CarouselContent style={{ transformStyle: 'preserve-3d' }}>
-                    {showcaseImages?.map((image, index) => (
-                        <CarouselItem key={image.id} className="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5 flex justify-center">
-                            <div className="p-1 h-full w-full max-w-xs"
-                              style={{
-                                ...(isMounted && transforms.length > index && {
-                                  opacity: transforms[index].opacity,
-                                  transform: `scale(${transforms[index].scale}) rotateY(${transforms[index].rotateY}deg)`,
-                                }),
-                              }}
-                            >
-                                <ShowcaseCard img={image.url} title={image.alt} />
-                            </div>
+                <CarouselContent>
+                    {isLoading ? (
+                      Array.from({ length: 4 }).map((_, index) => (
+                        <CarouselItem key={index} className="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5 flex justify-center">
+                           <div className="p-1 h-full w-full max-w-xs">
+                             <Skeleton className="w-full h-full aspect-square rounded-2xl bg-muted/50" />
+                           </div>
                         </CarouselItem>
-                    ))}
+                      ))
+                    ) : (
+                      showcaseImages?.map((image) => (
+                          <CarouselItem key={image.id} className="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5 flex justify-center">
+                              <div className="p-1 h-full w-full max-w-xs">
+                                  <ShowcaseCard img={image.url} title={image.alt} />
+                              </div>
+                          </CarouselItem>
+                      ))
+                    )}
                 </CarouselContent>
             </Carousel>
         </div>
