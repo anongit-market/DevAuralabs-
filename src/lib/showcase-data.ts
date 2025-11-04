@@ -16,8 +16,4 @@ export const showcaseImages = [
       alt: 'Engagement Skill',
       url: 'https://i.ibb.co/BHBKP0Xm/Adobe-Express-file.png',
     },
-     {
-      alt: 'DevAura Logo',
-      url: 'https://i.ibb.co/20tFWD4P/IMG-20251019-191415-1.png',
-    },
 ];
