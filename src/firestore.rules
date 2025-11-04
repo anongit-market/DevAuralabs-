@@ -8,6 +8,7 @@ service cloud.firestore {
       return exists(/databases/$(database)/documents/privates/$(userId));
     }
 
+    // Public collections that anyone can read
     match /showcase/{showcaseId} {
       allow read: if true;
       allow write: if isAdmin(request.auth.uid);
@@ -29,6 +30,7 @@ service cloud.firestore {
       allow write: if isAdmin(request.auth.uid);
     }
     
+    // Sub-collections with specific read access for enrolled users
     match /courses/{courseId}/classDetails/details {
       allow get: if (request.auth != null && exists(/databases/$(database)/documents/users/$(request.auth.uid)/enrollments/$(courseId))) || isAdmin(request.auth.uid);
       allow write: if isAdmin(request.auth.uid);
@@ -39,10 +41,12 @@ service cloud.firestore {
       allow write: if isAdmin(request.auth.uid);
     }
 
+    // User-specific data
     match /users/{userId}/{document=**} {
       allow read, write: if request.auth.uid == userId || isAdmin(request.auth.uid);
     }
     
+    // Admin-only collections
     match /privates/{userId} {
         allow read, write: if isAdmin(request.auth.uid);
     }
