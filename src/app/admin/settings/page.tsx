@@ -26,12 +26,12 @@ import { RippleEffect } from '@/components/ui/ripple-effect';
 import Link from 'next/link';
 
 const settingsSchema = z.object({
-  websiteName: z.string().min(1, 'Website name is required.'),
-  heroTitle: z.string().min(1, 'Hero title is required.'),
-  heroSubtitle: z.string().min(1, 'Hero subtitle is required.'),
-  contactEmail: z.string().email('Invalid email address.'),
-  contactPhone: z.string().min(1, 'Phone number is required.'),
-  contactAddress: z.string().min(1, 'Address is required.'),
+  websiteName: z.string().optional(),
+  heroTitle: z.string().optional(),
+  heroSubtitle: z.string().optional(),
+  contactEmail: z.string().email('Invalid email address.').or(z.literal('')),
+  contactPhone: z.string().optional(),
+  contactAddress: z.string().optional(),
   twitterUrl: z.string().url().or(z.literal('')),
   instagramUrl: z.string().url().or(z.literal('')),
   whatsappUrl: z.string().url().or(z.literal('')),
