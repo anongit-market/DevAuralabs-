@@ -11,7 +11,7 @@ import { Textarea } from '@/components/ui/textarea';
 import Link from 'next/link';
 import { ArrowLeft, PlusCircle, Trash2, Loader2 } from 'lucide-react';
 import { useCollection, useFirestore, useMemoFirebase, useDoc } from '@/firebase';
-import { collection, deleteDoc, doc, setDoc } from 'firebase/firestore';
+import { collection, deleteDoc, doc, setDoc, addDoc } from 'firebase/firestore';
 import Image from 'next/image';
 
 export default function GeneralSettingsPage() {
@@ -102,9 +102,7 @@ export default function GeneralSettingsPage() {
       return;
     }
     try {
-      // Use addDoc which automatically generates an ID
-      const docRef = doc(collection(firestore, 'showcase'));
-      await setDoc(docRef, { url: newShowcaseUrl, alt: newShowcaseAlt });
+      await addDoc(collection(firestore, 'showcase'), { url: newShowcaseUrl, alt: newShowcaseAlt });
       toast({
         title: 'Showcase Item Added!',
         description: 'The new item has been added to your showcase.',
