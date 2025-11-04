@@ -15,7 +15,7 @@ export default function TermsPage() {
     return <div className="flex h-screen items-center justify-center"><Loader2 className="h-12 w-12 animate-spin text-primary" /></div>;
   }
 
-  const termsContent = contentData?.termsContent || `
+  const defaultTermsContent = `
     Welcome to DevAura Labs. By accessing our website, you agree to these terms of service.
     
     1.  **Use of Service:** You agree to use our services for lawful purposes only.
@@ -23,6 +23,8 @@ export default function TermsPage() {
     3.  **Limitation of Liability:** We are not liable for any damages arising from your use of this site.
     4.  **Governing Law:** These terms are governed by the laws of our jurisdiction.
   `;
+  
+  const termsContent = contentData?.termsContent || defaultTermsContent;
 
   return (
     <div className="container mx-auto max-w-4xl py-20 px-4">
@@ -31,8 +33,10 @@ export default function TermsPage() {
           <CardTitle className="text-3xl font-bold">Terms of Service</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="prose prose-invert lg:prose-lg max-w-none text-muted-foreground">
-            <p className="whitespace-pre-wrap">{termsContent}</p>
+          <div className="prose prose-invert lg:prose-lg max-w-none text-muted-foreground space-y-4">
+             {termsContent.split('\n').map((paragraph, index) => (
+              <p key={index}>{paragraph}</p>
+            ))}
           </div>
         </CardContent>
       </Card>

@@ -15,7 +15,7 @@ export default function PrivacyPage() {
     return <div className="flex h-screen items-center justify-center"><Loader2 className="h-12 w-12 animate-spin text-primary" /></div>;
   }
 
-  const privacyContent = contentData?.privacyContent || `
+  const defaultPrivacyContent = `
     Your privacy is important to us. This Privacy Policy explains how we collect, use, and protect your information.
 
     1.  **Information Collection:** We collect information you provide directly to us, such as when you create an account or contact us.
@@ -24,6 +24,8 @@ export default function PrivacyPage() {
     4.  **Security:** We take reasonable measures to protect your information from unauthorized access.
   `;
 
+  const privacyContent = contentData?.privacyContent || defaultPrivacyContent;
+
   return (
     <div className="container mx-auto max-w-4xl py-20 px-4">
       <Card className="glass-card">
@@ -31,8 +33,10 @@ export default function PrivacyPage() {
           <CardTitle className="text-3xl font-bold">Privacy Policy</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="prose prose-invert lg:prose-lg max-w-none text-muted-foreground">
-            <p className="whitespace-pre-wrap">{privacyContent}</p>
+          <div className="prose prose-invert lg:prose-lg max-w-none text-muted-foreground space-y-4">
+            {privacyContent.split('\n').map((paragraph, index) => (
+              <p key={index}>{paragraph}</p>
+            ))}
           </div>
         </CardContent>
       </Card>
