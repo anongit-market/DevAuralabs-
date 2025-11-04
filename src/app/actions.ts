@@ -5,7 +5,7 @@ import { aiPoweredCourseRecommendations, AIPoweredCourseRecommendationsInput } f
 import Razorpay from 'razorpay';
 import { randomBytes } from 'crypto';
 import { initializeFirebase } from '@/firebase/server';
-import { collection, query, where, getDocs, doc, getDoc, runTransaction, serverTimestamp, addDoc } from 'firebase/firestore';
+import { collection, query, where, getDocs, doc, getDoc, runTransaction, serverTimestamp, addDoc, setDoc } from 'firebase/firestore';
 
 export async function getCourseRecommendations(input: AIPoweredCourseRecommendationsInput) {
     try {
@@ -156,18 +156,20 @@ export async function enrollUserInContent(userId: string, contentId: string, con
     }
 
     const { firestore } = initializeFirebase();
-    const enrollmentRef = collection(firestore, `users/${userId}/enrollments`);
+    // Use the contentId as the document ID for efficient lookup in security rules.
+    const enrollmentRef = doc(firestore, `users/${userId}/enrollments`, contentId);
 
     const newEnrollment = {
         userId: userId,
-        [`${contentType}Id`]: contentId,
+        [`${contentType}Id`]: contentId, // e.g., courseId: 'abc' or skillId: 'xyz'
         type: contentType,
         enrollmentDate: serverTimestamp(),
         progress: 0,
     };
 
     try {
-        await addDoc(enrollmentRef, newEnrollment);
+        // Use setDoc since we are defining the document ID ourselves.
+        await setDoc(enrollmentRef, newEnrollment);
         return { success: true, message: 'Enrollment successful.' };
     } catch (error) {
         console.error('Error creating enrollment:', error);
