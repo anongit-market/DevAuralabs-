@@ -2,67 +2,61 @@
 'use client';
 
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
-import { useAuth, useUser } from '@/firebase';
-import { signInWithEmailAndPassword, signOut, User } from 'firebase/auth';
+import { useUser } from '@/firebase';
 
 interface AdminContextType {
   isAdmin: boolean;
   isLoading: boolean;
-  login: (email: string, key: string) => Promise<boolean>;
+  login: (id: string, key: string) => Promise<boolean>;
   logout: () => void;
 }
 
 const AdminContext = createContext<AdminContextType | undefined>(undefined);
 
-const ADMIN_EMAIL = 'admindevaura22@gmail.com';
+const ADMIN_ID = 'MAYANK90LM8';
+const ADMIN_KEY = 'devaura@7790';
 const ADMIN_SESSION_KEY = 'dev-aura-admin-session';
 
 export function AdminProvider({ children }: { children: ReactNode }) {
-  const { user: firebaseUser, isUserLoading } = useUser();
-  const auth = useAuth();
+  const { isUserLoading } = useUser();
   const [isAdmin, setIsAdmin] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     setIsLoading(true);
     if (!isUserLoading) {
-      const sessionIsAdmin = sessionStorage.getItem(ADMIN_SESSION_KEY) === 'true';
-      const userIsAdmin = firebaseUser?.email === ADMIN_EMAIL;
-      
-      if (sessionIsAdmin && userIsAdmin) {
-        setIsAdmin(true);
-      } else {
+      try {
+        const sessionIsAdmin = sessionStorage.getItem(ADMIN_SESSION_KEY) === 'true';
+        setIsAdmin(sessionIsAdmin);
+      } catch (error) {
+        // Handle cases where sessionStorage is not available
         setIsAdmin(false);
-        sessionStorage.removeItem(ADMIN_SESSION_KEY);
       }
     }
     setIsLoading(false);
-  }, [firebaseUser, isUserLoading]);
+  }, [isUserLoading]);
 
-  const login = async (email: string, key: string): Promise<boolean> => {
-    if (email !== ADMIN_EMAIL) {
-      return false;
+  const login = async (id: string, key: string): Promise<boolean> => {
+    if (id === ADMIN_ID && key === ADMIN_KEY) {
+      try {
+        sessionStorage.setItem(ADMIN_SESSION_KEY, 'true');
+        setIsAdmin(true);
+        return true;
+      } catch (error) {
+        console.error("Could not set admin session in sessionStorage:", error);
+        return false;
+      }
     }
-
-    try {
-      await signInWithEmailAndPassword(auth, email, key);
-      sessionStorage.setItem(ADMIN_SESSION_KEY, 'true');
-      setIsAdmin(true);
-      return true;
-    } catch (error) {
-      console.error('Admin login failed:', error);
-      return false;
-    }
+    return false;
   };
 
-  const logout = async () => {
+  const logout = () => {
     try {
-      await signOut(auth);
       sessionStorage.removeItem(ADMIN_SESSION_KEY);
-      setIsAdmin(false);
     } catch (error) {
-       console.error('Admin logout failed:', error);
+       console.error('Could not remove admin session from sessionStorage:', error);
     }
+    setIsAdmin(false);
   };
 
   const value = { isAdmin, isLoading, login, logout };
