@@ -10,7 +10,7 @@ service cloud.firestore {
 
     // Public collections that anyone can read
     match /showcase/{showcaseId} {
-      allow read: if true;
+      allow read, list: if true;
       allow write: if isAdmin(request.auth.uid);
     }
     match /courses/{courseId} {
