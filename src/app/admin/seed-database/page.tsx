@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { ArrowLeft, DatabaseZap, Loader2 } from 'lucide-react';
 import Link from 'next/link';
-import { seedInitialData } from '@/app/actions';
+import { seedInitialData } from '@/app/server-actions';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 export default function SeedDatabasePage() {
