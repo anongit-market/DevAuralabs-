@@ -20,6 +20,7 @@ const navLinks = [
   { href: '/admin/add-hardware', label: 'Add Hardware', icon: Cpu },
   { href: '/admin/manage-classes', label: 'Manage Classes', icon: View },
   { href: '/admin/promo-codes', label: 'Promo Codes', icon: TicketPercent },
+  { href: '/admin/settings', label: 'Settings', icon: Settings },
 ];
 
 export default function AdminSidebar() {

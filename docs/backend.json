@@ -366,6 +366,25 @@
                 }
             }
         }
+    },
+    "Settings": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "title": "Settings",
+        "type": "object",
+        "description": "Represents the general platform settings.",
+        "properties": {
+          "websiteName": { "type": "string" },
+          "heroTitle": { "type": "string" },
+          "heroSubtitle": { "type": "string" },
+          "contactEmail": { "type": "string", "format": "email" },
+          "contactPhone": { "type": "string" },
+          "contactAddress": { "type": "string" },
+          "twitterUrl": { "type": "string", "format": "uri" },
+          "instagramUrl": { "type": "string", "format": "uri" },
+          "whatsappUrl": { "type": "string", "format": "uri" },
+          "termsContent": { "type": "string" },
+          "privacyContent": { "type": "string" }
+        }
     }
   },
   "auth": {
@@ -553,8 +572,19 @@
             }
           ]
         }
+      },
+      {
+        "path": "/settings/{docId}",
+        "definition": {
+          "entityName": "Settings",
+          "schema": { "$ref": "#/backend/entities/Settings" },
+          "description": "Collection to store general platform settings. It is expected to contain a single document with the ID 'content'.",
+          "params": [
+            { "name": "docId", "description": "The document ID, typically 'content'." }
+          ]
+        }
       }
     ],
-    "reasoning": "The Firestore structure is designed to be secure and scalable. Public content like courses, skills, hardware, and the showcase are top-level collections with read access for everyone. User-specific data like enrollments and chats are nested under a `/users/{userId}` path to enforce ownership-based security rules. Admin privileges are managed through a `/privates` collection, allowing admins to manage content. This structure follows Firestore best practices by separating public and private data, enabling efficient and secure queries."
+    "reasoning": "The Firestore structure is designed to be secure and scalable. Public content like courses, skills, hardware, and the showcase are top-level collections with read access for everyone. User-specific data like enrollments and chats are nested under a `/users/{userId}` path to enforce ownership-based security rules. Admin privileges are managed through a `/privates` collection, allowing admins to manage content. This structure follows Firestore best practices by separating public and private data, enabling efficient and secure queries. A `settings` collection is added to store global site configuration, which is readable by all but writable only by admins."
   }
 }
