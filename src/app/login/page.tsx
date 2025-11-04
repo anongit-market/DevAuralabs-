@@ -40,8 +40,6 @@ const adminFormSchema = z.object({
   password: z.string().min(1, { message: 'Password is required.' }),
 });
 
-const ADMIN_EMAIL = 'admindevaura22@gmail.com';
-
 export default function LoginPage() {
   const { toast } = useToast();
   const router = useRouter();
@@ -85,14 +83,6 @@ export default function LoginPage() {
   }, [user, isAdmin, next, router, toast]);
 
   async function onAdminSubmit(values: z.infer<typeof adminFormSchema>) {
-    if (values.email !== ADMIN_EMAIL) {
-        toast({
-            variant: 'destructive',
-            title: 'Login Failed',
-            description: 'This email is not registered as an admin.',
-        });
-        return;
-    }
     try {
         await signInWithEmailAndPassword(auth, values.email, values.password);
         // The useEffect hook will handle redirection on successful login.
