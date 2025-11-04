@@ -51,9 +51,9 @@ export default function SettingsPage() {
   const form = useForm<SettingsFormValues>({
     resolver: zodResolver(settingsSchema),
     defaultValues: {
-      websiteName: '',
-      heroTitle: '',
-      heroSubtitle: '',
+      websiteName: 'DevAura Labs',
+      heroTitle: 'Your Gateway to Digital Mastery.',
+      heroSubtitle: 'Unlock your potential with expert-led courses in Cybersecurity, cutting-edge Skill Development programs, and professional Website Creation services to elevate your digital presence.',
       contactEmail: '',
       contactPhone: '',
       contactAddress: '',
@@ -67,14 +67,19 @@ export default function SettingsPage() {
 
   useEffect(() => {
     if (contentData) {
-      form.reset(contentData);
+      // Merge fetched data with defaults, giving precedence to fetched data
+      const newDefaults = {
+        ...form.getValues(), // Start with existing defaults
+        ...contentData       // Overwrite with any fields from Firestore
+      };
+      form.reset(newDefaults);
     }
   }, [contentData, form]);
 
   const onSubmit = async (values: SettingsFormValues) => {
     if (!firestore) return;
     try {
-      await setDoc(doc(firestore, 'settings', 'content'), values);
+      await setDoc(doc(firestore, 'settings', 'content'), values, { merge: true });
       toast({
         title: 'Settings Saved!',
         description: 'Your platform settings have been updated.',
