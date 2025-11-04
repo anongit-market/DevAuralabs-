@@ -13,7 +13,7 @@ import { doc } from 'firebase/firestore';
 export default function HeroSection() {
   const firestore = useFirestore();
   const contentRef = useMemoFirebase(() => firestore ? doc(firestore, 'settings', 'content') : null, [firestore]);
-  const { data: contentData, isLoading } = useDoc(contentRef);
+  const { data: contentData } = useDoc(contentRef);
 
   const heroTitle = contentData?.heroTitle || 'Your Gateway to Digital Mastery.';
   const heroSubtitle = contentData?.heroSubtitle || 'Unlock your potential with expert-led courses in Cybersecurity, cutting-edge Skill Development programs, and professional Website Creation services to elevate your digital presence.';

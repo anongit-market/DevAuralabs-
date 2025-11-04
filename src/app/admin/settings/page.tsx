@@ -10,7 +10,7 @@ import { useEffect, useState } from 'react';
 import { Textarea } from '@/components/ui/textarea';
 import Link from 'next/link';
 import { ArrowLeft, PlusCircle, Trash2, Loader2 } from 'lucide-react';
-import { useCollection, useFirestore, addDocumentNonBlocking, useMemoFirebase, useDoc } from '@/firebase';
+import { useCollection, useFirestore, useMemoFirebase, useDoc } from '@/firebase';
 import { collection, deleteDoc, doc, setDoc } from 'firebase/firestore';
 import Image from 'next/image';
 
@@ -81,6 +81,7 @@ export default function GeneralSettingsPage() {
         description: 'Your website settings have been updated.',
       });
     } catch (error) {
+       console.error("Error saving settings: ", error);
        toast({
         variant: 'destructive',
         title: 'Error Saving',
@@ -101,7 +102,9 @@ export default function GeneralSettingsPage() {
       return;
     }
     try {
-      await addDocumentNonBlocking(collection(firestore, 'showcase'), { url: newShowcaseUrl, alt: newShowcaseAlt });
+      // Use addDoc which automatically generates an ID
+      const docRef = doc(collection(firestore, 'showcase'));
+      await setDoc(docRef, { url: newShowcaseUrl, alt: newShowcaseAlt });
       toast({
         title: 'Showcase Item Added!',
         description: 'The new item has been added to your showcase.',
@@ -109,6 +112,7 @@ export default function GeneralSettingsPage() {
       setNewShowcaseUrl('');
       setNewShowcaseAlt('');
     } catch (error) {
+       console.error("Error adding showcase item: ", error);
       toast({
         variant: 'destructive',
         title: 'Error',
