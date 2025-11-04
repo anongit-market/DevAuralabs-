@@ -69,7 +69,7 @@ export default function LoginPage() {
     if (isAdmin) {
         toast({ title: 'Admin Login Successful', description: 'Welcome, Administrator.' });
         router.push('/admin');
-    } else if (user) {
+    } else if (user && !user.isAnonymous) { // Make sure not to redirect for anon admin user
         toast({ title: 'Login Successful', description: 'Welcome back!' });
         if (next) {
             router.push(next);

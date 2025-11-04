@@ -3,6 +3,7 @@
 
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { useUser, useAuth } from '@/firebase';
+import { signInAnonymously, signOut } from 'firebase/auth';
 
 interface AdminContextType {
   isAdmin: boolean;
@@ -24,30 +25,37 @@ export function AdminProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    setIsLoading(true);
-    if (!isUserLoading) {
-      try {
-        const sessionIsAdmin = sessionStorage.getItem(ADMIN_SESSION_KEY) === 'true';
-        if (sessionIsAdmin) {
-          setIsAdmin(true);
-        } else {
+    const checkAdminStatus = () => {
+      setIsLoading(true);
+      if (!isUserLoading) {
+        try {
+          const sessionIsAdmin = sessionStorage.getItem(ADMIN_SESSION_KEY) === 'true';
+          if (sessionIsAdmin) {
+            setIsAdmin(true);
+          } else {
+            setIsAdmin(false);
+          }
+        } catch (error) {
           setIsAdmin(false);
         }
-      } catch (error) {
-        setIsAdmin(false);
       }
-    }
-    setIsLoading(false);
-  }, [isUserLoading, user]);
+      setIsLoading(false);
+    };
+    checkAdminStatus();
+  }, [isUserLoading]);
 
   const login = async (webId: string, key: string): Promise<boolean> => {
     if (webId === ADMIN_WEB_ID && key === ADMIN_SECRET_KEY) {
       try {
+        // Sign in anonymously to get a valid auth object for security rules
+        if (!auth.currentUser) {
+          await signInAnonymously(auth);
+        }
         sessionStorage.setItem(ADMIN_SESSION_KEY, 'true');
         setIsAdmin(true);
         return true;
       } catch (error) {
-        console.error("Admin login failed: Could not set session storage.", error);
+        console.error("Admin anonymous sign-in failed:", error);
         return false;
       }
     }
@@ -57,11 +65,12 @@ export function AdminProvider({ children }: { children: ReactNode }) {
   const logout = () => {
     try {
       sessionStorage.removeItem(ADMIN_SESSION_KEY);
-      if (auth.currentUser?.email === ADMIN_WEB_ID) {
-          auth.signOut();
+      // If the current user is an anonymous admin user, sign them out.
+      if (auth.currentUser && auth.currentUser.isAnonymous) {
+        signOut(auth);
       }
     } catch (error) {
-       console.error('Could not remove admin session from sessionStorage:', error);
+       console.error('Could not remove admin session or sign out:', error);
     }
     setIsAdmin(false);
   };
