@@ -3,7 +3,7 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Home, Settings, LogOut, BookCopy, Award, List, Users, View, Cpu, TicketPercent, Mail } from 'lucide-react';
+import { Home, Settings, LogOut, BookCopy, Award, List, Users, View, Cpu, TicketPercent, Mail, BarChart2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useAdmin } from '@/context/admin-context';
@@ -11,6 +11,7 @@ import Logo from '../logo';
 
 const navLinks = [
   { href: '/admin', label: 'Dashboard', icon: Home },
+  { href: '/admin/analytics', label: 'Analytics', icon: BarChart2 },
   { href: '/admin/content', label: 'Content', icon: List },
   { href: '/admin/users', label: 'Users', icon: Users },
   { href: '/admin/website-requests', label: 'Web Requests', icon: Mail },
@@ -19,7 +20,6 @@ const navLinks = [
   { href: '/admin/add-hardware', label: 'Add Hardware', icon: Cpu },
   { href: '/admin/manage-classes', label: 'Manage Classes', icon: View },
   { href: '/admin/promo-codes', label: 'Promo Codes', icon: TicketPercent },
-  { href: '/admin/settings', label: 'General', icon: Settings },
 ];
 
 export default function AdminSidebar() {

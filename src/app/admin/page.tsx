@@ -1,11 +1,10 @@
 
-
 'use client';
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { PlusCircle, UserCog, Settings, List, Users, Cpu, Eye, TicketPercent, Mail } from 'lucide-react';
+import { PlusCircle, UserCog, List, Users, Cpu, Eye, TicketPercent, Mail, BarChart2 } from 'lucide-react';
 import { useDemoUser } from '@/context/demo-user-context';
 import { useRouter } from 'next/navigation';
 
@@ -109,6 +108,17 @@ export default function AdminPage() {
                 </Link>
             </CardContent>
         </Card>
+         <Card className="glass-card">
+            <CardHeader>
+                <CardTitle className="flex items-center gap-2"><BarChart2 /> Platform Analytics</CardTitle>
+                <CardDescription>View statistics about your platform's content and users.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <Link href="/admin/analytics">
+                    <Button variant="outline">View Analytics</Button>
+                </Link>
+            </CardContent>
+        </Card>
         <Card className="glass-card">
             <CardHeader>
                 <CardTitle className="flex items-center gap-2"><Eye /> Demo User Mode</CardTitle>
@@ -118,20 +128,7 @@ export default function AdminPage() {
                 <Button variant="secondary" onClick={handleStartDemo}>Start Demo</Button>
             </CardContent>
         </Card>
-        <Card className="glass-card">
-            <CardHeader>
-                <CardTitle className="flex items-center gap-2"><Settings /> General Settings</CardTitle>
-                <CardDescription>Manage general website settings like theme and appearance.</CardDescription>
-            </CardHeader>
-            <CardContent>
-                <Link href="/admin/settings">
-                    <Button variant="outline">Go to Settings</Button>
-                </Link>
-            </CardContent>
-        </Card>
       </div>
     </div>
   );
 }
-
-    
