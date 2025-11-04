@@ -138,7 +138,7 @@ export default function ShowcaseSection() {
 
     return (
       <section id="showcase" className="py-12 md:py-16">
-        <div className="container mx-auto px-4" style={{perspective: '1000px'}}>
+        <div className="container mx-auto px-4">
            <Carousel
                 setApi={setApi}
                 opts={{
@@ -149,11 +149,12 @@ export default function ShowcaseSection() {
                 onMouseEnter={autoplay.current.stop}
                 onMouseLeave={autoplay.current.reset}
                 className="w-full relative"
+                style={{ perspective: '1000px' }}
             >
                 <CarouselContent style={{ transformStyle: 'preserve-3d' }}>
                     {showcaseImages?.map((image, index) => (
                         <CarouselItem key={image.id} className="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5 flex justify-center">
-                            <div className="p-1 h-full w-full max-w-md"
+                            <div className="p-1 h-full w-full max-w-xs"
                               style={{
                                 ...(isMounted && transforms.length > index && {
                                   opacity: transforms[index].opacity,
