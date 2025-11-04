@@ -126,10 +126,7 @@ export default function CheckoutSkillPage() {
 
     const order = result.order;
 
-    const isProduction = process.env.NODE_ENV === 'production';
-    const razorpayKeyId = isProduction 
-        ? process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID_LIVE
-        : process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID_TEST;
+    const razorpayKeyId = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID_LIVE;
 
     if (!razorpayKeyId) {
         toast({ variant: 'destructive', title: 'Configuration Error', description: 'Razorpay Key ID is not set for the current mode.' });
