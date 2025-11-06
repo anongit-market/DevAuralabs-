@@ -27,6 +27,7 @@ export function AdminProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     // This effect now ONLY checks session storage on initial load.
     // It avoids conflicts with the firebaseUser state.
+    setIsLoading(true);
     try {
       const isAdminSession = sessionStorage.getItem(ADMIN_SESSION_KEY) === 'true';
       if (isAdminSession) {
