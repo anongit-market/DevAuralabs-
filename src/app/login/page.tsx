@@ -34,11 +34,6 @@ const FacebookIcon = (props: React.SVGProps<SVGSVGElement>) => (
     </svg>
 );
 
-const adminFormSchema = z.object({
-  webId: z.string().min(1, { message: 'A Web ID is required.' }),
-  password: z.string().min(1, { message: 'Password is required.' }),
-});
-
 export default function LoginPage() {
   const { toast } = useToast();
   const router = useRouter();
@@ -46,126 +41,17 @@ export default function LoginPage() {
   const next = searchParams.get('next');
   const auth = useAuth();
   const { user } = useUser();
-  const [view, setView] = useState('user'); 
-  const { isAdmin, login: adminLogin } = useAdmin();
-  const [showPassword, setShowPassword] = useState(false);
-
-
-  useEffect(() => {
-    if (searchParams.get('view') === 'admin') {
-      setView('admin');
-    }
-  }, [searchParams]);
-
-  const adminForm = useForm<z.infer<typeof adminFormSchema>>({
-    resolver: zodResolver(adminFormSchema),
-    defaultValues: {
-      webId: '',
-      password: '',
-    },
-  });
+  const { isAdmin } = useAdmin();
 
   useEffect(() => {
     if (isAdmin) {
         toast({ title: 'Admin Login Successful', description: 'Welcome, Administrator.' });
-        router.push('/admin');
-    } else if (user && !user.isAnonymous) { // Make sure not to redirect for anon admin user
+        router.push(next || '/admin');
+    } else if (user) {
         toast({ title: 'Login Successful', description: 'Welcome back!' });
-        if (next) {
-            router.push(next);
-        } else {
-            router.push('/');
-        }
+        router.push(next || '/');
     }
   }, [user, isAdmin, next, router, toast]);
-
-  async function onAdminSubmit(values: z.infer<typeof adminFormSchema>) {
-    const success = await adminLogin(values.webId, values.password);
-    if (!success) {
-        toast({
-            variant: 'destructive',
-            title: 'Login Failed',
-            description: 'Invalid credentials. Please try again.',
-        });
-    }
-  }
-
-
-  const renderUserView = () => (
-    <>
-      <div className="text-center space-y-2">
-        <div className="flex justify-center">
-            <User className="h-12 w-12 text-primary" />
-        </div>
-        <h1 className="text-3xl font-bold">Welcome Back</h1>
-        <p className="text-muted-foreground">Sign in to continue your journey</p>
-      </div>
-      
-      <div className="grid grid-cols-1 gap-4">
-          <Button variant="outline" className="w-full" onClick={() => initiateGoogleSignIn(auth)}>
-              <GoogleIcon className="mr-2 h-5 w-5"/> Continue with Google
-          </Button>
-          <Button variant="outline" className="w-full" onClick={() => initiateFacebookSignIn(auth)}>
-              <FacebookIcon className="mr-2 h-5 w-5"/> Continue with Facebook
-          </Button>
-      </div>
-    </>
-  );
-
-
-  const renderAdminView = () => (
-    <>
-      <div className="text-center space-y-2">
-        <h1 className="text-3xl font-bold">Admin Panel</h1>
-        <p className="text-muted-foreground">Enter your administrator credentials</p>
-      </div>
-       <Form {...adminForm}>
-          <form onSubmit={adminForm.handleSubmit(onAdminSubmit)} className="space-y-4">
-              <FormField
-              control={adminForm.control}
-              name="webId"
-              render={({ field }) => (
-                  <FormItem>
-                  <FormLabel>Web ID</FormLabel>
-                  <FormControl>
-                      <Input placeholder="Enter your Web ID" {...field} className="bg-background/50"/>
-                  </FormControl>
-                  <FormMessage />
-                  </FormItem>
-              )}
-              />
-              <FormField
-              control={adminForm.control}
-              name="password"
-              render={({ field }) => (
-                  <FormItem>
-                  <FormLabel>Password</FormLabel>
-                   <FormControl>
-                        <div className="relative">
-                          <Input type={showPassword ? 'text' : 'password'} placeholder="••••••••" {...field} className="bg-background/50 pr-10"/>
-                          <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute inset-y-0 right-0 flex items-center pr-3 text-muted-foreground">
-                            {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-                          </button>
-                        </div>
-                      </FormControl>
-                  <FormMessage />
-                  </FormItem>
-              )}
-              />
-              <Button type="submit" className="w-full gradient-btn gradient-btn-1 relative" disabled={adminForm.formState.isSubmitting}>
-                  Secure Login
-              </Button>
-          </form>
-      </Form>
-       <Separator className="my-4 bg-white/10" />
-       <p className="text-center text-xs text-muted-foreground">
-          <button onClick={() => setView('user')} className="font-semibold text-primary hover:underline">
-              Switch to User Login
-          </button>
-      </p>
-    </>
-  );
-
 
   return (
     <>
@@ -173,7 +59,22 @@ export default function LoginPage() {
         <VantaBackground />
         <div className="relative z-10 w-full max-w-sm">
           <div className="glass-card p-8 space-y-6">
-            {view === 'user' ? renderUserView() : renderAdminView()}
+              <div className="text-center space-y-2">
+                <div className="flex justify-center">
+                    <User className="h-12 w-12 text-primary" />
+                </div>
+                <h1 className="text-3xl font-bold">Sign In</h1>
+                <p className="text-muted-foreground">Choose your provider to continue</p>
+              </div>
+              
+              <div className="grid grid-cols-1 gap-4">
+                  <Button variant="outline" className="w-full" onClick={() => initiateGoogleSignIn(auth)}>
+                      <GoogleIcon className="mr-2 h-5 w-5"/> Continue with Google
+                  </Button>
+                  <Button variant="outline" className="w-full" onClick={() => initiateFacebookSignIn(auth)}>
+                      <FacebookIcon className="mr-2 h-5 w-5"/> Continue with Facebook
+                  </Button>
+              </div>
           </div>
         </div>
       </div>

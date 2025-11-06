@@ -4,11 +4,9 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
   
-    // The new isAdmin function checks if any user is authenticated.
-    // The admin login flow now uses anonymous sign-in, so request.auth will be populated.
-    // This is secure because the admin routes are client-side protected.
+    // Admin is defined as the user authenticated with a specific email.
     function isAdmin() {
-      return request.auth != null;
+      return request.auth != null && request.auth.token.email == 'mayanksharma4174@gmail.com';
     }
 
     // Public collections that anyone can read
