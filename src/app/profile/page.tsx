@@ -30,7 +30,7 @@ const profileFormSchema = z.object({
     (a) => (a ? parseInt(z.string().parse(a), 10) : undefined),
     z.number().positive({ message: 'Age must be a positive number.' }).optional()
   ),
-  email: z.string().email(),
+  email: z.string().email().or(z.literal('')),
 });
 
 export default function ProfilePage() {
