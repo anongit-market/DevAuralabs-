@@ -14,10 +14,9 @@ export default function TermsPage() {
   const { data: contentData, isLoading } = useDoc(contentRef);
 
   const getRenderedHTML = (markdown: string | undefined) => {
-    if (!markdown) return '';
+    if (!markdown) return '<p>No content available. Please check back later.</p>';
     const dirtyHtml = marked.parse(markdown);
-    const cleanHtml = DOMPurify.sanitize(dirtyHtml);
-    return cleanHtml;
+    return DOMPurify.sanitize(dirtyHtml);
   }
 
   return (
@@ -42,5 +41,3 @@ export default function TermsPage() {
     </div>
   );
 }
-
-    
