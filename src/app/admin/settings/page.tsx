@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { z } from 'zod';
@@ -37,6 +38,7 @@ const settingsSchema = z.object({
   whatsappUrl: z.string().url().or(z.literal('')),
   termsContent: z.string().optional(),
   privacyContent: z.string().optional(),
+  returnRefundPolicyContent: z.string().optional(),
 });
 
 type SettingsFormValues = z.infer<typeof settingsSchema>;
@@ -62,6 +64,7 @@ export default function SettingsPage() {
       whatsappUrl: '',
       termsContent: '',
       privacyContent: '',
+      returnRefundPolicyContent: '',
     }
   });
 
@@ -252,6 +255,17 @@ export default function SettingsPage() {
                         </FormItem>
                       )}
                     />
+                     <FormField
+                      control={form.control}
+                      name="returnRefundPolicyContent"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Return & Refund Policy</FormLabel>
+                          <FormControl><Textarea {...field} className="bg-background/50 h-40" /></FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
                   </div>
 
                   <Button type="submit" size="lg" className="w-full gradient-btn gradient-btn-1 relative" disabled={form.formState.isSubmitting}>
@@ -267,3 +281,5 @@ export default function SettingsPage() {
     </div>
   );
 }
+
+    
