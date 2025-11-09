@@ -1,5 +1,4 @@
 
-
 {
   "entities": {
     "User": {
@@ -368,24 +367,21 @@
         }
     },
     "Settings": {
-      "$schema": "http://json-schema.org/draft-07/schema#",
-      "title": "Settings",
-      "type": "object",
-      "description": "Represents the general platform settings.",
-      "properties": {
-        "websiteName": { "type": "string" },
-        "heroTitle": { "type": "string" },
-        "heroSubtitle": { "type": "string" },
-        "contactEmail": { "type": "string", "format": "email" },
-        "contactPhone": { "type": "string" },
-        "contactAddress": { "type": "string" },
-        "twitterUrl": { "type": "string", "format": "uri" },
-        "instagramUrl": { "type": "string", "format": "uri" },
-        "whatsappUrl": { "type": "string", "format": "uri" },
-        "termsContent": { "type": "string", "description": "The full content for the Terms of Service page, in Markdown format." },
-        "privacyContent": { "type": "string", "description": "The full content for the Privacy Policy page, in Markdown format." },
-        "returnRefundPolicyContent": { "type": "string", "description": "The full content for the Return and Refund Policy page, in Markdown format." }
-      }
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "title": "Settings",
+        "type": "object",
+        "description": "Represents the general platform settings.",
+        "properties": {
+          "websiteName": { "type": "string" },
+          "heroTitle": { "type": "string" },
+          "heroSubtitle": { "type": "string" },
+          "contactEmail": { "type": "string", "format": "email" },
+          "contactPhone": { "type": "string" },
+          "contactAddress": { "type": "string" },
+          "twitterUrl": { "type": "string", "format": "uri" },
+          "instagramUrl": { "type": "string", "format": "uri" },
+          "whatsappUrl": { "type": "string", "format": "uri" }
+        }
     }
   },
   "auth": {
