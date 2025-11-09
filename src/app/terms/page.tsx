@@ -26,15 +26,17 @@ export default function TermsPage() {
           <CardTitle className="text-3xl font-bold">Terms & Policies</CardTitle>
         </CardHeader>
         <CardContent>
-          {isLoading ? (
+           {isLoading ? (
              <div className="flex justify-center items-center h-64">
                 <Loader2 className="h-12 w-12 animate-spin text-primary" />
               </div>
           ) : (
-            <div 
-              className="prose prose-invert lg:prose-lg max-w-none"
-              dangerouslySetInnerHTML={{ __html: getRenderedHTML(contentData?.termsContent) }}
-            />
+            <div className="p-6">
+                <div 
+                  className="prose prose-invert lg:prose-lg max-w-none"
+                  dangerouslySetInnerHTML={{ __html: getRenderedHTML(contentData?.termsContent) }}
+                />
+            </div>
           )}
         </CardContent>
       </Card>

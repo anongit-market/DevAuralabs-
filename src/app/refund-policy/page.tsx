@@ -31,15 +31,15 @@ export default function RefundPolicyPage() {
                 <Loader2 className="h-12 w-12 animate-spin text-primary" />
               </div>
           ) : (
-            <div 
-              className="prose prose-invert lg:prose-lg max-w-none"
-              dangerouslySetInnerHTML={{ __html: getRenderedHTML(contentData?.returnRefundPolicyContent) }}
-            />
+            <div className="p-6">
+                <div 
+                className="prose prose-invert lg:prose-lg max-w-none"
+                dangerouslySetInnerHTML={{ __html: getRenderedHTML(contentData?.returnRefundPolicyContent) }}
+                />
+            </div>
           )}
         </CardContent>
       </Card>
     </div>
   );
 }
-
-    
