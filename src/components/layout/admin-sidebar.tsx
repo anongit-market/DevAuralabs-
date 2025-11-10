@@ -3,7 +3,7 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Home, Settings, LogOut, BookCopy, Award, List, Users, View, Cpu, TicketPercent, Mail, BarChart2, Package } from 'lucide-react';
+import { Home, Settings, LogOut, BookCopy, Award, List, Users, View, Cpu, TicketPercent, Mail, BarChart2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useAdmin } from '@/context/admin-context';
@@ -14,7 +14,6 @@ const navLinks = [
   { href: '/admin/analytics', label: 'Analytics', icon: BarChart2 },
   { href: '/admin/content', label: 'Content', icon: List },
   { href: '/admin/users', label: 'Users', icon: Users },
-  { href: '/admin/orders', label: 'Orders', icon: Package },
   { href: '/admin/website-requests', label: 'Web Requests', icon: Mail },
   { href: '/admin/add-course', label: 'Add Course', icon: BookCopy },
   { href: '/admin/add-skill', label: 'Add Skill', icon: Award },
