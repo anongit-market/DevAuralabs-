@@ -32,10 +32,7 @@ export function AdminProvider({ children }: { children: ReactNode }) {
       const isAdminSession = sessionStorage.getItem(ADMIN_SESSION_KEY) === 'true';
       if (isAdminSession) {
         // Now also verify against firebase user to avoid mismatch
-        if (firebaseUser) {
-           const privateDocRef = doc(firestore, 'privates', firebaseUser.uid);
-           // This is a simplified check. A real app might fetch the doc.
-           // For now, if there is a firebase user and session is set, we assume they are admin.
+        if (firebaseUser?.email === ADMIN_WEB_ID) {
            setIsAdmin(true);
         } else {
            // If there's no firebase user, the admin session is invalid.
@@ -55,15 +52,7 @@ export function AdminProvider({ children }: { children: ReactNode }) {
   const adminLogin = async (webId: string, key: string): Promise<boolean> => {
     if (webId === ADMIN_WEB_ID && key === ADMIN_SECRET_KEY) {
       try {
-        const userCredential = await signInWithEmailAndPassword(auth, webId, key);
-        const user = userCredential.user;
-
-        // CRITICAL FIX: Create the document in 'privates' collection to validate isAdmin() rule
-        if (user && firestore) {
-          const privateDocRef = doc(firestore, 'privates', user.uid);
-          await setDoc(privateDocRef, { role: 'admin' });
-        }
-        
+        await signInWithEmailAndPassword(auth, webId, key);
         sessionStorage.setItem(ADMIN_SESSION_KEY, 'true');
         setIsAdmin(true);
         return true;
