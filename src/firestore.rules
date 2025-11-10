@@ -6,6 +6,7 @@ service cloud.firestore {
   
     function isAdmin() {
       // An admin user is identified by their specific email address.
+      // This requires the admin to be logged into Firebase with this email.
       return request.auth != null && request.auth.token.email == 'mayanksharma4174@gmail.com';
     }
 
