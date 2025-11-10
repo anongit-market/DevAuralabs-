@@ -26,21 +26,6 @@ export default function AboutPage() {
             </p>
         </div>
 
-        <Separator className="my-12 bg-white/10" />
-
-        <div className="max-w-2xl mx-auto text-center">
-            <div className="flex justify-center mb-6">
-                <KeyRound className="w-16 h-16 text-primary/50"/>
-            </div>
-            <h2 className="text-2xl font-bold mb-4">Private Access</h2>
-            <p className="text-muted-foreground mb-6">
-                The following link is for authorized personnel only and provides access to the private administrative area of DevAura Labs.
-            </p>
-            <Link href="/login?view=admin" className="font-semibold text-primary hover:underline">
-                Connect Private (Authorized Only)
-            </Link>
-        </div>
-
       </div>
     </div>
   );
