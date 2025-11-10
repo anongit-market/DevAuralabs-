@@ -220,7 +220,7 @@ export default function CourseDetailClient({ course }: { course: Course }) {
                         </Button>
                     </div>
                     {!isDemoMode && <div className="mt-8 text-xs text-center text-muted-foreground">
-                        3-Day Money-Back Guarantee
+                        24 hours money back guarantee
                     </div>}
                   </>
                 ) : null}
