@@ -29,8 +29,7 @@ export function AdminProvider({ children }: { children: ReactNode }) {
       return;
     }
     
-    // An admin is identified SOLELY by their email address matching the hardcoded one.
-    // This works because the firestore.rules also use this same logic.
+    // The single source of truth for admin status is the logged-in user's email.
     if (firebaseUser && firebaseUser.email === ADMIN_WEB_ID) {
       setIsAdmin(true);
     } else {
@@ -42,29 +41,24 @@ export function AdminProvider({ children }: { children: ReactNode }) {
 
 
   const adminLogin = async (webId: string, key: string): Promise<boolean> => {
-    // This function now performs two checks:
-    // 1. Verifies the secret credentials (webId and key).
-    // 2. Checks if the currently authenticated Firebase user has the admin email.
-    // Both must be true for the login to succeed. This prevents a non-admin user
-    // from seeing a "successful" login screen, only to be blocked by Firestore rules later.
-    
+    // This function now ONLY verifies the secret credentials.
+    // It does NOT perform sign-in. It simply confirms the user knows the secret.
+    // The actual admin privileges are granted by the `useEffect` hook above,
+    // which depends on the user being logged in with the correct Firebase account.
     const credentialsAreValid = webId.toLowerCase() === ADMIN_WEB_ID && key === ADMIN_SECRET_KEY;
     
-    // We also need to check the currently logged-in user.
-    const userIsAuthenticatedAsAdmin = auth.currentUser && auth.currentUser.email === ADMIN_WEB_ID;
-
-    if (credentialsAreValid && userIsAuthenticatedAsAdmin) {
-        setIsAdmin(true);
-        return true;
+    if (credentialsAreValid) {
+        // We also check if the currently authenticated user in Firebase has the correct email.
+        // This ensures the user is logged into the correct Firebase account BEFORE accessing admin areas.
+        const userIsAuthenticatedAsAdmin = auth.currentUser && auth.currentUser.email === ADMIN_WEB_ID;
+        return userIsAuthenticatedAsAdmin;
     }
     
-    // If either check fails, the login is unsuccessful.
     return false;
   };
 
   const adminLogout = () => {
-    // Since admin status is tied to the Firebase user, logging out the Firebase user
-    // will automatically revoke admin status via the useEffect hook.
+    // Logging out the Firebase user will automatically revoke admin status via the useEffect hook.
     signOut(auth);
     setIsAdmin(false);
   };
