@@ -117,7 +117,7 @@ export default function OrdersPage() {
                                     orders.map((order) => (
                                         <TableRow key={order.id}>
                                             <TableCell>
-                                                <div className="font-medium">{order.userName || order.shippingAddress.fullName}</div>
+                                                <div className="font-medium">{order.shippingAddress?.fullName || order.userName}</div>
                                                 <div className="text-sm text-muted-foreground">{order.userEmail}</div>
                                             </TableCell>
                                             <TableCell className="font-medium">{order.productName}</TableCell>
